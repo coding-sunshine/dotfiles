@@ -42,6 +42,7 @@ alias cgr='composer global require'
 alias cgrm='composer global remove'
 alias co='composer outdated'
 alias cod='composer outdated --direct'
+alias cm='php -d memory_limit=-1 /usr/local/bin/composer'
 
 # JS
 alias nfresh="rm -rf node_modules/ package-lock.json && npm install"
