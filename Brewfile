@@ -13,6 +13,7 @@ brew 'coreutils' # Those that come with macOS are outdated
 brew 'ffmpeg'
 brew 'gh'
 brew 'git'
+brew 'svn'
 brew 'gnupg2'
 brew 'grep'
 brew 'httpie'
