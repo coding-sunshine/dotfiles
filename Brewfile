@@ -98,7 +98,6 @@ mas signin --dialog hardikshahau@gmail.com
 mas 'Keynote', id: 409183694
 mas 'Numbers', id: 409203825
 mas 'Spark', id: 1176895641
-mas 'Xcode', id: 497799835
 mas 'Swift Playground', id: 1496833156
 mas 'Twitter', id: 1482454543
 mas 'Pages', id: 409201541
