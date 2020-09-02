@@ -9,6 +9,7 @@ export ZSH=$HOME/.oh-my-zsh
 
 # Enable completions
 autoload -Uz compinit && compinit -u
+compaudit | xargs chmod g-w,o-w
 
 # Minimal - Theme Settings
 export MNML_INSERT_CHAR="$"
