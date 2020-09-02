@@ -74,6 +74,8 @@ cask 'visual-studio-code'
 cask 'vlc'
 cask 'setapp'
 cask 'iterm2'
+cask 'microsoft-office'
+cask 'anydesk'
 
 # Quicklook
 cask 'qlcolorcode'
