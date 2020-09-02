@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# git global settings
+git config --global pull.rebase true
+
 echo "Cloning repositories..."
 
 SITES=$HOME/Code
