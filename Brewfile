@@ -73,6 +73,7 @@ cask 'vlc'
 cask 'setapp'
 cask 'iterm2'
 cask 'microsoft-office'
+cask 'adobe-creative-cloud'
 cask 'anydesk'
 
 # Quicklook

@@ -8,7 +8,7 @@ export DOTFILES=$HOME/.dotfiles
 export ZSH=$HOME/.oh-my-zsh
 
 # Enable completions
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -u
 
 # Minimal - Theme Settings
 export MNML_INSERT_CHAR="$"
