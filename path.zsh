@@ -1,6 +1,8 @@
 # Load Composer tools
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 
+export PATH="/usr/local/sbin:$PATH"
+
 # Load Node global installed binaries
 export PATH="$HOME/.node/bin:$PATH"
 

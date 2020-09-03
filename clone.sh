@@ -2,6 +2,8 @@
 
 # git global settings
 git config --global pull.rebase true
+git config --global user.email "sunshine.mahant@gmail.com"
+git config --global user.name "Sunshine"
 
 echo "Cloning repositories..."
 

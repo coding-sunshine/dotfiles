@@ -82,6 +82,9 @@ cask 'iterm2'
 cask 'microsoft-office'
 cask 'adobe-creative-cloud'
 cask 'anydesk'
+cask 'rectangle'
+cask 'postman'
+cask 'zoom'
 
 # Quicklook
 cask 'qlcolorcode'
