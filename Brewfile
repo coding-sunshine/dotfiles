@@ -102,6 +102,11 @@ cask 'font-source-code-pro'
 cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
 cask 'font-meslo-lg-nerd-font'
+cask 'font-hack-nerd-font'
+cask 'font-source-code-pro'
+cask 'font-fontawesome'
+cask 'font-awesome-terminal-fonts'
+
 
 # Mac App Store
 # mas signin --dialog hardikshahau@gmail.com

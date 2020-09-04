@@ -122,6 +122,8 @@ rm -rf $HOME/.zshrc
 ln -s $HOME/.dotfiles/.zshrc $HOME/.zshrc
 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/themes/powerlevel10k
+rm -rf $HOME/.p10k.zsh
+ln -s $HOME/.dotfiles/.p10k.zsh $HOME/.p10k.zsh
 
 # Symlink the Mackup config file to the home directory
 ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
