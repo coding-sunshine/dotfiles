@@ -84,7 +84,7 @@ cask 'adobe-creative-cloud'
 cask 'anydesk'
 cask 'rectangle'
 cask 'postman'
-cask 'zoom'
+cask 'zoomus'
 
 # Quicklook
 cask 'qlcolorcode'
