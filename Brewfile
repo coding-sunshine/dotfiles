@@ -88,6 +88,7 @@ cask 'anydesk'
 cask 'rectangle'
 cask 'postman'
 cask 'zoomus'
+cask 'expressvpn'
 
 # Quicklook
 cask 'qlcolorcode'
