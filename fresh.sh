@@ -138,5 +138,5 @@ git config --global core.excludesfile $HOME/.gitignore_global
 source .macos
 
 echo "Need to logout now to start the new SHELL..."
-logout
+exit
 
