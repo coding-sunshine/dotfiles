@@ -26,6 +26,7 @@ alias fresh="php artisan migrate:fresh --seed"
 alias seed="php artisan db:seed"
 alias publish="php artisan vendor:publish"
 alias aclear="php artisan optimize:clear"
+alias routes="php artisan route:list --columns=action,uri,name"
 
 # PHP
 alias cfresh="rm -rf vendor/ composer.lock && composer i"
