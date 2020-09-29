@@ -89,6 +89,7 @@ cask 'rectangle'
 cask 'postman'
 cask 'zoomus'
 cask 'expressvpn'
+cask 'figma'
 
 # Quicklook
 cask 'qlcolorcode'
