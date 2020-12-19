@@ -5,6 +5,7 @@ tap 'homebrew/cask-versions'
 tap 'homebrew/bundle'
 tap 'exolnet/homebrew-deprecated'
 tap 'homebrew/services'
+tap 'shivammathur/php'
 
 # Binaries
 brew 'awscli'
@@ -38,8 +39,10 @@ brew 'gifsicle'
 
 # Development
 brew 'php'
+brew 'php@7.4'
 brew 'php@7.3'
 brew 'php@7.2'
+brew 'php@7.1'
 brew 'composer'
 brew 'imagemagick'
 brew 'libmemcached'
