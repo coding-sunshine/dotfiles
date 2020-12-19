@@ -3,7 +3,6 @@ tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 tap 'homebrew/cask-versions'
 tap 'homebrew/bundle'
-tap 'exolnet/homebrew-deprecated'
 tap 'homebrew/services'
 tap 'shivammathur/php'
 
