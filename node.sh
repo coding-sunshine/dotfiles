@@ -43,4 +43,4 @@ npm install -g standard
 npm install -g typescript
 
 # do stuff
-vercel login
+#vercel login
