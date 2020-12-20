@@ -64,7 +64,7 @@ mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_passwor
 printf "\n" | pecl install memcached imagick
 
 # Install global Composer packages
-/usr/local/bin/composer global require laravel/valet beyondcode/expose laravel-zero/installer tightenco/lambo tightenco/takeout
+/usr/local/bin/composer global require laravel/valet beyondcode/expose laravel-zero/installer tightenco/lambo tightenco/takeout friendsofphp/php-cs-fixer phpmd/phpmd squizlabs/php_codesniffer sebastian/phpcpd phpdocumentor/phpdocumentor phploc/phploc
 
 #remove
 expose token 7d235ef9-70ca-413a-816a-8a9914d70f6a
