@@ -27,6 +27,7 @@ alias seed="php artisan db:seed"
 alias publish="php artisan vendor:publish"
 alias aclear="php artisan optimize:clear"
 alias routes="php artisan route:list --columns=action,uri,name"
+alias sail="bash vendor/bin/sail"
 
 # PHP
 alias cfresh="rm -rf vendor/ composer.lock && composer i"
@@ -163,4 +164,5 @@ alias php71="phpv php@7.1"
 alias php72="phpv php@7.2"
 alias php73="phpv php@7.3"
 alias php74="phpv php@7.4"
+alias php80="phpv php@8.0"
 
