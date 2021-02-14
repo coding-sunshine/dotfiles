@@ -61,7 +61,8 @@ brew services start mysql
 mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY ''; FLUSH PRIVILEGES;"
 
 # Install PHP extensions with PECL
-printf "\n" | pecl install memcached imagick
+printf "\n" | pecl install memcached imagick redis
+
 
 # Install global Composer packages
 /usr/local/bin/composer global require laravel/valet beyondcode/expose laravel-zero/installer tightenco/lambo tightenco/takeout friendsofphp/php-cs-fixer phpmd/phpmd squizlabs/php_codesniffer sebastian/phpcpd phpdocumentor/phpdocumentor phploc/phploc
