@@ -5,6 +5,7 @@ tap 'homebrew/cask-versions'
 tap 'homebrew/bundle'
 tap 'homebrew/services'
 tap 'shivammathur/php'
+tap 'mongodb/brew'
 
 # Binaries
 brew 'awscli'
@@ -53,6 +54,7 @@ brew 'node'
 brew 'redis'
 brew 'yarn'
 brew 'hubflow'
+brew 'mongodb-community'
 
 # Apps
 cask 'alfred'

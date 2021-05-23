@@ -122,4 +122,5 @@ source $DOTFILES/aliases.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PATH="$PATH:$HOME/Development/flutter/bin"
+export PATH="$PATH:$HOME/Development/flutter/bin"export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"
