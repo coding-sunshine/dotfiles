@@ -6,4 +6,5 @@ phpv() {
     composer global update
 	  rm -f ~/.config/valet/valet.sock
     valet install
+    valet use $1
 }
