@@ -55,6 +55,7 @@ brew 'redis'
 brew 'yarn'
 brew 'hubflow'
 brew 'mongodb-community'
+brew 'meilisearch'
 
 # Apps
 cask 'alfred'
