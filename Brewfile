@@ -96,7 +96,7 @@ cask 'adobe-creative-cloud'
 cask 'anydesk'
 cask 'rectangle'
 cask 'postman'
-cask 'zoomus'
+#cask 'zoomus'
 cask 'expressvpn'
 cask 'phpmon'
 
