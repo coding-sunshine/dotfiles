@@ -70,10 +70,6 @@ cask 'tuple'
 cask 'visual-studio-code'
 cask 'zoom'
 
-# Quicklook
-cask 'qlmarkdown'
-cask 'quicklook-json'
-
 # Fonts
 cask 'font-lato'
 cask 'font-open-sans'
