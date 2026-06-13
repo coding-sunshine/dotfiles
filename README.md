@@ -14,11 +14,15 @@ and adapted for an AI-agent-driven 2026 workflow.
 ### What you get
 
 - **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
-- **Zsh + Oh My Zsh** with a minimal theme, aliases, and `$PATH` setup
+- **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
+- **Terminal stack:** [Ghostty](https://ghostty.org) (renderer), [Zellij](https://zellij.dev)
+  (panes/sessions), [Atuin](https://atuin.sh) (searchable history)
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
   Gemini CLI, shared MCP servers, and a self-hosted Hermes Agent stack
+- [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
+  via git worktrees, and auto-format hooks
 - ~900 lines of opinionated [`.macos`](./.macos) system defaults
 
 ### Requirements
@@ -143,6 +147,51 @@ API keys live in `~/.env` (git-ignored), which [`.zshrc`](./.zshrc) sources
 automatically on shell start. Start from [`.env.example`](./.env.example).
 Nothing secret is ever committed.
 
+## Productivity workflows
+
+### Laravel Boost (real project context for agents)
+
+[Laravel Boost](https://laravel.com/ai/boost) gives AI agents 15 MCP tools to
+*see* your actual app (logs, queries, config, routes) instead of guessing, and
+it auto-installs the [Herd MCP server](https://herd.laravel.com/docs/macos/advanced-usage/ai-integrations).
+Run once per Laravel project:
+
+```zsh
+boost   # alias: composer require laravel/boost --dev && herd php artisan boost:install
+```
+
+### Parallel agents with git worktrees
+
+Worktrees let several agents work on different branches at once, each in its own
+directory sharing one `.git`. The [`gwt`](./bin/gwt) helper makes this a one-liner,
+and the Zellij `agents` layout gives you a pane per agent:
+
+```zsh
+gwt new feature-x      # create ../<repo>.worktrees/feature-x on a new branch
+gwtcd feature-x        # jump into it
+gwt ls                 # list worktrees
+gwt rm feature-x       # remove when merged
+za                     # open the 2x2 parallel-agents Zellij layout
+```
+
+> ⚠️ Practical ceiling is ~5–7 agents (rate limits + disk; each worktree is a
+> full checkout). Worktrees isolate files but **share ports/DBs/services** — give
+> each running app its own port and database.
+
+### Auto-format hook + skills
+
+Claude Code runs [`ai/claude/hooks/format.sh`](./ai/claude/hooks/format.sh) after
+every edit (PostToolUse), formatting the touched file with Pint (PHP), Ruff
+(Python), or Prettier (JS/TS) — deterministic, so it can't be skipped. The
+[`verify`](./ai/claude/skills/verify/SKILL.md) skill runs the right lint/test/
+type-check gates for whatever stack a project uses.
+
+### Terminal stack
+
+Ghostty is the renderer, Zellij the workspace (persistent panes/sessions), Atuin
+the searchable shell history (`Ctrl-R`), and Starship the prompt. Configs live
+under [`config/`](./config) and symlink into `~/.config`.
+
 ## What's in here
 
 | Path | What it does |
@@ -155,9 +204,11 @@ Nothing secret is ever committed.
 | [`.zshrc`](./.zshrc) | Zsh / Oh My Zsh config, Herd + tool init, `~/.env` |
 | [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
+| [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
+| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, atuin, zellij, starship) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
-| [`ai/`](./ai) | Versioned AI agent configs (see above) |
+| [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
 
 ## Day-to-day
 
@@ -166,6 +217,9 @@ dotfiles         # cd into the dotfiles repo
 reloadshell      # reload Oh My Zsh after editing config
 brew bundle      # install anything newly added to the Brewfile
 ./ai.sh          # re-apply agent configs after editing ai/
+gwt new <branch> # spin up a worktree for a parallel agent
+za               # open the parallel-agents Zellij layout
+boost            # add Laravel Boost to the current project
 mackup backup    # snapshot app preferences before a big change
 ```
 

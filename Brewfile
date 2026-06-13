@@ -48,6 +48,9 @@ brew 'git-delta' # better git diffs
 brew 'lazygit'   # git TUI
 brew 'direnv'    # per-directory env (.envrc)
 brew 'tldr'      # concise man pages
+brew 'atuin'     # searchable, syncable shell history
+brew 'starship'  # cross-shell prompt
+brew 'zellij'    # terminal multiplexer (one pane per parallel agent)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
@@ -71,6 +74,7 @@ cask 'discord'
 cask 'docker'
 cask 'figma'
 cask 'firefox'
+cask 'ghostty' # fast, native Metal terminal (best for AI-CLI workflows)
 cask 'github'
 cask 'google-chrome'
 cask 'helo'

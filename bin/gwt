@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# gwt — git worktree helper for running parallel AI agents.
+#
+# Worktrees let multiple agents work on separate branches of the same repo at
+# once, each in its own directory but sharing one .git. Created under a sibling
+# "<repo>.worktrees/" directory so they don't clutter the main checkout.
+#
+# Usage:
+#   gwt new <branch>    create (or reuse) a worktree + branch and print its path
+#   gwt ls              list worktrees for this repo
+#   gwt rm <branch>     remove a worktree (keeps the branch)
+#   gwt path <branch>   print a worktree's path (e.g. cd "$(gwt path foo)")
+#   gwt clean           prune stale worktree metadata
+#
+# Note: worktrees isolate FILES, not the runtime — they still share ports,
+# databases, and services. Give each agent its own DB/port if they run apps.
+
+set -e
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "gwt: not inside a git repository." >&2
+  exit 1
+fi
+
+ROOT="$(git rev-parse --show-toplevel)"
+REPO="$(basename "$ROOT")"
+WT_DIR="$(dirname "$ROOT")/$REPO.worktrees"
+
+cmd="${1:-ls}"
+branch="$2"
+
+case "$cmd" in
+  new)
+    [ -n "$branch" ] || { echo "gwt new <branch>" >&2; exit 1; }
+    dest="$WT_DIR/$branch"
+    if [ -d "$dest" ]; then
+      echo "$dest"
+      exit 0
+    fi
+    mkdir -p "$WT_DIR"
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+      git worktree add "$dest" "$branch" >&2
+    else
+      git worktree add -b "$branch" "$dest" >&2
+    fi
+    echo "$dest"
+    ;;
+  ls)
+    git worktree list
+    ;;
+  rm)
+    [ -n "$branch" ] || { echo "gwt rm <branch>" >&2; exit 1; }
+    git worktree remove "$WT_DIR/$branch"
+    ;;
+  path)
+    [ -n "$branch" ] || { echo "gwt path <branch>" >&2; exit 1; }
+    echo "$WT_DIR/$branch"
+    ;;
+  clean)
+    git worktree prune -v
+    ;;
+  *)
+    echo "Usage: gwt [new|ls|rm|path|clean] <branch>" >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,50 @@
+# Starship prompt (~/.config/starship.toml)
+# Docs: https://starship.rs/config/
+
+add_newline = true
+command_timeout = 1000
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$php\
+$nodejs\
+$python\
+$docker_context\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = "[\\$](bold green)"
+error_symbol = "[\\$](bold red)"
+vimcmd_symbol = "[·](bold yellow)"
+
+[directory]
+truncation_length = 4
+truncate_to_repo = true
+style = "bold cyan"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "bold yellow"
+
+[php]
+symbol = " "
+format = "[$symbol($version )]($style)"
+
+[nodejs]
+symbol = " "
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+format = "[$symbol($version )]($style)"
+
+[cmd_duration]
+min_time = 2000
+format = "[took $duration]($style) "

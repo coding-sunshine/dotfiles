@@ -50,6 +50,14 @@ mkdir -p $HOME/Code/ai                     # AI / agent projects
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
+# Symlink ~/.config app configs (ghostty, atuin, zellij, starship, ...)
+mkdir -p $HOME/.config
+for item in $HOME/.dotfiles/config/*; do
+  name=$(basename "$item")
+  rm -rf "$HOME/.config/$name"
+  ln -sf "$item" "$HOME/.config/$name"
+done
+
 # Set up the AI agent config layer (symlinks + MCP registration)
 ./ai.sh
 

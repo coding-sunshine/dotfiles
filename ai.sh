@@ -12,9 +12,9 @@ AI="$DOTFILES/ai"
 echo "Setting up AI agent layer..."
 
 link() {
-  # link <source> <target>
+  # link <source> <target> — works for files and directories
   mkdir -p "$(dirname "$2")"
-  rm -f "$2"
+  rm -rf "$2"
   ln -s "$1" "$2"
   echo "  linked $2 -> $1"
 }
@@ -23,6 +23,8 @@ link() {
 link "$AI/claude/CLAUDE.md"     "$HOME/.claude/CLAUDE.md"
 link "$AI/claude/settings.json" "$HOME/.claude/settings.json"
 link "$AI/AGENTS.md"            "$HOME/.claude/AGENTS.md"
+link "$AI/claude/hooks"         "$HOME/.claude/hooks"
+link "$AI/claude/skills"        "$HOME/.claude/skills"
 
 # Codex CLI (reads AGENTS.md automatically)
 link "$AI/codex/config.toml"    "$HOME/.codex/config.toml"

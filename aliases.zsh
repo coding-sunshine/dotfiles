@@ -47,6 +47,14 @@ alias hermes-up="$DOTFILES/ai/hermes/hermes.sh up"
 alias hermes-down="$DOTFILES/ai/hermes/hermes.sh down"
 alias hermes-logs="$DOTFILES/ai/hermes/hermes.sh logs"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
+# Parallel-agents workspace: 2x2 agent grid (see config/zellij/layouts/agents.kdl)
+alias za="zellij --layout agents"
+
+# Laravel Boost — give agents real project context via MCP (run inside a project)
+alias boost="composer require laravel/boost --dev && herd php artisan boost:install"
+
+# Git worktrees for parallel agents (bin/gwt). `gwtcd <branch>` jumps into one.
+gwtcd() { cd "$(gwt path "$1")"; }
 
 # Modern CLI replacements (only if installed)
 command -v eza >/dev/null 2>&1 && alias ls="eza --group-directories-first" && alias lt="eza --tree --level=2"

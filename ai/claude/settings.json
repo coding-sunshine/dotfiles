@@ -27,5 +27,18 @@
       "Read(./**/.env)",
       "Bash(rm -rf:*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/format.sh"
+          }
+        ]
+      }
+    ]
   }
 }
