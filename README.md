@@ -6,7 +6,7 @@ My personal dotfiles for setting up and maintaining a **macOS Tahoe (macOS 26)**
 machine on Apple Silicon. One script takes a clean Mac and installs my tooling
 for a **mixed PHP/Laravel + JS/TS + Python** stack, applies sensible macOS
 defaults, and — importantly — wires up a first-class **AI agent layer** (Claude
-Code, Codex, Cursor, Gemini CLI) plus a self-hosted **Hermes Agent**.
+Code, Codex, Cursor, Gemini CLI).
 
 Originally forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
 and adapted for an AI-agent-driven 2026 workflow.
@@ -15,12 +15,11 @@ and adapted for an AI-agent-driven 2026 workflow.
 
 - **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
-- **Terminal stack:** [Ghostty](https://ghostty.org) (renderer), [Zellij](https://zellij.dev)
-  (panes/sessions), [Atuin](https://atuin.sh) (searchable history)
+- **Terminal:** [Ghostty](https://ghostty.org) — fast, native Metal renderer
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
-  Gemini CLI, shared MCP servers, and a self-hosted Hermes Agent stack
+  Gemini CLI, and shared MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
   via git worktrees, and auto-format hooks
 - ~900 lines of opinionated [`.macos`](./.macos) system defaults
@@ -124,23 +123,6 @@ idempotent — re-run it any time you change a config.
 
 To update: edit a file under `ai/`, then run `./ai.sh`.
 
-### Self-hosted Hermes Agent
-
-[`ai/hermes/`](./ai/hermes) runs the always-on
-[Hermes Agent](https://hermes-agent.org) with a local Ollama model runtime via
-Docker Compose.
-
-```zsh
-cp ai/hermes/.env.example ai/hermes/.env   # add your provider keys
-hermes-up        # start  (alias for ai/hermes/hermes.sh up)
-hermes-logs      # follow logs
-hermes-down      # stop
-```
-
-> ⚠️ The compose file uses a **placeholder image**. Confirm the official Hermes
-> Agent image/repo and update [`ai/hermes/docker-compose.yml`](./ai/hermes/docker-compose.yml)
-> before first run.
-
 ### Secrets
 
 API keys live in `~/.env` (git-ignored), which [`.zshrc`](./.zshrc) sources
@@ -163,15 +145,13 @@ boost   # alias: composer require laravel/boost --dev && herd php artisan boost:
 ### Parallel agents with git worktrees
 
 Worktrees let several agents work on different branches at once, each in its own
-directory sharing one `.git`. The [`gwt`](./bin/gwt) helper makes this a one-liner,
-and the Zellij `agents` layout gives you a pane per agent:
+directory sharing one `.git`. The [`gwt`](./bin/gwt) helper makes this a one-liner:
 
 ```zsh
 gwt new feature-x      # create ../<repo>.worktrees/feature-x on a new branch
 gwtcd feature-x        # jump into it
 gwt ls                 # list worktrees
 gwt rm feature-x       # remove when merged
-za                     # open the 2x2 parallel-agents Zellij layout
 ```
 
 > ⚠️ Practical ceiling is ~5–7 agents (rate limits + disk; each worktree is a
@@ -186,11 +166,11 @@ every edit (PostToolUse), formatting the touched file with Pint (PHP), Ruff
 [`verify`](./ai/claude/skills/verify/SKILL.md) skill runs the right lint/test/
 type-check gates for whatever stack a project uses.
 
-### Terminal stack
+### Terminal
 
-Ghostty is the renderer, Zellij the workspace (persistent panes/sessions), Atuin
-the searchable shell history (`Ctrl-R`), and Starship the prompt. Configs live
-under [`config/`](./config) and symlink into `~/.config`.
+[Ghostty](https://ghostty.org) is the terminal (fast, native Metal) and
+[Starship](https://starship.rs) the prompt. Their configs live under
+[`config/`](./config) and symlink into `~/.config`.
 
 ## What's in here
 
@@ -205,7 +185,7 @@ under [`config/`](./config) and symlink into `~/.config`.
 | [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
-| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, atuin, zellij, starship) |
+| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
 | [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
@@ -218,7 +198,6 @@ reloadshell      # reload Oh My Zsh after editing config
 brew bundle      # install anything newly added to the Brewfile
 ./ai.sh          # re-apply agent configs after editing ai/
 gwt new <branch> # spin up a worktree for a parallel agent
-za               # open the parallel-agents Zellij layout
 boost            # add Laravel Boost to the current project
 mackup backup    # snapshot app preferences before a big change
 ```

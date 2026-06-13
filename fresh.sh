@@ -50,7 +50,7 @@ mkdir -p $HOME/Code/ai                     # AI / agent projects
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
-# Symlink ~/.config app configs (ghostty, atuin, zellij, starship, ...)
+# Symlink ~/.config app configs (ghostty, starship, ...)
 mkdir -p $HOME/.config
 for item in $HOME/.dotfiles/config/*; do
   name=$(basename "$item")

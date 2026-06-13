@@ -33,7 +33,7 @@ there is a single source of truth.
 ## Tooling available
 
 `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`, `gh`,
-`docker`, `ollama`. Prefer `rg`/`fd` over `grep`/`find`.
+`docker`. Prefer `rg`/`fd` over `grep`/`find`.
 
 ## Secrets
 

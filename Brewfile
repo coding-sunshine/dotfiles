@@ -48,13 +48,10 @@ brew 'git-delta' # better git diffs
 brew 'lazygit'   # git TUI
 brew 'direnv'    # per-directory env (.envrc)
 brew 'tldr'      # concise man pages
-brew 'atuin'     # searchable, syncable shell history
 brew 'starship'  # cross-shell prompt
-brew 'zellij'    # terminal multiplexer (one pane per parallel agent)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
-brew 'ollama'     # local model runtime (also backs self-hosted Hermes)
 
 # Apps
 cask '1password'

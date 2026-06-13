@@ -147,7 +147,6 @@ export HERD_PHP_85_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/p
 # Modern CLI tool initialization (only if installed)
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
-command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # Starship prompt (must be initialized last so it owns the prompt)

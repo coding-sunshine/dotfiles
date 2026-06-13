@@ -13,7 +13,7 @@ jobs:
       - name: Shell syntax & shellcheck
         run: |
           sudo apt-get update && sudo apt-get install -y shellcheck
-          for f in fresh.sh clone.sh ssh.sh ai.sh ai/hermes/hermes.sh bin/gwt ai/claude/hooks/format.sh; do
+          for f in fresh.sh clone.sh ssh.sh ai.sh bin/gwt ai/claude/hooks/format.sh; do
             sh -n "$f"
             shellcheck -S warning -e SC1091 "$f" || true
           done
@@ -26,12 +26,6 @@ jobs:
 
       - name: Validate TOML configs
         run: |
-          for f in ai/codex/config.toml config/atuin/config.toml config/starship.toml; do
+          for f in ai/codex/config.toml config/starship.toml; do
             python3 -c "import tomllib; tomllib.load(open('$f','rb'))"
           done
-
-      - name: Validate docker-compose
-        run: |
-          cp ai/hermes/.env.example ai/hermes/.env
-          docker compose -f ai/hermes/docker-compose.yml config > /dev/null
-          rm -f ai/hermes/.env
