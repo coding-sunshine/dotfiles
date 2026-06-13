@@ -72,6 +72,7 @@ cask 'discord'
 cask 'docker'
 cask 'figma'
 cask 'firefox'
+cask 'font-jetbrains-mono-nerd-font' # prompt/terminal glyphs (Starship icons)
 cask 'ghostty' # fast, native Metal terminal (best for AI-CLI workflows)
 cask 'github'
 cask 'google-chrome'
@@ -81,6 +82,7 @@ cask 'httpie'
 cask 'imageoptim'
 cask 'loom'
 cask 'pastebot'
+cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
 cask 'reflex'
 cask 'screen-studio'
 cask 'sequel-ace' # MySQL/MariaDB GUI

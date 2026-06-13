@@ -2,7 +2,7 @@
 # Docs: https://ghostty.org/docs/config
 
 theme = "GruvboxDark"
-font-family = "JetBrains Mono"
+font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 cursor-style = "block"
 

@@ -17,7 +17,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
 - **Terminal:** [Ghostty](https://ghostty.org) — fast, native Metal renderer
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
-- Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults)
+- Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
   Gemini CLI, and shared MCP servers
@@ -76,11 +76,20 @@ cd ~/.dotfiles && ./fresh.sh
 
 ### 4. Finish up
 
-1. Start **Herd.app** and complete its install process (provides PHP/Node/DBs)
+1. Start **Herd.app** and complete its install process (provides PHP/Node/DBs).
+   Then install the global Laravel installer (Herd's `composer` is only on
+   `$PATH` after Herd runs once):
+   ```zsh
+   composer global require laravel/installer   # so `laravel new` works
+   ```
 2. Copy the secrets template and fill in your keys:
    ```zsh
    cp ~/.dotfiles/.env.example ~/.env && $EDITOR ~/.env
    ```
+3. Add your SSH **public** key to GitHub as both an *Authentication* and a
+   *Signing* key (commits are SSH-signed by default — see `.gitconfig`):
+   <https://github.com/settings/keys>
+
 3. Restore app preferences once Mackup has synced from your cloud storage:
    ```zsh
    mackup restore

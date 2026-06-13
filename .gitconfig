@@ -4,11 +4,22 @@
 [user]
 	name = Hardik Shah
 	email = mail.hardikshah@gmail.com
+	signingkey = ~/.ssh/id_ed25519.pub
 
 [core]
 	excludesfile = ~/.dotfiles/.gitignore_global
 	pager = delta
 	editor = code --wait
+
+# Sign commits with your SSH key (the one ssh.sh generates). No GPG/1Password
+# needed. Add the same public key to GitHub as a "Signing Key" to get the
+# "Verified" badge: https://github.com/settings/keys
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
 
 [init]
 	defaultBranch = main

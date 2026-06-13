@@ -49,6 +49,13 @@ mkdir -p $HOME/Code/js                     # JavaScript/TypeScript
 mkdir -p $HOME/Code/python                 # Python
 mkdir -p $HOME/Code/ai                     # AI / agent projects
 
+# Install global Composer tools (best-effort — composer is provided by Herd, so
+# this only runs once Herd has injected it; re-run fresh.sh after starting Herd,
+# or run `composer global require laravel/installer` manually).
+if command -v composer >/dev/null 2>&1; then
+  composer global require laravel/installer
+fi
+
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
