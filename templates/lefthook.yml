@@ -1,0 +1,31 @@
+# Lefthook config — fast, parallel git hooks for any project.
+# Copy to a project root and run `lefthook install` (or use the `hooks` alias).
+# Docs: https://lefthook.dev
+#
+# Auto-formats/lints only the staged files and re-stages the fixes, so every
+# commit (yours or an agent's) lands clean. Each command is skipped if its tool
+# isn't present, so this is safe to drop into any repo.
+
+pre-commit:
+  parallel: true
+  commands:
+    pint:
+      glob: "*.php"
+      run: vendor/bin/pint {staged_files}
+      stage_fixed: true
+      skip: { run: "test ! -x vendor/bin/pint" }
+    ruff-format:
+      glob: "*.py"
+      run: ruff format {staged_files} && ruff check --fix {staged_files}
+      stage_fixed: true
+      skip: { run: "! command -v ruff" }
+    prettier:
+      glob: "*.{js,jsx,ts,tsx,vue,css,scss,json,md}"
+      run: npx --no-install prettier --write {staged_files}
+      stage_fixed: true
+
+# Uncomment to run tests before pushing (slower; remove if it gets in the way).
+# pre-push:
+#   commands:
+#     tests:
+#       run: vendor/bin/pest --no-coverage || pnpm test || uv run pytest -q

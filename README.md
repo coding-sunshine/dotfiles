@@ -133,7 +133,10 @@ idempotent — re-run it any time you change a config.
 | --- | --- | --- |
 | [`ai/AGENTS.md`](./ai/AGENTS.md) | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions |
 | [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
-| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Claude Code model / permissions |
+| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Claude Code model / permissions / hooks |
+| [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` (Opus), `test-writer` (Sonnet) |
+| [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test` |
+| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills` | Skills: `verify` (stack-aware lint/test gates) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
 | [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
 | [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | Shared MCP servers (filesystem, github) |
@@ -175,13 +178,33 @@ gwt rm feature-x       # remove when merged
 > full checkout). Worktrees isolate files but **share ports/DBs/services** — give
 > each running app its own port and database.
 
-### Auto-format hook + skills
+### Subagents, commands & skills
 
-Claude Code runs [`ai/claude/hooks/format.sh`](./ai/claude/hooks/format.sh) after
-every edit (PostToolUse), formatting the touched file with Pint (PHP), Ruff
-(Python), or Prettier (JS/TS) — deterministic, so it can't be skipped. The
-[`verify`](./ai/claude/skills/verify/SKILL.md) skill runs the right lint/test/
-type-check gates for whatever stack a project uses.
+The agent layer ships reusable Claude Code building blocks (all symlinked into
+`~/.claude` by `ai.sh`):
+
+- **Subagents** ([`ai/claude/agents/`](./ai/claude/agents)) — `code-reviewer`
+  (runs on Opus) and `test-writer` (Sonnet), each with its own context window.
+- **Slash commands** ([`ai/claude/commands/`](./ai/claude/commands)) — `/review`,
+  `/pr`, `/spec`, `/test`, which orchestrate the subagents.
+- **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
+  lint/test/type-check gates.
+- **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
+  file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
+- **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
+  into any repo.
+
+### Pre-commit hooks (Lefthook)
+
+[Lefthook](https://lefthook.dev) runs format/lint on **every** commit — yours and
+the agents' — not just Claude's edits. Drop the starter config into a project:
+
+```zsh
+hooks   # copies templates/lefthook.yml and runs `lefthook install`
+```
+
+It auto-formats staged files with Pint / Ruff / Prettier (whichever apply) and
+re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`](./templates/lefthook.yml).
 
 ### Terminal
 
@@ -206,6 +229,7 @@ type-check gates for whatever stack a project uses.
 | [`.env.example`](./.env.example) | Template for `~/.env` secrets (API keys) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
 | [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship) |
+| [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
 | [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
@@ -219,6 +243,8 @@ brew bundle      # install anything newly added to the Brewfile
 ./ai.sh          # re-apply agent configs after editing ai/
 gwt new <branch> # spin up a worktree for a parallel agent
 boost            # add Laravel Boost to the current project
+hooks            # install Lefthook pre-commit hooks in this project
+claude-init      # drop a CLAUDE.md template into this project
 mackup backup    # snapshot app preferences before a big change
 ```
 

@@ -25,6 +25,8 @@ link "$AI/claude/settings.json" "$HOME/.claude/settings.json"
 link "$AI/AGENTS.md"            "$HOME/.claude/AGENTS.md"
 link "$AI/claude/hooks"         "$HOME/.claude/hooks"
 link "$AI/claude/skills"        "$HOME/.claude/skills"
+link "$AI/claude/agents"        "$HOME/.claude/agents"
+link "$AI/claude/commands"      "$HOME/.claude/commands"
 
 # Codex CLI (reads AGENTS.md automatically)
 link "$AI/codex/config.toml"    "$HOME/.codex/config.toml"

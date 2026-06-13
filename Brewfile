@@ -49,6 +49,7 @@ brew 'eza'       # modern ls
 brew 'zoxide'    # smarter cd
 brew 'git-delta' # better git diffs
 brew 'lazygit'   # git TUI
+brew 'lefthook'  # fast, parallel git hooks (format/lint on commit)
 brew 'direnv'    # per-directory env (.envrc)
 brew 'tldr'      # concise man pages
 brew 'starship'  # cross-shell prompt
