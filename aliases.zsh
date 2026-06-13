@@ -43,12 +43,7 @@ alias venv="uv venv && source .venv/bin/activate"
 alias cc="claude"
 alias cx="codex"
 alias gem="gemini"
-alias hermes-up="$DOTFILES/ai/hermes/hermes.sh up"
-alias hermes-down="$DOTFILES/ai/hermes/hermes.sh down"
-alias hermes-logs="$DOTFILES/ai/hermes/hermes.sh logs"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
-# Parallel-agents workspace: 2x2 agent grid (see config/zellij/layouts/agents.kdl)
-alias za="zellij --layout agents"
 
 # Laravel Boost — give agents real project context via MCP (run inside a project)
 alias boost="composer require laravel/boost --dev && herd php artisan boost:install"

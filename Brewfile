@@ -1,5 +1,4 @@
 # Taps
-tap 'homebrew/cask-versions'
 tap 'stripe/stripe-cli'
 tap 'oven-sh/bun'
 
@@ -38,6 +37,10 @@ brew 'oven-sh/bun/bun'
 brew 'uv'   # fast Python package/project manager
 brew 'ruff' # linter/formatter
 
+# Zsh enhancements
+brew 'zsh-autosuggestions'
+brew 'zsh-syntax-highlighting'
+
 # Modern CLI quality-of-life (great for both humans and AI agents)
 brew 'ripgrep'   # rg — fast search
 brew 'fd'        # friendlier find
@@ -48,17 +51,12 @@ brew 'git-delta' # better git diffs
 brew 'lazygit'   # git TUI
 brew 'direnv'    # per-directory env (.envrc)
 brew 'tldr'      # concise man pages
-brew 'atuin'     # searchable, syncable shell history
 brew 'starship'  # cross-shell prompt
-brew 'zellij'    # terminal multiplexer (one pane per parallel agent)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
-brew 'ollama'     # local model runtime (also backs self-hosted Hermes)
 
 # Apps
-cask '1password'
-brew '1password-cli'
 cask 'antigravity-cli'
 cask 'caffeine'
 cask 'claude'
@@ -74,6 +72,7 @@ cask 'discord'
 cask 'docker'
 cask 'figma'
 cask 'firefox'
+cask 'font-jetbrains-mono-nerd-font' # prompt/terminal glyphs (Starship icons)
 cask 'ghostty' # fast, native Metal terminal (best for AI-CLI workflows)
 cask 'github'
 cask 'google-chrome'
@@ -83,8 +82,10 @@ cask 'httpie'
 cask 'imageoptim'
 cask 'loom'
 cask 'pastebot'
+cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
 cask 'reflex'
 cask 'screen-studio'
+cask 'sequel-ace' # MySQL/MariaDB GUI
 cask 'slack'
 cask 'tableplus'
 cask 'telegram-desktop'

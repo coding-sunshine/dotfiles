@@ -6,7 +6,7 @@ My personal dotfiles for setting up and maintaining a **macOS Tahoe (macOS 26)**
 machine on Apple Silicon. One script takes a clean Mac and installs my tooling
 for a **mixed PHP/Laravel + JS/TS + Python** stack, applies sensible macOS
 defaults, and — importantly — wires up a first-class **AI agent layer** (Claude
-Code, Codex, Cursor, Gemini CLI) plus a self-hosted **Hermes Agent**.
+Code, Codex, Cursor, Gemini CLI).
 
 Originally forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
 and adapted for an AI-agent-driven 2026 workflow.
@@ -15,12 +15,12 @@ and adapted for an AI-agent-driven 2026 workflow.
 
 - **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
-- **Terminal stack:** [Ghostty](https://ghostty.org) (renderer), [Zellij](https://zellij.dev)
-  (panes/sessions), [Atuin](https://atuin.sh) (searchable history)
+- **Terminal:** [Ghostty](https://ghostty.org) — fast, native Metal renderer
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
+- Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
-  Gemini CLI, shared MCP servers, and a self-hosted Hermes Agent stack
+  Gemini CLI, and shared MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
   via git worktrees, and auto-format hooks
 - ~900 lines of opinionated [`.macos`](./.macos) system defaults
@@ -47,18 +47,14 @@ Before wiping or migrating, run through this checklist:
 
 ### 2. Set up an SSH key
 
-Use **one** of:
+[Generate a key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+with the helper script:
 
-- **1Password (recommended):** install 1Password and enable its
-  [SSH agent](https://developer.1password.com/docs/ssh/get-started/#step-3-turn-on-the-1password-ssh-agent),
-  then sync your keys locally.
-- **Manual:** [generate a key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) with:
+```zsh
+curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
+```
 
-  ```zsh
-  curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
-  ```
-
-Make sure the key is added to your [GitHub account](https://github.com/settings/keys).
+Then add the key to your [GitHub account](https://github.com/settings/keys).
 
 ### 3. Clone and install
 
@@ -80,15 +76,29 @@ cd ~/.dotfiles && ./fresh.sh
 
 ### 4. Finish up
 
-1. Start **Herd.app** and complete its install process (provides PHP/Node/DBs)
+1. Start **Herd.app** and complete its install process (provides PHP/Node/DBs).
+   Then install the global Laravel installer (Herd's `composer` is only on
+   `$PATH` after Herd runs once):
+   ```zsh
+   composer global require laravel/installer   # so `laravel new` works
+   ```
 2. Copy the secrets template and fill in your keys:
    ```zsh
    cp ~/.dotfiles/.env.example ~/.env && $EDITOR ~/.env
    ```
+3. Add your SSH **public** key to GitHub as both an *Authentication* and a
+   *Signing* key (commits are SSH-signed by default — see `.gitconfig`):
+   <https://github.com/settings/keys>
+
 3. Restore app preferences once Mackup has synced from your cloud storage:
    ```zsh
    mackup restore
    ```
+   > ⚠️ **Mackup is largely unmaintained** and has broken with newer macOS app
+   > sandboxing — some apps no longer restore cleanly. If it misbehaves, skip it
+   > and configure those apps by hand, or move their settings into this repo and
+   > symlink them like the `config/` files. (Alternatives: [chezmoi](https://chezmoi.io)
+   > or plain symlinks.)
 4. Restart your Mac to finalize everything.
 
 ### 5. Verify
@@ -124,23 +134,6 @@ idempotent — re-run it any time you change a config.
 
 To update: edit a file under `ai/`, then run `./ai.sh`.
 
-### Self-hosted Hermes Agent
-
-[`ai/hermes/`](./ai/hermes) runs the always-on
-[Hermes Agent](https://hermes-agent.org) with a local Ollama model runtime via
-Docker Compose.
-
-```zsh
-cp ai/hermes/.env.example ai/hermes/.env   # add your provider keys
-hermes-up        # start  (alias for ai/hermes/hermes.sh up)
-hermes-logs      # follow logs
-hermes-down      # stop
-```
-
-> ⚠️ The compose file uses a **placeholder image**. Confirm the official Hermes
-> Agent image/repo and update [`ai/hermes/docker-compose.yml`](./ai/hermes/docker-compose.yml)
-> before first run.
-
 ### Secrets
 
 API keys live in `~/.env` (git-ignored), which [`.zshrc`](./.zshrc) sources
@@ -163,15 +156,13 @@ boost   # alias: composer require laravel/boost --dev && herd php artisan boost:
 ### Parallel agents with git worktrees
 
 Worktrees let several agents work on different branches at once, each in its own
-directory sharing one `.git`. The [`gwt`](./bin/gwt) helper makes this a one-liner,
-and the Zellij `agents` layout gives you a pane per agent:
+directory sharing one `.git`. The [`gwt`](./bin/gwt) helper makes this a one-liner:
 
 ```zsh
 gwt new feature-x      # create ../<repo>.worktrees/feature-x on a new branch
 gwtcd feature-x        # jump into it
 gwt ls                 # list worktrees
 gwt rm feature-x       # remove when merged
-za                     # open the 2x2 parallel-agents Zellij layout
 ```
 
 > ⚠️ Practical ceiling is ~5–7 agents (rate limits + disk; each worktree is a
@@ -186,11 +177,11 @@ every edit (PostToolUse), formatting the touched file with Pint (PHP), Ruff
 [`verify`](./ai/claude/skills/verify/SKILL.md) skill runs the right lint/test/
 type-check gates for whatever stack a project uses.
 
-### Terminal stack
+### Terminal
 
-Ghostty is the renderer, Zellij the workspace (persistent panes/sessions), Atuin
-the searchable shell history (`Ctrl-R`), and Starship the prompt. Configs live
-under [`config/`](./config) and symlink into `~/.config`.
+[Ghostty](https://ghostty.org) is the terminal (fast, native Metal) and
+[Starship](https://starship.rs) the prompt. Their configs live under
+[`config/`](./config) and symlink into `~/.config`.
 
 ## What's in here
 
@@ -202,10 +193,12 @@ under [`config/`](./config) and symlink into `~/.config`.
 | [`ai.sh`](./ai.sh) | Sets up the AI agent layer (symlinks + MCP) |
 | [`Brewfile`](./Brewfile) | All Homebrew formulae, casks, and MAS apps |
 | [`.zshrc`](./.zshrc) | Zsh / Oh My Zsh config, Herd + tool init, `~/.env` |
+| [`.gitconfig`](./.gitconfig) | Global git config (delta, sensible defaults, identity) |
+| [`.gitignore_global`](./.gitignore_global) | Global ignore rules (wired via `.gitconfig`) |
 | [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
-| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, atuin, zellij, starship) |
+| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
 | [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
@@ -218,7 +211,6 @@ reloadshell      # reload Oh My Zsh after editing config
 brew bundle      # install anything newly added to the Brewfile
 ./ai.sh          # re-apply agent configs after editing ai/
 gwt new <branch> # spin up a worktree for a parallel agent
-za               # open the parallel-agents Zellij layout
 boost            # add Laravel Boost to the current project
 mackup backup    # snapshot app preferences before a big change
 ```

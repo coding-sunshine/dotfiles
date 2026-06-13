@@ -27,11 +27,13 @@ fi
 rm -rf $HOME/.zshrc
 ln -sw $HOME/.dotfiles/.zshrc $HOME/.zshrc
 
+# Symlink the global git config
+ln -sf $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
+
 # Update Homebrew recipes
 brew update
 
 # Install all our dependencies with bundle (See Brewfile)
-brew tap homebrew/bundle
 brew bundle --file ./Brewfile
 
 # Set default MySQL root password and auth type (only if a standalone mysql is
@@ -47,10 +49,17 @@ mkdir -p $HOME/Code/js                     # JavaScript/TypeScript
 mkdir -p $HOME/Code/python                 # Python
 mkdir -p $HOME/Code/ai                     # AI / agent projects
 
+# Install global Composer tools (best-effort — composer is provided by Herd, so
+# this only runs once Herd has injected it; re-run fresh.sh after starting Herd,
+# or run `composer global require laravel/installer` manually).
+if command -v composer >/dev/null 2>&1; then
+  composer global require laravel/installer
+fi
+
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
-# Symlink ~/.config app configs (ghostty, atuin, zellij, starship, ...)
+# Symlink ~/.config app configs (ghostty, starship, ...)
 mkdir -p $HOME/.config
 for item in $HOME/.dotfiles/config/*; do
   name=$(basename "$item")
