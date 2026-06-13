@@ -2,13 +2,14 @@
 
 ## Introduction
 
-This repository serves as my way to help me setup and maintain my Mac. It takes the effort out of installing everything manually. Everything needed to install my preferred setup of macOS is detailed in this readme. Feel free to explore, learn and copy parts for your own dotfiles. Enjoy!
+My personal dotfiles for setting up and maintaining a **macOS Tahoe (macOS 26)**
+machine. It automates installing my tooling for a **mixed PHP/Laravel +
+JS/TS + Python** stack, configures macOS sensible defaults, and — importantly —
+sets up a first-class **AI agent layer** (Claude Code, Codex, Cursor, Gemini
+CLI) plus a self-hosted **Hermes Agent** stack.
 
-📖 - [Read the blog post](https://driesvints.com/blog/getting-started-with-dotfiles)  
-📺 - [Watch the screencast on Laracasts](https://laracasts.com/series/guest-spotlight/episodes/1)  
-💡 - [Learn how to build your own dotfiles](https://github.com/driesvints/dotfiles#your-own-dotfiles)
-
-If you find this repo useful, [consider sponsoring me](https://github.com/sponsors/driesvints) (a little bit)! ❤️ 
+Originally forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
+and adapted for an AI-agent-driven 2026 workflow.
 
 ## A Fresh macOS Setup
 
@@ -34,13 +35,13 @@ After backing up your old Mac you may now follow these install instructions to s
    2.2. Otherwise [generate a new public and private SSH key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) by running:
 
    ```zsh
-   curl https://raw.githubusercontent.com/driesvints/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
+   curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
    ```
 
 3. Clone this repo to `~/.dotfiles` with:
 
     ```zsh
-    git clone --recursive git@github.com:driesvints/dotfiles.git ~/.dotfiles
+    git clone --recursive git@github.com:coding-sunshine/dotfiles.git ~/.dotfiles
     ```
 
 4. Run the installation with:
@@ -50,10 +51,51 @@ After backing up your old Mac you may now follow these install instructions to s
     ```
 
 5. Start `Herd.app` and run its install process
-6. After mackup is synced with your cloud storage, restore preferences by running `mackup restore`
-7. Restart your computer to finalize the process
+6. Copy `.env.example` to `~/.env` and fill in your API keys (see [AI Agent Layer](#ai-agent-layer))
+7. After mackup is synced with your cloud storage, restore preferences by running `mackup restore`
+8. Restart your computer to finalize the process
 
 Your Mac is now ready to use!
+
+> 💡 `clone.sh` ships empty — add your own repositories there before running, or
+> `fresh.sh` will simply skip the cloning step.
+
+## AI Agent Layer
+
+The `ai/` directory is the single source of truth for every coding agent I run.
+`ai.sh` (invoked by `fresh.sh`, also runnable standalone) symlinks each config
+into place and registers shared MCP servers.
+
+| File | Symlinked to | Purpose |
+| --- | --- | --- |
+| `ai/AGENTS.md` | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions |
+| `ai/claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
+| `ai/claude/settings.json` | `~/.claude/settings.json` | Claude Code model/permissions |
+| `ai/codex/config.toml` | `~/.codex/config.toml` | Codex CLI config |
+| `ai/gemini/settings.json` | `~/.gemini/settings.json` | Gemini CLI config |
+| `ai/mcp/mcp.json` | registered via `claude mcp add-json` | Shared MCP servers (filesystem, github) |
+
+Edit any file under `ai/` and re-run `./ai.sh` to apply.
+
+### Self-hosted Hermes Agent
+
+`ai/hermes/` runs the always-on [Hermes Agent](https://hermes-agent.org) with a
+local Ollama model runtime via Docker Compose.
+
+```zsh
+cp ai/hermes/.env.example ai/hermes/.env   # add your keys
+hermes-up        # start (alias for ai/hermes/hermes.sh up)
+hermes-logs      # follow logs
+hermes-down      # stop
+```
+
+> ⚠️ The compose file uses a **placeholder image** — confirm the official Hermes
+> Agent image/repo and update `ai/hermes/docker-compose.yml` before first run.
+
+### Secrets
+
+API keys live in `~/.env` (git-ignored), which `.zshrc` sources automatically.
+Start from [`.env.example`](./.env.example).
 
 > 💡 You can use a different location than `~/.dotfiles` if you want. Make sure you also update the references in the [`.zshrc`](./.zshrc#L2) and [`fresh.sh`](./fresh.sh#L20) files.
 

@@ -33,6 +33,26 @@ alias test="pest --no-coverage"
 alias nfresh="rm -rf node_modules/ package-lock.json && npm install"
 alias watch="npm run dev"
 
+# Python (uv)
+alias uvr="uv run"
+alias uvs="uv sync"
+alias uva="uv add"
+alias venv="uv venv && source .venv/bin/activate"
+
+# AI agents
+alias cc="claude"
+alias cx="codex"
+alias gem="gemini"
+alias hermes-up="$DOTFILES/ai/hermes/hermes.sh up"
+alias hermes-down="$DOTFILES/ai/hermes/hermes.sh down"
+alias hermes-logs="$DOTFILES/ai/hermes/hermes.sh logs"
+alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
+
+# Modern CLI replacements (only if installed)
+command -v eza >/dev/null 2>&1 && alias ls="eza --group-directories-first" && alias lt="eza --tree --level=2"
+command -v bat >/dev/null 2>&1 && alias cat="bat --paging=never"
+command -v lazygit >/dev/null 2>&1 && alias lg="lazygit"
+
 # Docker
 alias docker-composer="docker-compose"
 

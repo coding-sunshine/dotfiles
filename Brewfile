@@ -1,6 +1,7 @@
 # Taps
 tap 'homebrew/cask-versions'
 tap 'stripe/stripe-cli'
+tap 'oven-sh/bun'
 
 # Binaries
 brew 'awscli'
@@ -28,6 +29,29 @@ brew 'gifsicle'
 # Development
 brew 'imagemagick'
 brew 'yarn'
+
+# JS/TS toolchain (Node itself comes from Herd's NVM)
+brew 'pnpm'
+brew 'oven-sh/bun/bun'
+
+# Python toolchain
+brew 'uv'   # fast Python package/project manager
+brew 'ruff' # linter/formatter
+
+# Modern CLI quality-of-life (great for both humans and AI agents)
+brew 'ripgrep'   # rg — fast search
+brew 'fd'        # friendlier find
+brew 'fzf'       # fuzzy finder
+brew 'eza'       # modern ls
+brew 'zoxide'    # smarter cd
+brew 'git-delta' # better git diffs
+brew 'lazygit'   # git TUI
+brew 'direnv'    # per-directory env (.envrc)
+brew 'tldr'      # concise man pages
+
+# AI / agents
+brew 'gemini-cli' # Google Gemini CLI
+brew 'ollama'     # local model runtime (also backs self-hosted Hermes)
 
 # Apps
 cask '1password'

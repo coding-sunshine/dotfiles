@@ -1,0 +1,14 @@
+# Codex CLI global config (~/.codex/config.toml)
+# Docs: https://github.com/openai/codex
+#
+# Shared, tool-agnostic guidance lives in ~/.codex/AGENTS.md (symlinked from this
+# dotfiles repo). Codex reads AGENTS.md automatically.
+
+model = "gpt-5-codex"
+
+# Ask before running commands that could change state; auto-approve read-only.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = false
