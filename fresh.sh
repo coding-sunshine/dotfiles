@@ -54,7 +54,7 @@ mkdir -p $HOME/Code/ai                     # AI / agent projects
 ./ai.sh
 
 # Symlink the Mackup config file to the home directory
-ln -s ./.mackup.cfg $HOME/.mackup.cfg
+ln -sf $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
 # Set macOS preferences - we will run this last because this will reload the shell
 source ./.macos

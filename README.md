@@ -3,131 +3,215 @@
 ## Introduction
 
 My personal dotfiles for setting up and maintaining a **macOS Tahoe (macOS 26)**
-machine. It automates installing my tooling for a **mixed PHP/Laravel +
-JS/TS + Python** stack, configures macOS sensible defaults, and — importantly —
-sets up a first-class **AI agent layer** (Claude Code, Codex, Cursor, Gemini
-CLI) plus a self-hosted **Hermes Agent** stack.
+machine on Apple Silicon. One script takes a clean Mac and installs my tooling
+for a **mixed PHP/Laravel + JS/TS + Python** stack, applies sensible macOS
+defaults, and — importantly — wires up a first-class **AI agent layer** (Claude
+Code, Codex, Cursor, Gemini CLI) plus a self-hosted **Hermes Agent**.
 
 Originally forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
 and adapted for an AI-agent-driven 2026 workflow.
 
+### What you get
+
+- **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
+- **Zsh + Oh My Zsh** with a minimal theme, aliases, and `$PATH` setup
+- Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
+- Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
+- An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
+  Gemini CLI, shared MCP servers, and a self-hosted Hermes Agent stack
+- ~900 lines of opinionated [`.macos`](./.macos) system defaults
+
+### Requirements
+
+- A Mac running **macOS 26 (Tahoe)** on **Apple Silicon**
+- An internet connection and your Apple ID signed in (for Mac App Store apps)
+
 ## A Fresh macOS Setup
 
-These instructions are for setting up new Mac devices. Instead, if you want to get started building your own dotfiles, you can [find those instructions below](#your-own-dotfiles).
+These instructions set up a brand-new Mac. If you instead want to build your own
+dotfiles from this repo, see [Customizing](#customizing) below.
 
-### Backup your data
+### 1. Back up your old Mac (if migrating)
 
-If you're migrating from an existing Mac, you should first make sure to backup all of your existing data. Go through the checklist below to make sure you didn't forget anything before you migrate.
+Before wiping or migrating, run through this checklist:
 
-- Did you commit and push any changes/branches to your git repositories?
-- Did you remember to save all important documents from non-iCloud directories?
-- Did you save all of your work from apps which aren't synced through iCloud?
-- Did you remember to export important data from your local database?
-- Did you update [mackup](https://github.com/lra/mackup) to the latest version and ran `mackup backup`?
+- Committed and pushed all your git branches?
+- Saved important documents from non-iCloud directories?
+- Exported any local databases you care about?
+- Saved data from apps that don't sync to iCloud?
+- Ran `mackup backup` on the latest [mackup](https://github.com/lra/mackup)?
 
-### Setting up your Mac
+### 2. Set up an SSH key
 
-After backing up your old Mac you may now follow these install instructions to setup a new one.
+Use **one** of:
 
-1. Update macOS to the latest version through system preferences
-2. Setup an SSH key by using one of the two following methods  
-   2.1. If you use 1Password, install it with the 1Password [SSH agent](https://developer.1password.com/docs/ssh/get-started/#step-3-turn-on-the-1password-ssh-agent) and sync your SSH keys locally.  
-   2.2. Otherwise [generate a new public and private SSH key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) by running:
+- **1Password (recommended):** install 1Password and enable its
+  [SSH agent](https://developer.1password.com/docs/ssh/get-started/#step-3-turn-on-the-1password-ssh-agent),
+  then sync your keys locally.
+- **Manual:** [generate a key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) with:
 
+  ```zsh
+  curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
+  ```
+
+Make sure the key is added to your [GitHub account](https://github.com/settings/keys).
+
+### 3. Clone and install
+
+```zsh
+git clone --recursive git@github.com:coding-sunshine/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles && ./fresh.sh
+```
+
+`fresh.sh` is idempotent — safe to re-run. It will:
+
+1. Install Xcode Command Line Tools, Oh My Zsh, and Homebrew
+2. Symlink [`.zshrc`](./.zshrc) into your home directory
+3. Install everything in the [`Brewfile`](./Brewfile)
+4. Create project directories (`~/Herd`, `~/Code/{php,js,python,ai}`)
+5. Clone your repositories (edit [`clone.sh`](./clone.sh) first — it ships empty)
+6. Set up the [AI agent layer](#ai-agent-layer) via [`ai.sh`](./ai.sh)
+7. Symlink the Mackup config
+8. Apply [`.macos`](./.macos) system defaults (this reloads the shell at the end)
+
+### 4. Finish up
+
+1. Start **Herd.app** and complete its install process (provides PHP/Node/DBs)
+2. Copy the secrets template and fill in your keys:
    ```zsh
-   curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
+   cp ~/.dotfiles/.env.example ~/.env && $EDITOR ~/.env
    ```
+3. Restore app preferences once Mackup has synced from your cloud storage:
+   ```zsh
+   mackup restore
+   ```
+4. Restart your Mac to finalize everything.
 
-3. Clone this repo to `~/.dotfiles` with:
+### 5. Verify
 
-    ```zsh
-    git clone --recursive git@github.com:coding-sunshine/dotfiles.git ~/.dotfiles
-    ```
+```zsh
+brew bundle check --file ~/.dotfiles/Brewfile   # all packages installed?
+ls -l ~/.claude ~/.codex ~/.gemini              # agent configs symlinked?
+claude mcp list                                 # MCP servers registered?
+echo $ANTHROPIC_API_KEY                          # ~/.env loaded? (non-empty)
+```
 
-4. Run the installation with:
+Your Mac is now ready to use! 🎉
 
-    ```zsh
-    cd ~/.dotfiles && ./fresh.sh
-    ```
-
-5. Start `Herd.app` and run its install process
-6. Copy `.env.example` to `~/.env` and fill in your API keys (see [AI Agent Layer](#ai-agent-layer))
-7. After mackup is synced with your cloud storage, restore preferences by running `mackup restore`
-8. Restart your computer to finalize the process
-
-Your Mac is now ready to use!
-
-> 💡 `clone.sh` ships empty — add your own repositories there before running, or
-> `fresh.sh` will simply skip the cloning step.
+> 💡 You can clone to a location other than `~/.dotfiles`, but several scripts
+> assume that path. If you change it, update [`.zshrc`](./.zshrc) (`$DOTFILES`)
+> and the `~/.dotfiles` references in [`fresh.sh`](./fresh.sh) and [`ai.sh`](./ai.sh).
 
 ## AI Agent Layer
 
-The `ai/` directory is the single source of truth for every coding agent I run.
-`ai.sh` (invoked by `fresh.sh`, also runnable standalone) symlinks each config
-into place and registers shared MCP servers.
+The [`ai/`](./ai) directory is the single source of truth for every coding agent
+I run. [`ai.sh`](./ai.sh) (invoked by `fresh.sh`, also runnable standalone)
+symlinks each config into place and registers shared MCP servers. It is
+idempotent — re-run it any time you change a config.
 
 | File | Symlinked to | Purpose |
 | --- | --- | --- |
-| `ai/AGENTS.md` | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions |
-| `ai/claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
-| `ai/claude/settings.json` | `~/.claude/settings.json` | Claude Code model/permissions |
-| `ai/codex/config.toml` | `~/.codex/config.toml` | Codex CLI config |
-| `ai/gemini/settings.json` | `~/.gemini/settings.json` | Gemini CLI config |
-| `ai/mcp/mcp.json` | registered via `claude mcp add-json` | Shared MCP servers (filesystem, github) |
+| [`ai/AGENTS.md`](./ai/AGENTS.md) | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions |
+| [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
+| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Claude Code model / permissions |
+| [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
+| [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
+| [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | Shared MCP servers (filesystem, github) |
 
-Edit any file under `ai/` and re-run `./ai.sh` to apply.
+To update: edit a file under `ai/`, then run `./ai.sh`.
 
 ### Self-hosted Hermes Agent
 
-`ai/hermes/` runs the always-on [Hermes Agent](https://hermes-agent.org) with a
-local Ollama model runtime via Docker Compose.
+[`ai/hermes/`](./ai/hermes) runs the always-on
+[Hermes Agent](https://hermes-agent.org) with a local Ollama model runtime via
+Docker Compose.
 
 ```zsh
-cp ai/hermes/.env.example ai/hermes/.env   # add your keys
-hermes-up        # start (alias for ai/hermes/hermes.sh up)
+cp ai/hermes/.env.example ai/hermes/.env   # add your provider keys
+hermes-up        # start  (alias for ai/hermes/hermes.sh up)
 hermes-logs      # follow logs
 hermes-down      # stop
 ```
 
-> ⚠️ The compose file uses a **placeholder image** — confirm the official Hermes
-> Agent image/repo and update `ai/hermes/docker-compose.yml` before first run.
+> ⚠️ The compose file uses a **placeholder image**. Confirm the official Hermes
+> Agent image/repo and update [`ai/hermes/docker-compose.yml`](./ai/hermes/docker-compose.yml)
+> before first run.
 
 ### Secrets
 
-API keys live in `~/.env` (git-ignored), which `.zshrc` sources automatically.
-Start from [`.env.example`](./.env.example).
+API keys live in `~/.env` (git-ignored), which [`.zshrc`](./.zshrc) sources
+automatically on shell start. Start from [`.env.example`](./.env.example).
+Nothing secret is ever committed.
 
-> 💡 You can use a different location than `~/.dotfiles` if you want. Make sure you also update the references in the [`.zshrc`](./.zshrc#L2) and [`fresh.sh`](./fresh.sh#L20) files.
+## What's in here
 
-### Cleaning your old Mac (optionally)
+| Path | What it does |
+| --- | --- |
+| [`fresh.sh`](./fresh.sh) | Main bootstrap — orchestrates the whole install |
+| [`ssh.sh`](./ssh.sh) | Generates an SSH key and adds it to the agent |
+| [`clone.sh`](./clone.sh) | Clones your repositories (empty template) |
+| [`ai.sh`](./ai.sh) | Sets up the AI agent layer (symlinks + MCP) |
+| [`Brewfile`](./Brewfile) | All Homebrew formulae, casks, and MAS apps |
+| [`.zshrc`](./.zshrc) | Zsh / Oh My Zsh config, Herd + tool init, `~/.env` |
+| [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
+| [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
+| [`.macos`](./.macos) | macOS system defaults |
+| [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
+| [`ai/`](./ai) | Versioned AI agent configs (see above) |
 
-After you've set up your new Mac you may want to wipe and clean install your old Mac. Follow [this article](https://support.apple.com/guide/mac-help/erase-and-reinstall-macos-mh27903/mac) to do that. Remember to [backup your data](#backup-your-data) first!
+## Day-to-day
 
-## Your Own Dotfiles
+```zsh
+dotfiles         # cd into the dotfiles repo
+reloadshell      # reload Oh My Zsh after editing config
+brew bundle      # install anything newly added to the Brewfile
+./ai.sh          # re-apply agent configs after editing ai/
+mackup backup    # snapshot app preferences before a big change
+```
 
-**Please note that the instructions below assume you already have set up Oh My Zsh so make sure to first [install Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh#getting-started) before you continue.**
+## Troubleshooting
 
-If you want to start with your own dotfiles from this setup, it's pretty easy to do so. First of all you'll need to fork this repo. After that you can tweak it the way you want.
+- **A `brew` cask fails to install:** check the exact name on
+  [formulae.brew.sh](https://formulae.brew.sh/cask/); some apps change cask IDs.
+- **`herd`/`php` not found:** start Herd.app once so it injects its shell config,
+  then `reloadshell`.
+- **Agent configs missing:** re-run `./ai.sh`; it logs each symlink it creates.
+- **MCP servers not registered:** they only register if the `claude` CLI is
+  installed — run `./ai.sh` again after the Brewfile install completes.
 
-Go through the [`.macos`](./.macos) file and adjust the settings to your liking. You can find much more settings at [the original script by Mathias Bynens](https://github.com/mathiasbynens/dotfiles/blob/master/.macos) and [Kevin Suttle's macOS Defaults project](https://github.com/kevinSuttle/MacOS-Defaults).
+## Customizing
 
-Check out the [`Brewfile`](./Brewfile) file and adjust the apps you want to install for your machine. Use [their search page](https://formulae.brew.sh/cask/) to check if the app you want to install is available.
+Want to base your own dotfiles on this? Fork the repo, then:
 
-Check out the [`aliases.zsh`](./aliases.zsh) file and add your own aliases. If you need to tweak your `$PATH` check out the [`path.zsh`](./path.zsh) file. These files get loaded in because the `$ZSH_CUSTOM` setting points to the `.dotfiles` directory. You can adjust the [`.zshrc`](./.zshrc) file to your liking to tweak your Oh My Zsh setup. More info about how to customize Oh My Zsh can be found [here](https://github.com/robbyrussell/oh-my-zsh/wiki/Customization).
+- Edit [`.macos`](./.macos) — set your computer name (`COMPUTER_NAME`), timezone,
+  and locale near the top. More options live in
+  [Mathias Bynens' script](https://github.com/mathiasbynens/dotfiles/blob/master/.macos).
+- Trim/extend the [`Brewfile`](./Brewfile) ([cask search](https://formulae.brew.sh/cask/)).
+- Add your aliases in [`aliases.zsh`](./aliases.zsh) and `$PATH` tweaks in
+  [`path.zsh`](./path.zsh) (auto-loaded because `$ZSH_CUSTOM` points here).
+- List the repos you want cloned in [`clone.sh`](./clone.sh).
+- Tailor the agent instructions in [`ai/AGENTS.md`](./ai/AGENTS.md).
 
-When installing these dotfiles for the first time you'll need to backup all of your settings with Mackup. Install Mackup and backup your settings with the commands below. Your settings will be synced to iCloud so you can use them to sync between computers and reinstall them when reinstalling your Mac. If you want to save your settings to a different directory or different storage than iCloud, [checkout the documentation](https://github.com/lra/mackup/blob/master/doc/README.md#storage). Also make sure your `.zshrc` file is symlinked from your dotfiles repo to your home directory. 
+Back up your app preferences with Mackup (synced to iCloud by default):
 
 ```zsh
 brew install mackup
 mackup backup
 ```
 
-You can tweak the shell theme, the Oh My Zsh settings and much more. Go through the files in this repo and tweak everything to your liking.
-
-Enjoy your own Dotfiles!
+> This repo deliberately uses a simple **symlink + Brewfile + Mackup** approach
+> rather than a dedicated manager (chezmoi, stow, yadm). It's easy to read and
+> extend; reach for one of those tools only if you need cross-platform templating
+> or encrypted, multi-machine secret sync.
 
 ## Thanks To...
 
-I first got the idea for starting this project by visiting the [GitHub does dotfiles](https://dotfiles.github.io/) project. Both [Zach Holman](https://github.com/holman/dotfiles) and [Mathias Bynens](https://github.com/mathiasbynens/dotfiles) were great sources of inspiration. [Sourabh Bajaj](https://twitter.com/sb2nov/)'s [Mac OS X Setup Guide](http://sourabhbajaj.com/mac-setup/) proved to be invaluable. Thanks to [@subnixr](https://github.com/subnixr) for [his awesome Zsh theme](https://github.com/subnixr/minimal)! Thanks to [Caneco](https://twitter.com/caneco) for the header in this readme. And lastly, I'd like to thank [Emma Fabre](https://twitter.com/anahkiasen) for [her excellent presentation on Homebrew](https://speakerdeck.com/anahkiasen/a-storm-homebrewin) which made me migrate a lot to a [`Brewfile`](./Brewfile) and [Mackup](https://github.com/lra/mackup).
+Forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles).
+Inspiration from the [GitHub does dotfiles](https://dotfiles.github.io/) project,
+[Zach Holman](https://github.com/holman/dotfiles), and
+[Mathias Bynens](https://github.com/mathiasbynens/dotfiles).
+[Sourabh Bajaj](https://twitter.com/sb2nov/)'s
+[Mac Setup Guide](http://sourabhbajaj.com/mac-setup/) was invaluable, and the
+minimal Zsh theme is by [@subnixr](https://github.com/subnixr/minimal).
 
-In general, I'd like to thank every single one who open-sources their dotfiles for their effort to contribute something to the open-source community.
+Thanks to everyone who open-sources their dotfiles. 💛
