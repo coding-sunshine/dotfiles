@@ -15,10 +15,11 @@ and adapted for an AI-agent-driven 2026 workflow.
 
 - **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
-- **Terminal:** [Ghostty](https://ghostty.org) — fast, native Metal renderer
+- **Terminal:** [Ghostty](https://ghostty.org) (fast, native Metal) with the JetBrains Mono Nerd Font
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
 - Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
+- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), VS Code/Cursor, and more
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
   Gemini CLI, and shared MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
@@ -66,13 +67,15 @@ cd ~/.dotfiles && ./fresh.sh
 `fresh.sh` is idempotent — safe to re-run. It will:
 
 1. Install Xcode Command Line Tools, Oh My Zsh, and Homebrew
-2. Symlink [`.zshrc`](./.zshrc) into your home directory
+2. Symlink [`.zshrc`](./.zshrc) and [`.gitconfig`](./.gitconfig) into your home directory
 3. Install everything in the [`Brewfile`](./Brewfile)
 4. Create project directories (`~/Herd`, `~/Code/{php,js,python,ai}`)
-5. Clone your repositories (edit [`clone.sh`](./clone.sh) first — it ships empty)
-6. Set up the [AI agent layer](#ai-agent-layer) via [`ai.sh`](./ai.sh)
-7. Symlink the Mackup config
-8. Apply [`.macos`](./.macos) system defaults (this reloads the shell at the end)
+5. Install the global Laravel installer (if Herd's `composer` is available)
+6. Clone your repositories (edit [`clone.sh`](./clone.sh) first — it ships empty)
+7. Symlink [`config/`](./config) into `~/.config` and set up the
+   [AI agent layer](#ai-agent-layer) via [`ai.sh`](./ai.sh)
+8. Symlink the Mackup config
+9. Apply [`.macos`](./.macos) system defaults (this reloads the shell at the end)
 
 ### 4. Finish up
 
@@ -89,8 +92,7 @@ cd ~/.dotfiles && ./fresh.sh
 3. Add your SSH **public** key to GitHub as both an *Authentication* and a
    *Signing* key (commits are SSH-signed by default — see `.gitconfig`):
    <https://github.com/settings/keys>
-
-3. Restore app preferences once Mackup has synced from your cloud storage:
+4. Restore app preferences once Mackup has synced from your cloud storage:
    ```zsh
    mackup restore
    ```
@@ -99,7 +101,7 @@ cd ~/.dotfiles && ./fresh.sh
    > and configure those apps by hand, or move their settings into this repo and
    > symlink them like the `config/` files. (Alternatives: [chezmoi](https://chezmoi.io)
    > or plain symlinks.)
-4. Restart your Mac to finalize everything.
+5. Restart your Mac to finalize everything.
 
 ### 5. Verify
 
@@ -107,8 +109,12 @@ cd ~/.dotfiles && ./fresh.sh
 brew bundle check --file ~/.dotfiles/Brewfile   # all packages installed?
 ls -l ~/.claude ~/.codex ~/.gemini              # agent configs symlinked?
 claude mcp list                                 # MCP servers registered?
+git config --get commit.gpgsign                 # "true" -> SSH signing on
 echo $ANTHROPIC_API_KEY                          # ~/.env loaded? (non-empty)
 ```
+
+> 💡 Set your terminal/editor font to **"JetBrainsMono Nerd Font"** (Ghostty is
+> preconfigured) so the Starship prompt icons render instead of as empty boxes.
 
 Your Mac is now ready to use! 🎉
 
@@ -197,6 +203,7 @@ type-check gates for whatever stack a project uses.
 | [`.gitignore_global`](./.gitignore_global) | Global ignore rules (wired via `.gitconfig`) |
 | [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
+| [`.env.example`](./.env.example) | Template for `~/.env` secrets (API keys) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
 | [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship) |
 | [`.macos`](./.macos) | macOS system defaults |
