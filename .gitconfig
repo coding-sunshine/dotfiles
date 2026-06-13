@@ -1,0 +1,51 @@
+# Global git config — symlinked to ~/.gitconfig by fresh.sh.
+# Edit [user] below to your own name/email.
+
+[user]
+	name = Hardik Shah
+	email = mail.hardikshah@gmail.com
+
+[core]
+	excludesfile = ~/.dotfiles/.gitignore_global
+	pager = delta
+	editor = code --wait
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+	default = current
+
+[pull]
+	rebase = true
+
+[rebase]
+	autostash = true
+	autosquash = true
+
+[fetch]
+	prune = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	colorMoved = default
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = false
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[help]
+	autocorrect = prompt

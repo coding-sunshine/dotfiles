@@ -17,6 +17,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
 - **Terminal:** [Ghostty](https://ghostty.org) — fast, native Metal renderer
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
+- Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
   Gemini CLI, and shared MCP servers
@@ -46,18 +47,14 @@ Before wiping or migrating, run through this checklist:
 
 ### 2. Set up an SSH key
 
-Use **one** of:
+[Generate a key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+with the helper script:
 
-- **1Password (recommended):** install 1Password and enable its
-  [SSH agent](https://developer.1password.com/docs/ssh/get-started/#step-3-turn-on-the-1password-ssh-agent),
-  then sync your keys locally.
-- **Manual:** [generate a key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) with:
+```zsh
+curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
+```
 
-  ```zsh
-  curl https://raw.githubusercontent.com/coding-sunshine/dotfiles/HEAD/ssh.sh | sh -s "<your-email-address>"
-  ```
-
-Make sure the key is added to your [GitHub account](https://github.com/settings/keys).
+Then add the key to your [GitHub account](https://github.com/settings/keys).
 
 ### 3. Clone and install
 
@@ -88,6 +85,11 @@ cd ~/.dotfiles && ./fresh.sh
    ```zsh
    mackup restore
    ```
+   > ⚠️ **Mackup is largely unmaintained** and has broken with newer macOS app
+   > sandboxing — some apps no longer restore cleanly. If it misbehaves, skip it
+   > and configure those apps by hand, or move their settings into this repo and
+   > symlink them like the `config/` files. (Alternatives: [chezmoi](https://chezmoi.io)
+   > or plain symlinks.)
 4. Restart your Mac to finalize everything.
 
 ### 5. Verify
@@ -182,6 +184,8 @@ type-check gates for whatever stack a project uses.
 | [`ai.sh`](./ai.sh) | Sets up the AI agent layer (symlinks + MCP) |
 | [`Brewfile`](./Brewfile) | All Homebrew formulae, casks, and MAS apps |
 | [`.zshrc`](./.zshrc) | Zsh / Oh My Zsh config, Herd + tool init, `~/.env` |
+| [`.gitconfig`](./.gitconfig) | Global git config (delta, sensible defaults, identity) |
+| [`.gitignore_global`](./.gitignore_global) | Global ignore rules (wired via `.gitconfig`) |
 | [`aliases.zsh`](./aliases.zsh) | Shell aliases (loaded via `$ZSH_CUSTOM`) |
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |

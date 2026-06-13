@@ -27,11 +27,13 @@ fi
 rm -rf $HOME/.zshrc
 ln -sw $HOME/.dotfiles/.zshrc $HOME/.zshrc
 
+# Symlink the global git config
+ln -sf $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
+
 # Update Homebrew recipes
 brew update
 
 # Install all our dependencies with bundle (See Brewfile)
-brew tap homebrew/bundle
 brew bundle --file ./Brewfile
 
 # Set default MySQL root password and auth type (only if a standalone mysql is

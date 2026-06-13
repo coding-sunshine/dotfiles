@@ -147,9 +147,14 @@ export HERD_PHP_85_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/p
 # Modern CLI tool initialization (only if installed)
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
-[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --zsh)"
 
-# Starship prompt (must be initialized last so it owns the prompt)
+# Zsh autosuggestions (installed via Homebrew)
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
+[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# Starship prompt (owns the prompt)
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # Load secrets and API keys (git-ignored). See .env.example for the template.
@@ -160,3 +165,7 @@ if [[ -f "$HOME/.env" ]]; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Zsh syntax highlighting MUST be sourced last (after all ZLE widgets)
+[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

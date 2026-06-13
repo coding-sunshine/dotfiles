@@ -1,5 +1,4 @@
 # Taps
-tap 'homebrew/cask-versions'
 tap 'stripe/stripe-cli'
 tap 'oven-sh/bun'
 
@@ -38,6 +37,10 @@ brew 'oven-sh/bun/bun'
 brew 'uv'   # fast Python package/project manager
 brew 'ruff' # linter/formatter
 
+# Zsh enhancements
+brew 'zsh-autosuggestions'
+brew 'zsh-syntax-highlighting'
+
 # Modern CLI quality-of-life (great for both humans and AI agents)
 brew 'ripgrep'   # rg — fast search
 brew 'fd'        # friendlier find
@@ -54,8 +57,6 @@ brew 'starship'  # cross-shell prompt
 brew 'gemini-cli' # Google Gemini CLI
 
 # Apps
-cask '1password'
-brew '1password-cli'
 cask 'antigravity-cli'
 cask 'caffeine'
 cask 'claude'
@@ -82,6 +83,7 @@ cask 'loom'
 cask 'pastebot'
 cask 'reflex'
 cask 'screen-studio'
+cask 'sequel-ace' # MySQL/MariaDB GUI
 cask 'slack'
 cask 'tableplus'
 cask 'telegram-desktop'
