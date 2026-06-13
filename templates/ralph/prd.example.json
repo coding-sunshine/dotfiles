@@ -1,0 +1,9 @@
+{
+  "project": "Example app — replace with yours",
+  "stories": [
+    { "id": "S1", "title": "Project skeleton + health-check endpoint", "passes": false },
+    { "id": "S2", "title": "User model + migration", "passes": false },
+    { "id": "S3", "title": "Signup endpoint with validation + tests", "passes": false },
+    { "id": "S4", "title": "Login + session/token issuance + tests", "passes": false }
+  ]
+}

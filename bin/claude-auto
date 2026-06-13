@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Headless, budget-capped Claude run for automation/CI.
+#
+# Routes to API billing (ANTHROPIC_API_KEY) so unattended runs draw from the
+# Agent-SDK/API budget rather than burning the interactive subscription's
+# session/weekly caps. Hard budget + turn caps mean it can't run away.
+#
+# Usage:  claude-auto "prompt..."        echo "prompt" | claude-auto
+# Env:    CLAUDE_MAX_USD    per-run USD cap        (default 5)
+#         CLAUDE_MAX_TURNS  max agent turns        (default 30)
+#         CLAUDE_AUTO_TOOLS allowed tools, csv     (default Read,Edit,Write,Grep,Glob,Bash)
+
+set -e
+
+command -v claude >/dev/null 2>&1 || { echo "claude CLI not found" >&2; exit 1; }
+
+BUDGET="${CLAUDE_MAX_USD:-5}"
+TURNS="${CLAUDE_MAX_TURNS:-30}"
+TOOLS="${CLAUDE_AUTO_TOOLS:-Read,Edit,Write,Grep,Glob,Bash}"
+
+exec claude -p "$@" \
+  --max-budget-usd "$BUDGET" \
+  --max-turns "$TURNS" \
+  --allowedTools "$TOOLS"

@@ -55,6 +55,15 @@ if command -v composer >/dev/null 2>&1; then
   composer global require laravel/installer
 fi
 
+# Install global AI tooling (best-effort; needs node/uv from the Brewfile).
+# Done before ai.sh so `cavemem install` can wire its MCP during that step.
+if command -v npm >/dev/null 2>&1; then
+  npm install -g cavemem >/dev/null 2>&1 || true   # persistent compressed memory (MCP)
+fi
+if command -v uv >/dev/null 2>&1; then
+  uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
+fi
+
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 

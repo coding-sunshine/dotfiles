@@ -133,15 +133,22 @@ idempotent — re-run it any time you change a config.
 | --- | --- | --- |
 | [`ai/AGENTS.md`](./ai/AGENTS.md) | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions |
 | [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
-| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Claude Code model / permissions / hooks |
-| [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` (Opus), `test-writer` (Sonnet) |
-| [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test` |
-| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills` | Skills: `verify` (stack-aware lint/test gates) |
+| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Model (Sonnet default) / permissions / hooks / statusline / auto memory |
+| [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh` | Statusline: model · branch · context-usage bar · session cost |
+| [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `test-writer` & `debugger` (Sonnet) |
+| [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship` |
+| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (stack-aware lint/test gates) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
 | [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
-| [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | Shared MCP servers (filesystem, github) |
+| [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | MCP servers: filesystem, github, context7 (+ composio when keyed) |
 
-To update: edit a file under `ai/`, then run `./ai.sh`.
+To update: edit a file under `ai/`, then run `./ai.sh`. Skills are symlinked
+per-item so externally-installed skills coexist without polluting the repo.
+
+> **Model routing.** The interactive default is **Sonnet 4.6** (fast and cheap
+> for day-to-day work); the `planner` and `code-reviewer` subagents run on
+> **Opus** where the extra reasoning pays off. Use `/model` to downshift to Haiku
+> for trivial work or up to Opus for hard problems.
 
 ### Secrets
 
@@ -184,15 +191,62 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
 `~/.claude` by `ai.sh`):
 
 - **Subagents** ([`ai/claude/agents/`](./ai/claude/agents)) — `code-reviewer`
-  (runs on Opus) and `test-writer` (Sonnet), each with its own context window.
+  and `planner` (Opus), `test-writer` and `debugger` (Sonnet), each with its own
+  isolated context window (verbose work stays out of the main thread).
 - **Slash commands** ([`ai/claude/commands/`](./ai/claude/commands)) — `/review`,
-  `/pr`, `/spec`, `/test`, which orchestrate the subagents.
+  `/pr`, `/spec`, `/test`, plus `/plan` (delegates to `planner`) and `/ship`
+  (full gate: verify → review → commit).
 - **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
   lint/test/type-check gates.
 - **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
   file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
-  into any repo.
+  into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
+  (TypeScript/PHP/Python/tests) that load only when matching files are touched.
+
+### Memory & context management
+
+Most of this is native to Claude Code — the layer here just turns it on, makes
+it visible, and adds one lightweight persistent store:
+
+- **Auto memory** is enabled in [`settings.json`](./ai/claude/settings.json)
+  (`autoMemoryEnabled`). Claude writes its own learnings to
+  `~/.claude/projects/<repo>/memory/MEMORY.md` (only ~200 lines load per session);
+  browse/edit with `/memory`.
+- **Statusline** ([`statusline.sh`](./ai/claude/statusline.sh)) shows a live
+  context-usage bar + session cost so you see compaction coming. Pair with
+  `/context` and `/cost`.
+- **Path-scoped rules** (`rules-init`) keep heavy instructions out of context
+  until a matching file is opened.
+- **cavemem** (installed by `fresh.sh`, wired by `ai.sh`) is a local, compressed
+  persistent-memory MCP (SQLite + FTS5 + local vector search — no keys, no
+  network) that *survives `/compact`* and gives cross-session recall. View it
+  with `memview` (`cavemem viewer`).
+- **Token discipline** lives in [`AGENTS.md`](./ai/AGENTS.md): delegate fan-out to
+  subagents, read file ranges not whole files, keep the MCP set lean (`/mcp`),
+  and downshift the model for routine work.
+- *Opt-in:* `caveman-on` installs the [caveman](https://github.com/JuliusBrussee/caveman)
+  skill, which compresses Claude's **output** (~65%, reasoning and code preserved);
+  it changes output style, so toggle per session with `/caveman`.
+
+### Autonomous & spec-driven delivery
+
+Two paths for building whole features/apps:
+
+- **Supervised** — [GitHub Spec Kit](https://github.com/github/spec-kit) (`spec`
+  → `specify init`, then `/speckit.*`) to spec first, plan mode + `/plan` to
+  design, then `/ship` to gate and commit.
+- **Autonomous** — the [Ralph loop](./templates/ralph) (`ralph-init`) runs a
+  fresh `claude -p` per iteration against a `prd.json` backlog (TDD → commit →
+  repeat), and [`claude-auto`](./bin/claude-auto) (`cauto`) is a headless,
+  budget-capped runner.
+
+> **Safe automation ("don't make Claude angry").** Run unattended loops on a
+> throwaway worktree, route them to **API billing** (`ANTHROPIC_API_KEY`) so they
+> draw from the Agent-SDK/API budget instead of the interactive subscription
+> caps, and keep the `--max-budget-usd` / `--max-turns` caps. For sanctioned
+> unattended work, prefer Anthropic's **Claude Code Routines** (pushes only to
+> `claude/*` branches).
 
 ### Pre-commit hooks (Lefthook)
 
@@ -228,8 +282,9 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
 | [`.env.example`](./.env.example) | Template for `~/.env` secrets (API keys) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
+| [`bin/claude-auto`](./bin/claude-auto) | Headless, budget-capped Claude runner for automation/CI |
 | [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship, zed) |
-| [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`) |
+| [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `claude-rules/`) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
 | [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
@@ -245,6 +300,11 @@ gwt new <branch> # spin up a worktree for a parallel agent
 boost            # add Laravel Boost to the current project
 hooks            # install Lefthook pre-commit hooks in this project
 claude-init      # drop a CLAUDE.md template into this project
+rules-init       # drop path-scoped .claude/rules into this project
+spec             # GitHub Spec Kit (specify init, then /speckit.* commands)
+ralph-init       # drop the autonomous Ralph build loop into this project
+cauto "..."      # headless, budget-capped Claude run for automation
+memview          # open the cavemem persistent-memory viewer
 mackup backup    # snapshot app preferences before a big change
 ```
 

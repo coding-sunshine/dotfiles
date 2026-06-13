@@ -1,5 +1,5 @@
 {
-  "// note": "Canonical MCP server definitions. ai.sh registers these with the Claude CLI via `claude mcp add-json`. Tools that read MCP from their own config can point here. Secrets come from env (~/.env), never inline.",
+  "// note": "Canonical MCP server definitions. ai.sh registers filesystem, github, and context7 with the Claude CLI via `claude mcp add-json`. composio is registered only when COMPOSIO_API_KEY is set (it's heavy — 300+ connectors — so keep it off unless a task needs it). Keep the active MCP set lean: each heavy server costs 2k–10k context tokens; toggle with `/mcp`. Secrets come from env (~/.env), never inline.",
   "mcpServers": {
     "filesystem": {
       "command": "npx",
@@ -10,6 +10,22 @@
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "context7": {
+      "// note": "Up-to-date, version-correct library docs into context. Low overhead. CONTEXT7_API_KEY is optional (raises rate limits).",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    },
+    "composio": {
+      "// note": "Opt-in: 300+ SaaS/API connectors. Heavy on context tokens — registered by ai.sh only when COMPOSIO_API_KEY is set. Verify the start command against the current composio CLI.",
+      "command": "npx",
+      "args": ["-y", "@composio/mcp@latest", "start"],
+      "env": {
+        "COMPOSIO_API_KEY": "${COMPOSIO_API_KEY}"
       }
     }
   }

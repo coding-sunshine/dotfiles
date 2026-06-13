@@ -35,6 +35,20 @@ there is a single source of truth.
 `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`, `gh`,
 `docker`. Prefer `rg`/`fd` over `grep`/`find`.
 
+## Context & token discipline
+
+Keep the working context small and the durable context known:
+
+- Delegate broad search and verbose runs (test suites, log/doc trawling) to
+  subagents — only their summary returns to the main thread.
+- Read just-in-time: keep references (paths, queries) and read file *ranges*;
+  don't dump whole large files.
+- At milestones run `/compact`. Durable decisions persist via auto memory
+  (`MEMORY.md`) and, when present, the cavemem store — don't re-derive them.
+- Keep `CLAUDE.md` and rules under ~200 lines; scope detail to `.claude/rules/`.
+- Watch the statusline / `/context` / `/cost`; keep the active MCP set lean and
+  downshift the model (`/model`) for routine work.
+
 ## Secrets
 
 Never print or commit secrets. Keys live in `~/.env` (git-ignored) and are

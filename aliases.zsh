@@ -57,6 +57,22 @@ alias hooks="cp -n $DOTFILES/templates/lefthook.yml ./lefthook.yml; lefthook ins
 # Drop a starter CLAUDE.md into the current project
 alias claude-init="cp -n $DOTFILES/templates/CLAUDE.md ./CLAUDE.md && \${EDITOR:-zed} ./CLAUDE.md"
 
+# GitHub Spec Kit — spec-driven development (`specify init`, then /speckit.* commands)
+alias spec="specify"
+
+# Drop the Ralph autonomous-loop template into the current project (.ralph/)
+alias ralph-init="cp -r $DOTFILES/templates/ralph ./.ralph && echo 'edit .ralph/prd.json, work on a throwaway branch, then ./.ralph/ralph.sh'"
+
+# Drop path-scoped Claude rules into the current project (.claude/rules/)
+alias rules-init="mkdir -p ./.claude/rules && cp -n $DOTFILES/templates/claude-rules/*.md ./.claude/rules/"
+
+# Headless, budget-capped Claude for automation (bin/claude-auto)
+alias cauto="claude-auto"
+
+# Persistent-memory viewer (cavemem) + opt-in output compression (caveman)
+alias memview="cavemem viewer"
+alias caveman-on="curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash"
+
 # Modern CLI replacements (only if installed)
 command -v eza >/dev/null 2>&1 && alias ls="eza --group-directories-first" && alias lt="eza --tree --level=2"
 command -v bat >/dev/null 2>&1 && alias cat="bat --paging=never"
