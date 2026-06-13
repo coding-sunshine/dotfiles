@@ -9,7 +9,7 @@
 [core]
 	excludesfile = ~/.dotfiles/.gitignore_global
 	pager = delta
-	editor = code --wait
+	editor = zed --wait
 
 # Sign commits with your SSH key (the one ssh.sh generates). No GPG/1Password
 # needed. Add the same public key to GitHub as a "Signing Key" to get the

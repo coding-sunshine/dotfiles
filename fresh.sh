@@ -43,11 +43,10 @@ if command -v mysql >/dev/null 2>&1; then
 fi
 
 # Create project directories
-mkdir -p $HOME/Herd                       # Laravel/PHP apps served by Herd
-mkdir -p $HOME/Code/php                    # PHP packages
-mkdir -p $HOME/Code/js                     # JavaScript/TypeScript
-mkdir -p $HOME/Code/python                 # Python
-mkdir -p $HOME/Code/ai                     # AI / agent projects
+mkdir -p $HOME/Herd                        # Laravel/PHP apps served by Herd
+mkdir -p $HOME/Code/Personal               # Personal projects
+mkdir -p $HOME/Code/Clients                # Client work
+mkdir -p $HOME/Code/Cogneiss               # Cogneiss
 
 # Install global Composer tools (best-effort — composer is provided by Herd, so
 # this only runs once Herd has injected it; re-run fresh.sh after starting Herd,

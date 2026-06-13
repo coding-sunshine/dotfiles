@@ -19,9 +19,9 @@
 # # Sites (served by Herd)
 # git clone git@github.com:coding-sunshine/my-app.git $SITES/my-app
 #
-# # Code (packages / JS / Python / AI)
-# git clone git@github.com:coding-sunshine/some-package.git $CODE/php/some-package
-# git clone git@github.com:coding-sunshine/some-frontend.git $CODE/js/some-frontend
-# git clone git@github.com:coding-sunshine/some-agent.git   $CODE/ai/some-agent
+# # Code (organized by Personal / Clients / Cogneiss)
+# git clone git@github.com:coding-sunshine/my-side-project.git $CODE/Personal/my-side-project
+# git clone git@github.com:some-client/their-app.git          $CODE/Clients/their-app
+# git clone git@github.com:cogneiss/some-service.git          $CODE/Cogneiss/some-service
 
 :

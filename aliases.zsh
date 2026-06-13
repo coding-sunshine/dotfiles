@@ -55,7 +55,7 @@ gwtcd() { cd "$(gwt path "$1")"; }
 alias hooks="cp -n $DOTFILES/templates/lefthook.yml ./lefthook.yml; lefthook install"
 
 # Drop a starter CLAUDE.md into the current project
-alias claude-init="cp -n $DOTFILES/templates/CLAUDE.md ./CLAUDE.md && \${EDITOR:-code} ./CLAUDE.md"
+alias claude-init="cp -n $DOTFILES/templates/CLAUDE.md ./CLAUDE.md && \${EDITOR:-zed} ./CLAUDE.md"
 
 # Modern CLI replacements (only if installed)
 command -v eza >/dev/null 2>&1 && alias ls="eza --group-directories-first" && alias lt="eza --tree --level=2"

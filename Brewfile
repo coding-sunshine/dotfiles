@@ -95,7 +95,7 @@ cask 'tinkerwell'
 cask 'transmit'
 cask 'tunnelbear'
 cask 'tuple'
-cask 'visual-studio-code'
+cask 'zed' # primary GUI editor
 cask 'zoom'
 
 # Mac App Store

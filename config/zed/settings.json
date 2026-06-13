@@ -1,0 +1,24 @@
+// Zed settings (~/.config/zed/settings.json)
+// Docs: https://zed.dev/docs/configuring-zed
+{
+  "theme": "One Dark",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_size": 14,
+  "format_on_save": "on",
+  "tab_size": 2,
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "terminal": {
+    "font_family": "JetBrainsMono Nerd Font"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "agent": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-opus-4-8"
+    }
+  }
+}

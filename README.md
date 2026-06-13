@@ -19,7 +19,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
 - Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
-- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), VS Code/Cursor, and more
+- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), Zed + Cursor (editors), and more
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
   Gemini CLI, and shared MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
@@ -69,7 +69,7 @@ cd ~/.dotfiles && ./fresh.sh
 1. Install Xcode Command Line Tools, Oh My Zsh, and Homebrew
 2. Symlink [`.zshrc`](./.zshrc) and [`.gitconfig`](./.gitconfig) into your home directory
 3. Install everything in the [`Brewfile`](./Brewfile)
-4. Create project directories (`~/Herd`, `~/Code/{php,js,python,ai}`)
+4. Create project directories (`~/Herd`, `~/Code/{Personal,Clients,Cogneiss}`)
 5. Install the global Laravel installer (if Herd's `composer` is available)
 6. Clone your repositories (edit [`clone.sh`](./clone.sh) first — it ships empty)
 7. Symlink [`config/`](./config) into `~/.config` and set up the
@@ -228,7 +228,7 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`path.zsh`](./path.zsh) | `$PATH` additions (loaded via `$ZSH_CUSTOM`) |
 | [`.env.example`](./.env.example) | Template for `~/.env` secrets (API keys) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
-| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship) |
+| [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship, zed) |
 | [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
