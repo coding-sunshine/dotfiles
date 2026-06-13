@@ -34,22 +34,35 @@ brew update
 brew tap homebrew/bundle
 brew bundle --file ./Brewfile
 
-# Set default MySQL root password and auth type
-mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+# Set default MySQL root password and auth type (only if a standalone mysql is
+# installed — Herd ships its own database services).
+if command -v mysql >/dev/null 2>&1; then
+  mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+fi
 
-# Create a projects directories
-mkdir $HOME/Code
-mkdir $HOME/Herd
+# Create project directories
+mkdir -p $HOME/Herd                       # Laravel/PHP apps served by Herd
+mkdir -p $HOME/Code/php                    # PHP packages
+mkdir -p $HOME/Code/js                     # JavaScript/TypeScript
+mkdir -p $HOME/Code/python                 # Python
+mkdir -p $HOME/Code/ai                     # AI / agent projects
 
-# Create Code subdirectories
-mkdir $HOME/Code/blade-ui-kit
-mkdir $HOME/Code/laravel
-
-# Clone Github repositories
+# Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
+# Symlink ~/.config app configs (ghostty, atuin, zellij, starship, ...)
+mkdir -p $HOME/.config
+for item in $HOME/.dotfiles/config/*; do
+  name=$(basename "$item")
+  rm -rf "$HOME/.config/$name"
+  ln -sf "$item" "$HOME/.config/$name"
+done
+
+# Set up the AI agent config layer (symlinks + MCP registration)
+./ai.sh
+
 # Symlink the Mackup config file to the home directory
-ln -s ./.mackup.cfg $HOME/.mackup.cfg
+ln -sf $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
 # Set macOS preferences - we will run this last because this will reload the shell
 source ./.macos

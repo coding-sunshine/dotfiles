@@ -1,0 +1,15 @@
+// Zellij config (~/.config/zellij/config.kdl)
+// Docs: https://zellij.dev/documentation/
+
+theme "gruvbox-dark"
+default_layout "compact"
+pane_frames false
+copy_on_select true
+mouse_mode true
+
+// Don't nest sessions when launching from inside one
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}

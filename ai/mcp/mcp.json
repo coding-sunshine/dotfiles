@@ -1,0 +1,16 @@
+{
+  "// note": "Canonical MCP server definitions. ai.sh registers these with the Claude CLI via `claude mcp add-json`. Tools that read MCP from their own config can point here. Secrets come from env (~/.env), never inline.",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${HOME}/Code", "${HOME}/Herd"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Atuin config (~/.config/atuin/config.toml)
+# Docs: https://docs.atuin.sh/configuration/config/
+
+## Keep history fully local by default. To enable sync across machines, run
+## `atuin login` / `atuin register` and set this to true.
+auto_sync = false
+update_check = false
+
+## Search UX
+search_mode = "fuzzy"
+filter_mode = "global"
+style = "compact"
+inline_height = 25
+show_preview = true
+
+## Don't record obvious secrets
+history_filter = [
+  "^export (ANTHROPIC|OPENAI|GEMINI|GITHUB).*",
+  "AKIA[0-9A-Z]{16}",
+]

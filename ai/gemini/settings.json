@@ -1,0 +1,8 @@
+{
+  "theme": "Default",
+  "contextFileName": "AGENTS.md",
+  "autoAccept": false,
+  "checkpointing": {
+    "enabled": true
+  }
+}

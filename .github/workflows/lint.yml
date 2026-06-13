@@ -1,0 +1,37 @@
+name: lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell syntax & shellcheck
+        run: |
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          for f in fresh.sh clone.sh ssh.sh ai.sh ai/hermes/hermes.sh bin/gwt ai/claude/hooks/format.sh; do
+            sh -n "$f"
+            shellcheck -S warning -e SC1091 "$f" || true
+          done
+
+      - name: Validate JSON configs
+        run: |
+          for f in ai/claude/settings.json ai/gemini/settings.json ai/mcp/mcp.json; do
+            jq -e . "$f" > /dev/null
+          done
+
+      - name: Validate TOML configs
+        run: |
+          for f in ai/codex/config.toml config/atuin/config.toml config/starship.toml; do
+            python3 -c "import tomllib; tomllib.load(open('$f','rb'))"
+          done
+
+      - name: Validate docker-compose
+        run: |
+          cp ai/hermes/.env.example ai/hermes/.env
+          docker compose -f ai/hermes/docker-compose.yml config > /dev/null
+          rm -f ai/hermes/.env

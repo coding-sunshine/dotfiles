@@ -1,0 +1,38 @@
+# Self-hosted Hermes Agent (Nous Research) — always-on agent with persistent
+# memory, backed by a local Ollama model runtime.
+#
+# TODO: confirm the official image / repo before first run. As of planning the
+# Hermes docs were unreachable; replace `image:` below with the official
+# published image (or swap to a `build:` against a cloned hermes-agent repo).
+# Track: https://hermes-agent.org / https://github.com (nousresearch/hermes).
+#
+# Usage: `./hermes.sh up` (wrapper around `docker compose`). Reads ./.env.
+
+services:
+  hermes:
+    # TODO: replace with the official image tag once confirmed.
+    image: ghcr.io/nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8787:8787" # gateway / CLI bridge (adjust to the project's documented port)
+    volumes:
+      - hermes_memory:/data    # persistent memory + learned skills
+      - ./config:/config:ro    # optional: mount your own config dir
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: hermes-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+
+volumes:
+  hermes_memory:
+  ollama_models:

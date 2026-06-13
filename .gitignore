@@ -1,0 +1,10 @@
+# Local secrets — never commit
+.env
+.env.local
+ai/hermes/.env
+
+# Local-only agent settings
+.claude/settings.local.json
+
+# macOS
+.DS_Store
