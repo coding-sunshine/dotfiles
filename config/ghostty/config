@@ -1,7 +1,7 @@
 # Ghostty config (~/.config/ghostty/config)
 # Docs: https://ghostty.org/docs/config
 
-theme = "GruvboxDark"
+theme = "Gruvbox Dark Hard"
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 
