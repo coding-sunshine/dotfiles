@@ -1,12 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "claude-sonnet-4-6",
   "includeCoAuthoredBy": true,
-  "autoMemoryEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "$HOME/.claude/statusline.sh"
-  },
   "permissions": {
     "allow": [
       "Bash(git status)",
@@ -33,6 +27,7 @@
       "Bash(rm -rf:*)"
     ]
   },
+  "model": "claude-sonnet-4-6",
   "hooks": {
     "PostToolUse": [
       {
@@ -45,5 +40,29 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "feature-dev@claude-code-plugins": true,
+    "code-review@claude-code-plugins": true,
+    "superpowers@superpowers-marketplace": false
+  },
+  "extraKnownMarketplaces": {
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    }
+  },
+  "autoMemoryEnabled": true
 }
