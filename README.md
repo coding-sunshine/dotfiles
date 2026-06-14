@@ -59,6 +59,11 @@ Then add the key to your [GitHub account](https://github.com/settings/keys).
 
 ### 3. Clone and install
 
+> 🛑 **Run as your normal user, not `root`.** If your prompt ends in `#` (e.g.
+> `sh-3.2#`) you're root — type `exit` until it ends in `%`. Homebrew refuses to
+> run as root, the CLT install dialog won't appear for root, and symlinks would
+> land in `/var/root` instead of your home directory. Never run `fresh.sh` as root.
+
 > ℹ️ **A brand-new Mac has no `git` yet.** The first `git` command triggers the
 > **Xcode Command Line Tools** installer — click **Install** in the dialog (or run
 > `xcode-select --install`) and wait for it to finish before continuing. The clone
@@ -77,6 +82,27 @@ cd ~/.dotfiles && ./fresh.sh
 > ```zsh
 > git clone --recursive https://github.com/coding-sunshine/dotfiles.git ~/.dotfiles
 > ```
+
+#### Troubleshooting: the CLT installer dialog never appears
+
+`xcode-select --install` prints `install requested...` but no GUI dialog shows
+up (common over SSH, or if you were in a root shell). Two reliable fallbacks:
+
+- **Headless install** — no dialog needed:
+  ```zsh
+  # Tell softwareupdate to expose the CLT package, then list and install it
+  sudo touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  softwareupdate --list   # copy the exact "Command Line Tools for Xcode-XX.X" label
+  sudo softwareupdate --install "Command Line Tools for Xcode-16.4" --verbose
+  sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  ```
+- **Manual download** — if `softwareupdate` doesn't list it, grab the installer
+  from <https://developer.apple.com/download/all/> (sign in with your Apple ID),
+  search **"Command Line Tools"**, and run the `.dmg`.
+
+If a previous attempt got wedged, clear it and retry:
+`sudo rm -rf /Library/Developer/CommandLineTools && xcode-select --install`.
+Confirm success with `git --version` before continuing.
 
 `fresh.sh` is idempotent — safe to re-run. It will:
 
