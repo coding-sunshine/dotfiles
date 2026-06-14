@@ -197,9 +197,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # When you run a legacy command that has a better modern replacement installed,
 # print a one-line tip. Fires at most once per command per shell session, and
 # only if the suggested tool is actually installed, so it never gets spammy.
-# (Commands already aliased to modern tools — ls→eza, cat→bat — are omitted.)
+# (Commands already aliased to modern tools — ls→eza, cat→bat, grep→rg — are omitted.)
 typeset -gA _MODERN_TOOLS=(
-  grep "rg     (ripgrep — faster search)"
   find "fd     (friendlier, faster find)"
   du   "dust   (visual disk usage)"
   df   "duf    (prettier disk-free)"

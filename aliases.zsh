@@ -97,6 +97,7 @@ command -v eza >/dev/null 2>&1 && alias ls="eza --icons --group-directories-firs
   && alias la="eza --icons --group-directories-first -a" \
   && alias lt="eza --icons --tree --level=2"
 command -v bat >/dev/null 2>&1 && alias cat="bat --paging=never"
+command -v rg >/dev/null 2>&1 && alias grep="rg"
 command -v lazygit >/dev/null 2>&1 && alias lg="lazygit"
 command -v yazi >/dev/null 2>&1 && alias y="yazi"
 command -v btop >/dev/null 2>&1 && alias btm="btop"
