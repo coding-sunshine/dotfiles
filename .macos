@@ -922,28 +922,49 @@ defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
 # Kill affected applications                                                  #
 ###############################################################################
 
-for app in "Activity Monitor" \
-    "Address Book" \
-    "Calendar" \
-    "cfprefsd" \
-    "Contacts" \
-    "Dock" \
-    "Finder" \
-    "Google Chrome Canary" \
-    "Google Chrome" \
-    "Mail" \
-    "Messages" \
-    "Opera" \
-    "Photos" \
-    "Safari" \
-    "SizeUp" \
-    "Spectacle" \
-    "SystemUIServer" \
-    "Terminal" \
-    "Transmission" \
-    "Tweetbot" \
-    "Twitter" \
-    "iCal"; do
-    killall "${app}" &> /dev/null
-done
+echo
+echo "✅ All macOS defaults have been applied."
+echo "   Some changes only take effect after the affected apps are restarted."
+echo "   (Your terminal is never force-quit, so this session stays open.)"
+echo
+
+# Ask before force-quitting anything — restarting apps closes Chrome tabs,
+# Mail, etc., so make it opt-in instead of automatic.
+printf "Restart affected apps now (Dock, Finder, menu bar, Chrome, Mail, Safari…)? [y/N] "
+read -r restart_reply
+
+case "$restart_reply" in
+  [Yy]*)
+    # Note: "Terminal" is intentionally NOT in this list — quitting it would
+    # close the very shell running this script.
+    for app in "Activity Monitor" \
+        "Address Book" \
+        "Calendar" \
+        "cfprefsd" \
+        "Contacts" \
+        "Dock" \
+        "Finder" \
+        "Google Chrome Canary" \
+        "Google Chrome" \
+        "Mail" \
+        "Messages" \
+        "Opera" \
+        "Photos" \
+        "Safari" \
+        "SizeUp" \
+        "Spectacle" \
+        "SystemUIServer" \
+        "Transmission" \
+        "Tweetbot" \
+        "Twitter" \
+        "iCal"; do
+        killall "${app}" &> /dev/null
+    done
+    echo "Affected apps restarted."
+    ;;
+  *)
+    echo "Skipped restarting apps. The new defaults will apply after you quit/reopen"
+    echo "those apps, or after a logout/restart."
+    ;;
+esac
 echo "Done. Note that some of these changes require a logout/restart to take effect."
