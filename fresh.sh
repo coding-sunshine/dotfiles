@@ -33,8 +33,19 @@ ln -sf $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
 # Update Homebrew recipes
 brew update
 
+# Trust third-party taps before bundling. Newer Homebrew refuses to load
+# formulae from untrusted taps, which aborts `brew bundle` partway (everything
+# after the offending line — bun, claude-code, etc. — then silently fails to
+# install). Best-effort so it's a no-op on Homebrew versions without `trust`.
+brew tap stripe/stripe-cli >/dev/null 2>&1 || true
+brew trust stripe/stripe-cli >/dev/null 2>&1 || true
+
 # Install all our dependencies with bundle (See Brewfile)
 brew bundle --file ./Brewfile
+
+# Make sure everything brew just installed (bun, claude, ...) is on PATH for the
+# rest of this script, so the AI layer setup below doesn't skip gstack/MCP.
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Set default MySQL root password and auth type (only if a standalone mysql is
 # installed — Herd ships its own database services).
