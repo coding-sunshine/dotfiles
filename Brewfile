@@ -14,7 +14,6 @@ brew 'grep'
 brew 'httpie'
 brew 'jq' # Used for spatie/visit
 brew 'mackup'
-brew 'mas' # Mac App Store manager
 brew 'pkg-config' # https://github.com/driesvints/dotfiles/issues/20
 brew 'stripe/stripe-cli/stripe'
 
@@ -97,9 +96,3 @@ cask 'tunnelbear'
 cask 'tuple'
 cask 'zed' # primary GUI editor
 cask 'zoom'
-
-# Mac App Store
-mas 'Keynote', id: 409183694
-mas 'MyWoosh', id: 1498889644
-mas 'Numbers', id: 409203825
-mas 'Speedtest', id: 1153157709

@@ -13,7 +13,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 
 ### What you get
 
-- **Homebrew** packages, casks, and Mac App Store apps from a single [`Brewfile`](./Brewfile)
+- **Homebrew** packages and casks from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
 - **Terminal:** [Ghostty](https://ghostty.org) (fast, native Metal) with the JetBrains Mono Nerd Font
 - Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
@@ -29,7 +29,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 ### Requirements
 
 - A Mac running **macOS 26 (Tahoe)** on **Apple Silicon**
-- An internet connection and your Apple ID signed in (for Mac App Store apps)
+- An internet connection (and your Apple ID signed in if you install App Store apps by hand)
 
 ## A Fresh macOS Setup
 
