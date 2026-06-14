@@ -59,10 +59,24 @@ Then add the key to your [GitHub account](https://github.com/settings/keys).
 
 ### 3. Clone and install
 
+> ℹ️ **A brand-new Mac has no `git` yet.** The first `git` command triggers the
+> **Xcode Command Line Tools** installer — click **Install** in the dialog (or run
+> `xcode-select --install`) and wait for it to finish before continuing. The clone
+> that triggered it does *not* run; re-issue it afterwards. Verify with
+> `git --version`.
+
 ```zsh
 git clone --recursive git@github.com:coding-sunshine/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles && ./fresh.sh
 ```
+
+> 🔑 The SSH clone above only works once your key from step 2 is added to GitHub.
+> If you haven't done that yet (or want to skip SSH for the initial clone), use
+> HTTPS instead:
+>
+> ```zsh
+> git clone --recursive https://github.com/coding-sunshine/dotfiles.git ~/.dotfiles
+> ```
 
 `fresh.sh` is idempotent — safe to re-run. It will:
 
