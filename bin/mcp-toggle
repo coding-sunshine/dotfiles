@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Enable/disable a named MCP server on demand to keep the always-on context lean.
+# Server definitions live in ai/mcp/mcp.json (single source of truth); this reads
+# the requested one and registers/removes it at user scope.
+#
+# Usage:  mcp-toggle <name> on|off
+# Example: mcp-toggle github on   |   mcp-toggle playwright off
+
+set -e
+
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+MCP="$DOTFILES/ai/mcp/mcp.json"
+
+name="$1"
+action="$2"
+[ -n "$name" ] && [ -n "$action" ] || { echo "usage: mcp-toggle <name> on|off" >&2; exit 1; }
+command -v claude >/dev/null 2>&1 || { echo "claude CLI not found" >&2; exit 1; }
+
+case "$action" in
+  on)
+    # Extract the def, dropping any "// note" documentation keys.
+    def="$(jq -c --arg n "$name" '.mcpServers[$n] | with_entries(select(.key | startswith("//") | not))' "$MCP" 2>/dev/null)"
+    [ -n "$def" ] && [ "$def" != "null" ] || { echo "no server '$name' defined in $MCP" >&2; exit 1; }
+    claude mcp add-json --scope user "$name" "$def" && echo "MCP '$name' on"
+    ;;
+  off)
+    claude mcp remove --scope user "$name" 2>/dev/null \
+      || claude mcp remove "$name" 2>/dev/null \
+      || true
+    echo "MCP '$name' off"
+    ;;
+  *)
+    echo "usage: mcp-toggle <name> on|off" >&2; exit 1 ;;
+esac

@@ -56,26 +56,59 @@ if command -v cavemem >/dev/null 2>&1; then
     || echo "  (cavemem install skipped)"
 fi
 
-# Register shared MCP servers with the Claude CLI (best-effort).
+# Install agent skills via the `npx skills` ecosystem (best-effort). These are
+# thin, progressive-disclosure skills (~100 tokens frontmatter each), so they're
+# cheap to keep always-on. Land in the user skills dir, coexisting with ours.
+if command -v npx >/dev/null 2>&1; then
+  echo "  installing agent skills (npx skills)..."
+  npx -y skills add vercel-labs/agent-browser -g -y >/dev/null 2>&1 || true            # token-lean browser CLI
+  npx -y skills add anthropics/skills@frontend-design -g -y >/dev/null 2>&1 || true     # non-AI-looking UI
+  npx -y skills add vercel-labs/agent-skills@web-design-guidelines -g -y >/dev/null 2>&1 || true  # UI audit
+fi
+
+# gstack — Garry Tan's command framework. Installed PREFIXED (/gstack-*) so it
+# coexists with our /review //ship //plan instead of colliding. Best-effort.
+if command -v bun >/dev/null 2>&1 && command -v git >/dev/null 2>&1; then
+  if [ ! -d "$HOME/.claude/skills/gstack" ]; then
+    echo "  installing gstack (/gstack-* commands)..."
+    git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git \
+      "$HOME/.claude/skills/gstack" >/dev/null 2>&1 \
+      && ( cd "$HOME/.claude/skills/gstack" && ./setup --prefix >/dev/null 2>&1 ) \
+      && echo "  gstack installed" \
+      || echo "  (gstack install skipped)"
+  fi
+else
+  echo "  (skipping gstack — needs bun + git)"
+fi
+
+# Register MCP servers with the Claude CLI (best-effort).
 if command -v claude >/dev/null 2>&1; then
   echo "  registering MCP servers with claude..."
-  for srv in filesystem github context7; do
+  # Lean always-on set only. github/playwright/chrome-devtools are opt-in via
+  # `mcp-toggle <name> on` (github-on / browser-on) to keep per-turn tokens low.
+  for srv in filesystem context7; do
     claude mcp add-json --scope user "$srv" \
-      "$(jq -c ".mcpServers.$srv" "$AI/mcp/mcp.json")" 2>/dev/null \
+      "$(jq -c ".mcpServers.$srv | with_entries(select(.key|startswith(\"//\")|not))" "$AI/mcp/mcp.json")" 2>/dev/null \
       || echo "  ($srv MCP already registered or failed — skipping)"
   done
   # composio is heavy — register only when an API key is present.
   if [ -n "$COMPOSIO_API_KEY" ]; then
     claude mcp add-json --scope user composio \
-      "$(jq -c '.mcpServers.composio' "$AI/mcp/mcp.json")" 2>/dev/null \
+      "$(jq -c '.mcpServers.composio | with_entries(select(.key|startswith("//")|not))' "$AI/mcp/mcp.json")" 2>/dev/null \
       || echo "  (composio MCP already registered or failed — skipping)"
   fi
 
-  # Install official plugins (best-effort; never fail setup).
+  # Official plugins (best-effort; never fail setup).
   claude plugin marketplace add anthropics/claude-code >/dev/null 2>&1 || true
   for plugin in feature-dev code-review; do
     claude plugin install "$plugin" >/dev/null 2>&1 || true
   done
+
+  # Superpowers: install but DISABLE by default (it preloads ~22k tokens when
+  # active). Toggle per session with `superpowers-on` / `superpowers-off`.
+  claude plugin marketplace add obra/superpowers-marketplace >/dev/null 2>&1 || true
+  claude plugin install superpowers@superpowers-marketplace >/dev/null 2>&1 || true
+  claude plugin disable superpowers@superpowers-marketplace >/dev/null 2>&1 || true
 else
   echo "  claude CLI not found yet — re-run ./ai.sh after Brewfile install."
 fi

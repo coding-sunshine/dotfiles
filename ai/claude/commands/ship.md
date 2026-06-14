@@ -11,6 +11,8 @@ failure — never commit broken code.
    lint, type-check, and tests).
 2. **Review** — delegate the working-tree diff to the `code-reviewer` subagent.
    Fix 🔴 must-fix findings; surface 🟡/🟢 for my call.
-3. **Commit** — only if 1–2 pass. Stage and commit with a clear message
+3. **Security** — run the `/security-review` skill on the diff. Treat anything it
+   flags as a 🔴 must-fix (auth, secrets, injection, unsafe input) before commit.
+4. **Commit** — only if 1–3 pass. Stage and commit with a clear message
    ($ARGUMENTS if given, otherwise write an accurate one from the diff).
    Never stage `.env` or `*.local.*`. Do not push unless I ask.

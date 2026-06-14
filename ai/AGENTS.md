@@ -48,6 +48,17 @@ Keep the working context small and the durable context known:
 - Keep `CLAUDE.md` and rules under ~200 lines; scope detail to `.claude/rules/`.
 - Watch the statusline / `/context` / `/cost`; keep the active MCP set lean and
   downshift the model (`/model`) for routine work.
+- Audit periodically with `/context`. The always-on set is deliberately small
+  (filesystem + context7 MCP); enable heavier tools only when needed —
+  `github-on`, `browser-on`, `superpowers-on` — and turn them back off after.
+
+## Browser automation
+
+Default to the **Agent Browser** CLI (`agent-browser`) — it's the most
+token-efficient (load workflows via `agent-browser skills get core` or `--help`).
+Use `npx playwright` for authoring/running standard E2E tests. Only run
+`browser-on` (Playwright MCP + Chrome DevTools MCP) when you need interactive MCP
+control or network/console/performance debugging, and `browser-off` afterwards.
 
 ## Secrets
 

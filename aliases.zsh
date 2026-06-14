@@ -73,6 +73,20 @@ alias cauto="claude-auto"
 alias memview="cavemem viewer"
 alias caveman-on="curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash"
 
+# Opt-in MCP toggles (bin/mcp-toggle) — keep the always-on set lean, enable on demand
+alias github-on="mcp-toggle github on"
+alias github-off="mcp-toggle github off"
+alias browser-on="mcp-toggle playwright on && mcp-toggle chrome-devtools on && echo 'Browser MCP on. Agent Browser (npx agent-browser) is the lean default; run npx agent-browser install once.'"
+alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
+
+# Superpowers plugin — installed but disabled by default (preloads ~22k tokens);
+# turn on only for heavy structured-dev sessions, then off again.
+alias superpowers-on="claude plugin enable superpowers@superpowers-marketplace"
+alias superpowers-off="claude plugin disable superpowers@superpowers-marketplace"
+
+# Update gstack to the latest (re-runs setup, keeping the /gstack-* prefix)
+alias gstack-upgrade="(cd ~/.claude/skills/gstack && git pull && ./setup --prefix)"
+
 # Modern CLI replacements (only if installed)
 command -v eza >/dev/null 2>&1 && alias ls="eza --group-directories-first" && alias lt="eza --tree --level=2"
 command -v bat >/dev/null 2>&1 && alias cat="bat --paging=never"

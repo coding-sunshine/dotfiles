@@ -137,10 +137,10 @@ idempotent — re-run it any time you change a config.
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh` | Statusline: model · branch · context-usage bar · session cost |
 | [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `test-writer` & `debugger` (Sonnet) |
 | [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship` |
-| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (stack-aware lint/test gates) |
+| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `gstack` (`/gstack-*`) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
 | [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
-| [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | MCP servers: filesystem, github, context7 (+ composio when keyed) |
+| [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | MCP servers: **always-on** filesystem, context7; **opt-in** github, playwright, chrome-devtools, composio |
 
 To update: edit a file under `ai/`, then run `./ai.sh`. Skills are symlinked
 per-item so externally-installed skills coexist without polluting the repo.
@@ -195,9 +195,15 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   isolated context window (verbose work stays out of the main thread).
 - **Slash commands** ([`ai/claude/commands/`](./ai/claude/commands)) — `/review`,
   `/pr`, `/spec`, `/test`, plus `/plan` (delegates to `planner`) and `/ship`
-  (full gate: verify → review → commit).
+  (full gate: verify → review → **security-review** → commit).
 - **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
-  lint/test/type-check gates.
+  lint/test/type-check gates. `ai.sh` also installs (via `npx skills`)
+  `agent-browser` (token-lean browser CLI), Anthropic's `frontend-design`, and
+  Vercel's `web-design-guidelines`.
+- **gstack** ([garrytan/gstack](https://github.com/garrytan/gstack)) — Garry Tan's
+  23-command framework (CEO/eng/design/QA/release review gates), installed
+  **prefixed** as `/gstack-*` so it coexists with the commands above. Update with
+  `gstack-upgrade`.
 - **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
   file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
@@ -248,6 +254,46 @@ Two paths for building whole features/apps:
 > unattended work, prefer Anthropic's **Claude Code Routines** (pushes only to
 > `claude/*` branches).
 
+### Browser automation
+
+Ranked by token cost (browser tools are expensive, so the default is the lean one):
+
+- **Default — [Agent Browser](https://github.com/vercel-labs/agent-browser)**: a
+  CLI (~1,400 tokens/snapshot, ~93% less than Playwright MCP). Installed as a thin
+  skill by `ai.sh`; run `npx agent-browser install` once to fetch Chrome.
+- **E2E tests — Playwright CLI** (`npx playwright`): no MCP tool-def tax; use it to
+  author/run standard test suites.
+- **Opt-in — Playwright MCP + Chrome DevTools MCP**: `browser-on` registers both
+  (interactive control + network/console/perf debugging); `browser-off` after.
+  Playwright MCP alone adds ~13.7k tokens at startup, hence opt-in.
+
+### Token budget
+
+Session base overhead is ~20–30k tokens before you type (system prompt + CLAUDE.md
+every turn + MCP schemas every turn + skill frontmatter). This setup keeps it lean:
+
+- **Always-on by design:** `filesystem` + `context7` MCP, a short
+  `CLAUDE.md`→`AGENTS.md`, skill frontmatter (~100 tokens each; gstack adds ~2–3k
+  for its 23 skills), auto memory (≤25k cap).
+- **Off by default (opt-in):** `github`, `playwright`, `chrome-devtools` MCP
+  (toggle with `github-on` / `browser-on`), and Superpowers (installed but
+  disabled — `superpowers-on` only for heavy sessions; it preloads ~22k tokens).
+- **Levers without losing quality:** delegate fan-out to subagents, use `cavemem`
+  for durable memory (not a bloated `CLAUDE.md`), `caveman-on` for output
+  compression, and watch `/context` + `/cost`. Audit with `/context` and toggle
+  off anything you're not using this session.
+
+### References / going further
+
+- [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) and
+  [awesome-claude-code-skills](https://github.com/Sensiblehorizonmatahari4990/awesome-claude-code-skills)
+  — curated indexes of skills, hooks, commands, and MCP servers.
+- [ECC / everything-claude-code](https://github.com/affaan-m/everything-claude-code)
+  — a huge harness (261 skills / 64 agents). We cherry-picked the security-review
+  gate rather than installing it; if you want the kitchen sink,
+  `/plugin marketplace add affaan-m/everything-claude-code` + `/plugin install ecc@ecc`
+  (mind the context cost — check `/context` after).
+
 ### Pre-commit hooks (Lefthook)
 
 [Lefthook](https://lefthook.dev) runs format/lint on **every** commit — yours and
@@ -283,6 +329,7 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`.env.example`](./.env.example) | Template for `~/.env` secrets (API keys) |
 | [`bin/gwt`](./bin/gwt) | Git worktree helper for parallel agents |
 | [`bin/claude-auto`](./bin/claude-auto) | Headless, budget-capped Claude runner for automation/CI |
+| [`bin/mcp-toggle`](./bin/mcp-toggle) | Enable/disable an opt-in MCP server on demand (keeps context lean) |
 | [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship, zed) |
 | [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `claude-rules/`) |
 | [`.macos`](./.macos) | macOS system defaults |
@@ -305,6 +352,10 @@ spec             # GitHub Spec Kit (specify init, then /speckit.* commands)
 ralph-init       # drop the autonomous Ralph build loop into this project
 cauto "..."      # headless, budget-capped Claude run for automation
 memview          # open the cavemem persistent-memory viewer
+github-on        # enable the (opt-in) github MCP for this session; github-off after
+browser-on       # enable Playwright + Chrome DevTools MCP; browser-off after
+superpowers-on   # enable the Superpowers plugin for a heavy session; superpowers-off after
+gstack-upgrade   # update gstack to the latest /gstack-* commands
 mackup backup    # snapshot app preferences before a big change
 ```
 

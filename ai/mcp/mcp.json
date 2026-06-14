@@ -1,11 +1,12 @@
 {
-  "// note": "Canonical MCP server definitions. ai.sh registers filesystem, github, and context7 with the Claude CLI via `claude mcp add-json`. composio is registered only when COMPOSIO_API_KEY is set (it's heavy — 300+ connectors — so keep it off unless a task needs it). Keep the active MCP set lean: each heavy server costs 2k–10k context tokens; toggle with `/mcp`. Secrets come from env (~/.env), never inline.",
+  "// note": "Canonical MCP server definitions. ai.sh auto-registers only the lean always-on set (filesystem, context7). Everything else is opt-in via `mcp-toggle <name> on|off` (or `/mcp`) so the per-turn schema cost stays low — each heavy server adds 2k–10k context tokens every turn. github is opt-in because the `gh` CLI covers routine work; composio is registered by ai.sh only when COMPOSIO_API_KEY is set. Secrets come from env (~/.env), never inline.",
   "mcpServers": {
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "${HOME}/Code", "${HOME}/Herd"]
     },
     "github": {
+      "// note": "Opt-in (heavy schema, re-sent every turn). Enable with `github-on` / `mcp-toggle github on` when you need GitHub tools beyond the gh CLI.",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
@@ -27,6 +28,16 @@
       "env": {
         "COMPOSIO_API_KEY": "${COMPOSIO_API_KEY}"
       }
+    },
+    "playwright": {
+      "// note": "Opt-in (heavy: ~13.7k tool-def tokens at startup). Prefer the Agent Browser / Playwright CLI instead; enable with `browser-on` only when you need interactive MCP control.",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "// note": "Opt-in. Network/console/performance/DOM debugging via CDP. Enable with `browser-on` when diagnosing runtime issues.",
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
     }
   }
 }
