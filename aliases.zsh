@@ -40,6 +40,10 @@ alias uva="uv add"
 alias venv="uv venv && source .venv/bin/activate"
 
 # AI agents
+# Default `claude` (and the `cc` shortcut, which expands to it) to skip the
+# per-action permission prompts. Only affects interactive shells, not the
+# `claude ...` calls inside scripts like ai.sh / bin/claude-auto.
+alias claude="claude --dangerously-skip-permissions"
 alias cc="claude"
 alias cx="codex"
 alias gem="gemini"
