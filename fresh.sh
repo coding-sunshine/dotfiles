@@ -37,8 +37,10 @@ brew update
 # formulae from untrusted taps, which aborts `brew bundle` partway (everything
 # after the offending line — bun, claude-code, etc. — then silently fails to
 # install). Best-effort so it's a no-op on Homebrew versions without `trust`.
-brew tap stripe/stripe-cli >/dev/null 2>&1 || true
-brew trust stripe/stripe-cli >/dev/null 2>&1 || true
+for tap in stripe/stripe-cli oven-sh/bun; do
+  brew tap "$tap" >/dev/null 2>&1 || true
+  brew trust "$tap" >/dev/null 2>&1 || true
+done
 
 # Install all our dependencies with bundle (See Brewfile)
 brew bundle --file ./Brewfile
