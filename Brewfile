@@ -1,6 +1,7 @@
 # Taps
 tap 'stripe/stripe-cli'
 tap 'oven-sh/bun'
+tap 'manaflow-ai/cmux' # for the cmux cask below
 
 # Binaries
 brew 'awscli'
@@ -81,6 +82,7 @@ cask 'caffeine'
 cask 'claude'
 cask 'claude-code'
 cask 'cleanshot'
+cask 'cmux' # Ghostty-based terminal for running AI coding agents in parallel
 cask 'codex'
 cask 'codex-app'
 cask 'copilot-cli'
@@ -100,6 +102,7 @@ cask 'herd'
 cask 'httpie'
 cask 'imageoptim'
 cask 'loom'
+cask 'maestro' # RunMaestro.ai — AI agent command center
 cask 'pastebot'
 cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
 cask 'reflex'
@@ -113,5 +116,6 @@ cask 'tinkerwell'
 cask 'transmit'
 cask 'tunnelbear'
 cask 'tuple'
+cask 'warp' # AI-powered terminal
 cask 'zed' # primary GUI editor
 cask 'zoom'
