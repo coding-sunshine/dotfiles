@@ -385,6 +385,7 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 
 ```zsh
 dotfiles         # cd into the dotfiles repo
+update           # sync this machine: pull + brew bundle/upgrade + refresh AI layer (bin/dotup)
 reloadshell      # reload Oh My Zsh after editing config
 brew bundle      # install anything newly added to the Brewfile
 ./ai.sh          # re-apply agent configs after editing ai/
@@ -403,6 +404,20 @@ superpowers-on   # enable the Superpowers plugin for a heavy session; superpower
 gstack-upgrade   # update gstack to the latest /gstack-* commands
 mackup backup    # snapshot app preferences before a big change
 ```
+
+### Keeping a machine in sync
+
+Run **`update`** (alias for [`bin/dotup`](./bin/dotup)) to bring a machine fully
+up to date in one command: it pulls the repo, installs anything new from the
+Brewfile, upgrades installed packages, cleans up, and refreshes the AI layer.
+
+What updates how:
+
+| Thing | How it updates |
+|-------|----------------|
+| `.zshrc`, aliases, `starship.toml`, ghostty, `.gitconfig`, `ai/*` | **Live on `git pull`** — they're symlinks into the repo. Just `exec zsh` to reload. |
+| Homebrew packages | `update` installs new Brewfile entries and upgrades existing ones. It does **not** remove packages you deleted — prune with `brew bundle cleanup --file ~/.dotfiles/Brewfile --force`. |
+| `.macos` system defaults | Not auto-applied (it can restart apps). Re-apply with `source ~/.dotfiles/.macos` when it changes. |
 
 ## Troubleshooting
 

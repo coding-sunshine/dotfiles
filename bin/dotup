@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Bring this machine fully in sync with the dotfiles: pull the latest, install
+# new Homebrew packages, upgrade existing ones, and refresh the AI agent layer.
+# Config files (.zshrc, starship, ghostty, git, ai/*) are symlinked, so they go
+# live the moment the pull lands — just reload your shell afterwards.
+#
+# Usage: dotup            (alias: `update`)
+
+set -e
+
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+
+echo "⟳ Pulling latest dotfiles…"
+git -C "$DOTFILES" pull --rebase --autostash origin main
+
+if command -v brew >/dev/null 2>&1; then
+  echo "⟳ Updating Homebrew…"
+  brew update
+  echo "⟳ Installing anything new in the Brewfile…"
+  brew bundle --file "$DOTFILES/Brewfile"
+  echo "⟳ Upgrading installed packages…"
+  brew upgrade
+  brew cleanup
+else
+  echo "  (brew not found — skipping package update)"
+fi
+
+# Refresh the AI agent layer (idempotent: re-links configs, re-registers MCP).
+if [ -x "$DOTFILES/ai.sh" ]; then
+  echo "⟳ Refreshing AI agent layer…"
+  ( cd "$DOTFILES" && ./ai.sh )
+fi
+
+echo
+echo "✅ Up to date."
+echo "   • Reload your shell:        exec zsh"
+echo "   • Re-apply macOS defaults:  source $DOTFILES/.macos   (only if .macos changed)"
+echo "   • Prune removed packages:   brew bundle cleanup --file $DOTFILES/Brewfile --force"
