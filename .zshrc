@@ -77,9 +77,24 @@ ZSH_CUSTOM=$DOTFILES
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(artisan git)
+plugins=(
+  artisan git fzf-tab
+  sudo            # press Esc twice to prepend sudo to the last command
+  dirhistory      # Alt + ←/→/↑/↓ to navigate directory history
+  colored-man-pages
+  extract         # `x <archive>` extracts any archive format
+  copypath copyfile
+  composer npm docker brew gh macos web-search
+)
 
 source $ZSH/oh-my-zsh.sh
+
+# Completion styling (case-insensitive) + fzf-tab fuzzy completion previews
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu no                      # fzf-tab replaces the menu
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':fzf-tab:*' fzf-flags --height=50% --border
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --icons --color=always $realpath 2>/dev/null || ls -la $realpath'
 
 # User configuration
 
@@ -148,11 +163,19 @@ export HERD_PHP_85_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/p
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --zsh)"
+# Atuin: magical shell history (Ctrl-R). Up-arrow left as normal zsh history.
+command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh --disable-up-arrow)"
 
 # Zsh autosuggestions (installed via Homebrew)
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
 [ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
   source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# you-should-use: if you type a command that has an alias defined, it reminds
+# you of the shorter alias ("Found existing alias..."). Reinforces muscle memory.
+export YSU_MESSAGE_POSITION="after"
+[ -f "$HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh" ] && \
+  source "$HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh"
 
 # Starship prompt (owns the prompt)
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
@@ -169,3 +192,36 @@ export PATH="$HOME/.local/bin:$PATH"
 # Zsh syntax highlighting MUST be sourced last (after all ZLE widgets)
 [ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# ── "Use the modern tool" nudges ─────────────────────────────────────────────
+# When you run a legacy command that has a better modern replacement installed,
+# print a one-line tip. Fires at most once per command per shell session, and
+# only if the suggested tool is actually installed, so it never gets spammy.
+# (Commands already aliased to modern tools — ls→eza, cat→bat — are omitted.)
+typeset -gA _MODERN_TOOLS=(
+  grep "rg     (ripgrep — faster search)"
+  find "fd     (friendlier, faster find)"
+  du   "dust   (visual disk usage)"
+  df   "duf    (prettier disk-free)"
+  ps   "procs  (modern process viewer)"
+  sed  "sd     (simpler find & replace)"
+  man  "tldr   (concise, example-first help)"
+  ping "gping  (ping with a live graph)"
+  top  "btop   (gorgeous resource monitor)"
+  cd   "z      (zoxide — jump to frequent dirs)"
+)
+typeset -gA _MODERN_TOOLS_SEEN=()
+_modern_tool_nudge() {
+  local cmd=${1%% *} tip tool
+  tip=${_MODERN_TOOLS[$cmd]}
+  [[ -n $tip && -z ${_MODERN_TOOLS_SEEN[$cmd]} ]] || return
+  tool=${tip%% *}
+  command -v "$tool" >/dev/null 2>&1 || return
+  _MODERN_TOOLS_SEEN[$cmd]=1
+  print -P "%F{yellow}💡 try:%f %F{green}${tip}%f"
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _modern_tool_nudge
+
+# System splash on new interactive shells (comment out the next line to disable)
+command -v fastfetch >/dev/null 2>&1 && [[ -o interactive ]] && fastfetch

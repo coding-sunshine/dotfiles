@@ -16,8 +16,13 @@ and adapted for an AI-agent-driven 2026 workflow.
 - **Homebrew** packages and casks from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
 - **Terminal:** [Ghostty](https://ghostty.org) (fast, native Metal) with the JetBrains Mono Nerd Font
-- Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`
-- Zsh autosuggestions + syntax highlighting, and a global git config (delta diffs, sane defaults, SSH-signed commits)
+- Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`,
+  plus `btop`, `yazi`, `glow`, `jless`, `dust`, `duf`, `procs`, `sd`, `gping`, `zellij`
+- Smart shell: `atuin` (fuzzy Ctrl-R history), `fzf-tab` (fuzzy Tab completion),
+  a `fastfetch` greeting, and **"use the modern tool" nudges** that remind you to
+  reach for `rg`/`fd`/`dust`/… when you type the old command
+- Zsh autosuggestions + syntax highlighting + `you-should-use` alias reminders, and a
+  global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
 - GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), Zed + Cursor (editors), and more
 - An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,

@@ -39,6 +39,7 @@ brew 'ruff' # linter/formatter
 # Zsh enhancements
 brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
+brew 'zsh-you-should-use' # nudges you toward your aliases when you type the long form
 
 # Modern CLI quality-of-life (great for both humans and AI agents)
 brew 'ripgrep'   # rg — fast search
@@ -52,6 +53,24 @@ brew 'lefthook'  # fast, parallel git hooks (format/lint on commit)
 brew 'direnv'    # per-directory env (.envrc)
 brew 'tldr'      # concise man pages
 brew 'starship'  # cross-shell prompt
+
+# Terminal candy + extra modern CLI (nerdy & useful)
+brew 'atuin'      # magical shell history (full-screen fuzzy Ctrl-R)
+brew 'fastfetch'  # system-info splash on shell start
+brew 'btop'       # gorgeous resource monitor
+brew 'yazi'       # blazing TUI file manager
+brew 'zellij'     # terminal multiplexer (persistent split sessions)
+brew 'glow'       # render markdown in the terminal
+brew 'jless'      # JSON/YAML viewer
+brew 'dust'       # du, but pretty
+brew 'duf'        # df, but pretty
+brew 'procs'      # ps, but pretty
+brew 'sd'         # sed, but simple
+brew 'gping'      # ping with a live graph
+brew 'sevenzip'   # archives (also a yazi preview dep)
+brew 'poppler'    # PDF previews for yazi
+brew 'lolcat'     # rainbow text (pipe into it for fun)
+brew 'cmatrix'    # matrix rain (pure eye-candy)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI

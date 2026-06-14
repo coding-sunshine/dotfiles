@@ -5,5 +5,8 @@
 # Local-only agent settings
 .claude/settings.local.json
 
+# Runtime-cloned zsh plugin (installed by fresh.sh)
+plugins/fzf-tab/
+
 # macOS
 .DS_Store

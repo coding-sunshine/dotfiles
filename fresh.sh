@@ -77,6 +77,13 @@ if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
 fi
 
+# Install the fzf-tab zsh plugin (fuzzy Tab completion). It's git-only (not on
+# Homebrew) and git-ignored, so it lives in the custom plugins dir without
+# dirtying the repo. Best-effort.
+if command -v git >/dev/null 2>&1 && [ ! -d "$HOME/.dotfiles/plugins/fzf-tab" ]; then
+  git clone --depth 1 https://github.com/Aloxaf/fzf-tab "$HOME/.dotfiles/plugins/fzf-tab" >/dev/null 2>&1 || true
+fi
+
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
