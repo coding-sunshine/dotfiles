@@ -102,5 +102,13 @@ done
 # Symlink the Mackup config file to the home directory
 ln -sf $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
+# Upgrade everything Homebrew installed and run a health check. Done near the end
+# so it catches anything pulled in above. `brew doctor` is advisory (non-zero
+# just means warnings), so it never aborts the run.
+if command -v brew >/dev/null 2>&1; then
+  brew upgrade
+  brew doctor || true
+fi
+
 # Set macOS preferences - we will run this last because this will reload the shell
 source ./.macos
