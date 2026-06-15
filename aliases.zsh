@@ -84,6 +84,11 @@ alias github-off="mcp-toggle github off"
 alias browser-on="mcp-toggle playwright on && mcp-toggle chrome-devtools on && echo 'Browser MCP on. Agent Browser (npx agent-browser) is the lean default; run npx agent-browser install once.'"
 alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
 
+# code-review-graph MCP (uv-installed by fresh.sh). Off by default; toggle on
+# from inside the target project, after the one-time per-repo build.
+alias review-on="mcp-toggle code-review-graph on && echo 'code-review-graph on. Run \`code-review-graph build\` once in this repo first.'"
+alias review-off="mcp-toggle code-review-graph off"
+
 # Superpowers plugin — installed but disabled by default (preloads ~22k tokens);
 # turn on only for heavy structured-dev sessions, then off again.
 alias superpowers-on="claude plugin enable superpowers@superpowers-marketplace"

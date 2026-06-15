@@ -38,6 +38,11 @@
       "// note": "Opt-in. Network/console/performance/DOM debugging via CDP. Enable with `browser-on` when diagnosing runtime issues.",
       "command": "npx",
       "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "code-review-graph": {
+      "// note": "Opt-in. Local-first code-intelligence graph (Tree-sitter AST + caller/dependent/test edges) exposing ~30 review tools over MCP so an agent reads only what a diff touches. Installed by fresh.sh (`uv tool install code-review-graph`). Run `code-review-graph build` once per repo before enabling. Enable with `review-on`, disable with `review-off`. Reads the graph relative to the cwd, so toggle it on from inside the target project.",
+      "command": "code-review-graph",
+      "args": ["serve"]
     }
   }
 }
