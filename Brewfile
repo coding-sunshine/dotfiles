@@ -109,6 +109,7 @@ cask 'reflex'
 cask 'screen-studio'
 cask 'sequel-ace' # MySQL/MariaDB GUI
 cask 'slack'
+cask 'sublime-text'
 cask 'tableplus'
 cask 'telegram-desktop'
 cask 'the-unarchiver'
