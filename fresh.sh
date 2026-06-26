@@ -66,6 +66,7 @@ mkdir -p $HOME/Code/Cogneiss               # Cogneiss
 # or run `composer global require laravel/installer` manually).
 if command -v composer >/dev/null 2>&1; then
   composer global require laravel/installer
+  composer global require 'phploc/phploc=*'   # LOC/complexity metrics (abandoned upstream but still runs)
 fi
 
 # Install global AI tooling (best-effort; needs node/uv from the Brewfile).
