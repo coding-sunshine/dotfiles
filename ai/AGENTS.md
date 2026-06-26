@@ -35,6 +35,32 @@ there is a single source of truth.
 `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`, `gh`,
 `docker`. Prefer `rg`/`fd` over `grep`/`find`.
 
+## Capability map — reach for these automatically
+
+I've installed a lot of agent tooling; don't wait to be asked — when a task
+matches a row, use that tool. Skills are progressive (load only when invoked),
+so routing costs nothing until used.
+
+| When you're… | Reach for |
+|---|---|
+| exploring an unfamiliar codebase / "how does X relate to Y" | `/graphify .` then query the graph |
+| tracing callers / impact / blast-radius of a change | code-review-graph (`graph-init` once, then `review-on`) |
+| doing a structural search or multi-file refactor | the `ast-grep` skill (not regex) |
+| building or polishing UI | `frontend-design` / `impeccable` / `ui-ux-pro-max` skills |
+| researching across many sources | `/deep-research` |
+| about to commit / open a PR | `verify` skill, then `/review` (or `/gstack-review`) |
+| planning a non-trivial feature | `/plan` (planner subagent) or `/gstack-spec` |
+| told to "just build it" from a feature list, unattended | `autobuild features.md` |
+| running a big/verbose search or test sweep | delegate to a subagent (only the summary returns) |
+| running parallel agents on branches | `gwt new <branch>` |
+| a headless, budget-capped automation run | `claude-auto` |
+| over-engineering creeping in | `/ponytail` |
+
+Heavy/opt-in — turn on then off: `superpowers-on`, `browser-on`, `github-on`,
+`review-on`. The `continuous-learning-v2` instinct system observes sessions and
+surfaces your recurring patterns automatically; check `/instinct-status`
+occasionally and promote the good ones.
+
 ## Context & token discipline
 
 Keep the working context small and the durable context known:
@@ -57,6 +83,10 @@ Keep the working context small and the durable context known:
 - Audit periodically with `/context`. The always-on set is deliberately small
   (filesystem + context7 MCP); enable heavier tools only when needed —
   `github-on`, `browser-on`, `superpowers-on` — and turn them back off after.
+- When context feels heavy, audit by component size: **MCP is the biggest lever**
+  (~500 tokens per tool schema — drop any server a CLI like `gh`/`git` replaces);
+  agent/skill `description`s load into every call (keep <30 words); flag skills
+  >400 lines, rules >100, combined `CLAUDE.md` >300. Aim to stay under ~40% used.
 
 ## Browser automation
 

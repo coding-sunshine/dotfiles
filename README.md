@@ -182,7 +182,7 @@ idempotent — re-run it any time you change a config.
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh` | Statusline: model · branch · context-usage bar · session cost |
 | [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `test-writer` & `debugger` (Sonnet) |
 | [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship` |
-| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `gstack` (`/gstack-*`) |
+| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `continuous-learning-v2` (instincts), `agent-eval`, `gstack` (`/gstack-*`) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
 | [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
 | [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | MCP servers: **always-on** filesystem, context7; **opt-in** github, playwright, chrome-devtools, composio |
@@ -247,6 +247,15 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   Vercel's `web-design-guidelines`, `ast-grep` (structural code search),
   `find-skills` (discover/install skills), `ui-ux-pro-max` (design suite, 7
   skills), and `impeccable` (frontend polish/critique).
+- **Vendored skills** (cherry-picked from [affaan-m/ECC](https://github.com/affaan-m/ecc),
+  not the whole bundle) — `continuous-learning-v2` watches sessions via Pre/PostToolUse
+  hooks and distils your recurring patterns into confidence-scored "instincts"
+  (`/instinct-status`; heavy background observer is **off** by default, data in
+  `~/.local/share/ecc-homunculus`), and `agent-eval` (guidance for head-to-head
+  agent benchmarking — the CLI installs separately).
+- **Capability map** — [`AGENTS.md`](./ai/AGENTS.md) carries a "reach for these
+  automatically" table so agents route to the right tool (graphify, ast-grep,
+  deep-research, autobuild, …) without you having to remember each one.
 - **gstack** ([garrytan/gstack](https://github.com/garrytan/gstack)) — Garry Tan's
   23-command framework (CEO/eng/design/QA/release review gates), installed
   **prefixed** as `/gstack-*` so it coexists with the commands above. Update with

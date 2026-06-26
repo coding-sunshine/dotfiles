@@ -32,6 +32,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -39,6 +50,15 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/format.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
           }
         ]
       }
@@ -75,9 +95,8 @@
       }
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
-  "model": "sonnet"
+  "theme": "dark"
 }
