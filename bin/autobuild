@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# autobuild — feature list → autonomous build → PR. The front-end Ralph lacks.
+#
+# Ralph (templates/ralph) is the proven autonomous loop, but it makes you
+# hand-write the prd.json backlog. autobuild adds the two missing pieces:
+#   1. PLAN  — turn a plain feature list into a Ralph prd.json backlog (+ SPEC.md)
+#   2. SHIP  — isolate in a branch, run ralph.sh, open a draft PR
+# It reuses what you already have rather than reimplementing the loop:
+#   claude-auto  — budget/turn-capped headless agent (the planner)
+#   ralph.sh     — the autonomous build loop (templates/ralph)
+#   gwt          — worktree isolation (opt-in via AB_WORKTREE=1)
+#
+# Usage:   autobuild <features.md> [target-repo-dir]
+#
+# Env:
+#   AB_MAX_ITER    ralph loop iterations               (default 25)
+#   AB_WORKTREE=1  isolate in a sibling worktree (gwt)  (default: branch in place)
+#   AB_DRY_RUN=1   stub the planner + skip loop/PR — fast plumbing self-check
+#   plus the underlying caps: CLAUDE_MAX_USD, CLAUDE_MAX_TURNS, RALPH_MODEL
+#
+# Self-check:  AB_DRY_RUN=1 autobuild demo.md   (runs plan→commit, no API/loop)
+
+set -euo pipefail
+
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+FEATURES="${1:?usage: autobuild <features.md> [target-repo-dir]}"
+TARGET="${2:-$PWD}"
+DRY="${AB_DRY_RUN:-}"
+
+[ -f "$FEATURES" ] || { echo "autobuild: no such file: $FEATURES" >&2; exit 1; }
+FEATURES="$(cd "$(dirname "$FEATURES")" && pwd)/$(basename "$FEATURES")"
+[ -d "$DOTFILES/templates/ralph" ] || { echo "autobuild: $DOTFILES/templates/ralph not found" >&2; exit 1; }
+cd "$TARGET"
+
+# --- isolation: dedicated branch (worktree opt-in) --------------------------
+git rev-parse --git-dir >/dev/null 2>&1 || { git init -q && git commit -q --allow-empty -m "autobuild: init"; }
+git rev-parse HEAD   >/dev/null 2>&1 || git commit -q --allow-empty -m "autobuild: root"
+BRANCH="autobuild/$(date +%Y%m%d-%H%M%S)"
+if [ -n "${AB_WORKTREE:-}" ]; then WT="$(gwt new "$BRANCH")"; cd "$WT"; else git switch -c "$BRANCH" >/dev/null; fi
+
+# Drop the Ralph loop into the project (idempotent; this is what ralph-init does).
+mkdir -p .ralph
+cp -n "$DOTFILES/templates/ralph/ralph.sh" "$DOTFILES/templates/ralph/CLAUDE.md" .ralph/ 2>/dev/null || true
+chmod +x .ralph/ralph.sh
+
+# === 1. PLAN: feature list -> Ralph prd.json backlog (+ SPEC.md) ============
+echo "-- planning backlog from $(basename "$FEATURES") --"
+if [ -n "$DRY" ]; then
+  printf '{"project":"dry-run","stories":[{"id":"S1","title":"scaffold + test runner","passes":false},{"id":"S2","title":"feature one","passes":false}]}\n' > .ralph/prd.json
+else
+  CLAUDE_MAX_TURNS="${CLAUDE_MAX_TURNS:-40}" claude-auto "You are an autonomous software architect. Read the feature list below and any existing code in this repo. Research with web/context7 if useful. Write TWO files and STOP — do not implement features yet:
+
+1) SPEC.md (repo root): chosen stack (justified), architecture, and per-feature acceptance criteria.
+2) .ralph/prd.json: the build backlog in EXACTLY this schema —
+   {\"project\":\"<name>\",\"stories\":[{\"id\":\"S1\",\"title\":\"<small, verifiable story>\",\"passes\":false}, ...]}
+   Stories ordered and independently verifiable; the FIRST scaffolds the project + test runner if the repo is empty.
+
+FEATURE LIST:
+$(cat "$FEATURES")"
+fi
+command -v jq >/dev/null 2>&1 && jq -e '.stories | length > 0' .ralph/prd.json >/dev/null 2>&1 \
+  || { echo "autobuild: planner did not produce a valid .ralph/prd.json — aborting" >&2; exit 1; }
+git add -A && git commit -q -m "autobuild: plan (SPEC + prd.json backlog)" || true
+echo "   $(jq '.stories | length' .ralph/prd.json) stories planned"
+
+# === 2. BUILD: hand off to the proven Ralph loop ===========================
+if [ -n "$DRY" ]; then
+  echo "-- dry-run: skipping ralph.sh loop --"
+else
+  echo "-- running ralph loop (max ${AB_MAX_ITER:-25} iterations) --"
+  ./.ralph/ralph.sh "${AB_MAX_ITER:-25}" || true
+fi
+
+# === 3. SHIP: push + draft PR ===============================================
+open="$( { command -v jq >/dev/null && jq '[.stories[] | select(.passes != true)] | length' .ralph/prd.json; } 2>/dev/null || echo '?')"
+echo "== autobuild done: $open stories still open =="
+if [ -z "$DRY" ] && command -v gh >/dev/null 2>&1 && git remote get-url origin >/dev/null 2>&1; then
+  GIT_TERMINAL_PROMPT=0 git push -u origin "$BRANCH" >/dev/null 2>&1 || true
+  body="autobuild from \`$(basename "$FEATURES")\` — $open stories still open."$'\n\n'"See SPEC.md for the plan and .ralph/progress.txt for the build log."
+  gh pr create --title "autobuild: $(basename "$FEATURES" .md)" --body "$body" --draft 2>/dev/null \
+    && echo "   draft PR opened" || echo "   (gh pr create skipped — branch $BRANCH is pushed)"
+else
+  echo "   branch $BRANCH ready for review (no push/PR — dry-run or no gh/remote)"
+fi

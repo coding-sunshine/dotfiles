@@ -68,6 +68,9 @@ alias spec="specify"
 # Drop the Ralph autonomous-loop template into the current project (.ralph/)
 alias ralph-init="cp -r $DOTFILES/templates/ralph ./.ralph && echo 'edit .ralph/prd.json, work on a throwaway branch, then ./.ralph/ralph.sh'"
 
+# Drop a feature-list template for autobuild (feature list -> plan -> Ralph loop -> PR)
+alias autobuild-init="cp -n $DOTFILES/templates/features.md ./features.md && echo 'edit features.md, then: autobuild features.md'"
+
 # Drop path-scoped Claude rules into the current project (.claude/rules/)
 alias rules-init="mkdir -p ./.claude/rules && cp -n $DOTFILES/templates/claude-rules/*.md ./.claude/rules/"
 
@@ -88,6 +91,10 @@ alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
 # from inside the target project, after the one-time per-repo build.
 alias review-on="mcp-toggle code-review-graph on && echo 'code-review-graph on. Run \`code-review-graph build\` once in this repo first.'"
 alias review-off="mcp-toggle code-review-graph off"
+
+# Build the free code-only graph + install auto-update git hooks in this repo.
+# graphify's semantic graph stays manual (costs tokens): run `/graphify .`.
+alias graph-init="code-review-graph build && graphify hook install && echo 'graph built + auto-updates on commit. Run /graphify . for the full semantic graph.'"
 
 # Superpowers plugin — installed but disabled by default (preloads ~22k tokens);
 # turn on only for heavy structured-dev sessions, then off again.

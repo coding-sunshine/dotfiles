@@ -15,3 +15,6 @@ Claude-specific notes in this file.
 - Run independent tool calls in parallel.
 - Keep commits scoped and messages descriptive; never commit `.env` or
   `*.local.json`.
+# graphify
+- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.

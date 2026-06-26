@@ -15,6 +15,7 @@ brew 'grep'
 brew 'httpie'
 brew 'jq' # Used for spatie/visit
 brew 'mackup'
+brew 'mas' # Mac App Store CLI (for the `mas` app entries below)
 brew 'pkg-config' # https://github.com/driesvints/dotfiles/issues/20
 brew 'stripe/stripe-cli/stripe'
 
@@ -32,6 +33,7 @@ brew 'yarn'
 # JS/TS toolchain (Node itself comes from Herd's NVM)
 brew 'pnpm'
 brew 'oven-sh/bun/bun'
+brew 'vercel-cli' # Vercel deploy CLI
 
 # Python toolchain
 brew 'uv'   # fast Python package/project manager
@@ -44,6 +46,7 @@ brew 'zsh-you-should-use' # nudges you toward your aliases when you type the lon
 
 # Modern CLI quality-of-life (great for both humans and AI agents)
 brew 'ripgrep'   # rg — fast search
+brew 'ast-grep'  # sg — structural (AST) code search/rewrite
 brew 'fd'        # friendlier find
 brew 'fzf'       # fuzzy finder
 brew 'eza'       # modern ls
@@ -118,5 +121,9 @@ cask 'transmit'
 cask 'tunnelbear'
 cask 'tuple'
 cask 'warp' # AI-powered terminal
+cask 'whatsapp' # native WhatsApp desktop client
 cask 'zed' # primary GUI editor
 cask 'zoom'
+
+# Mac App Store apps (needs `mas`, installed above)
+mas 'Speedtest', id: 1153157709

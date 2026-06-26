@@ -42,5 +42,8 @@ Thumbs.db
 # AI #
 ######################
 .claude/settings.local.json
+graphify-out/          # graphify knowledge-graph output
+.code-review-graph/    # code-review-graph DB
+.code-review-graph.db
 
 polyscope.local.json

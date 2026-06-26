@@ -56,4 +56,12 @@ out="$model"
 [ -n "$branch" ] && out="$out · ⎇ $branch"
 [ -n "$pct" ]    && out="$out · $bar ${pct}%"
 [ -n "$cost" ]   && out="$out · \$$(printf '%.2f' "$cost" 2>/dev/null || printf '%s' "$cost")"
+
+# Warn when the session is getting expensive — nudge to /clear. A long-lived
+# session re-reads its whole history every turn, so cost grows quadratically.
+if [ -n "$cost" ]; then
+  warn="$(awk -v c="$cost" 'BEGIN { c+=0; if (c>=10) print "\xe2\x9a\xa0 pricey-/clear?"; else if (c>=5) print "\xe2\x86\xb3 /clear soon" }')"
+  [ -n "$warn" ] && out="$out · $warn"
+fi
+
 printf '%s' "$out"

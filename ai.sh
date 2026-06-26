@@ -64,6 +64,10 @@ if command -v npx >/dev/null 2>&1; then
   npx -y skills add vercel-labs/agent-browser -g -y >/dev/null 2>&1 || true            # token-lean browser CLI
   npx -y skills add anthropics/skills@frontend-design -g -y >/dev/null 2>&1 || true     # non-AI-looking UI
   npx -y skills add vercel-labs/agent-skills@web-design-guidelines -g -y >/dev/null 2>&1 || true  # UI audit
+  npx -y skills add ast-grep/agent-skill@ast-grep -g -y >/dev/null 2>&1 || true        # structural code search
+  npx -y skills add vercel-labs/skills@find-skills -g -y >/dev/null 2>&1 || true        # discover/install skills
+  npx -y skills add nextlevelbuilder/ui-ux-pro-max-skill -g -y >/dev/null 2>&1 || true  # UI/UX design suite (7 skills)
+  npx -y skills add pbakaus/impeccable -g -y >/dev/null 2>&1 || true                    # frontend polish/critique
 fi
 
 # gstack — Garry Tan's command framework. Installed PREFIXED (/gstack-*) so it
@@ -79,6 +83,16 @@ if command -v bun >/dev/null 2>&1 && command -v git >/dev/null 2>&1; then
   fi
 else
   echo "  (skipping gstack — needs bun + git)"
+fi
+
+# AI-related CLI tools via uv (best-effort). code-review-graph backs the
+# opt-in code-review-graph MCP below, so install it before registering MCPs.
+if command -v uv >/dev/null 2>&1; then
+  echo "  installing uv tool CLIs..."
+  uv tool install code-review-graph >/dev/null 2>&1 || true                       # crg + crg-daemon (code-review-graph MCP)
+  uv tool install graphifyy >/dev/null 2>&1 || true                               # graphify + graphify-mcp
+  command -v graphify >/dev/null 2>&1 && graphify install --platform claude >/dev/null 2>&1 || true  # register /graphify skill (idempotent)
+  uv tool install git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # specify (GitHub spec-kit)
 fi
 
 # Register MCP servers with the Claude CLI (best-effort).
@@ -104,11 +118,19 @@ if command -v claude >/dev/null 2>&1; then
     claude plugin install "$plugin" >/dev/null 2>&1 || true
   done
 
+  # frontend-design — from Anthropic's claude-plugins-official marketplace.
+  claude plugin marketplace add anthropics/claude-plugins-official >/dev/null 2>&1 || true
+  claude plugin install frontend-design@claude-plugins-official >/dev/null 2>&1 || true
+
   # Superpowers: install but DISABLE by default (it preloads ~22k tokens when
   # active). Toggle per session with `superpowers-on` / `superpowers-off`.
   claude plugin marketplace add obra/superpowers-marketplace >/dev/null 2>&1 || true
   claude plugin install superpowers@superpowers-marketplace >/dev/null 2>&1 || true
   claude plugin disable superpowers@superpowers-marketplace >/dev/null 2>&1 || true
+
+  # ponytail — lazy/minimal-code mode (/ponytail*).
+  claude plugin marketplace add DietrichGebert/ponytail >/dev/null 2>&1 || true
+  claude plugin install ponytail@ponytail >/dev/null 2>&1 || true
 else
   echo "  claude CLI not found yet — re-run ./ai.sh after Brewfile install."
 fi

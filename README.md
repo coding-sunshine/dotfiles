@@ -16,7 +16,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 - **Homebrew** packages and casks from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
 - **Terminal:** [Ghostty](https://ghostty.org) (fast, native Metal) with the JetBrains Mono Nerd Font
-- Modern CLI tooling: `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`,
+- Modern CLI tooling: `rg`, `ast-grep`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`,
   plus `btop`, `yazi`, `glow`, `jless`, `dust`, `duf`, `procs`, `sd`, `gping`, `zellij`
 - Smart shell: `atuin` (fuzzy Ctrl-R history), `fzf-tab` (fuzzy Tab completion),
   a `fastfetch` greeting, and **"use the modern tool" nudges** that remind you to
@@ -182,7 +182,7 @@ idempotent — re-run it any time you change a config.
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh` | Statusline: model · branch · context-usage bar · session cost |
 | [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `test-writer` & `debugger` (Sonnet) |
 | [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship` |
-| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `gstack` (`/gstack-*`) |
+| [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `gstack` (`/gstack-*`) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
 | [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json` | Gemini CLI config |
 | [`ai/mcp/mcp.json`](./ai/mcp/mcp.json) | registered via `claude mcp add-json` | MCP servers: **always-on** filesystem, context7; **opt-in** github, playwright, chrome-devtools, composio |
@@ -243,12 +243,23 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   (full gate: verify → review → **security-review** → commit).
 - **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
   lint/test/type-check gates. `ai.sh` also installs (via `npx skills`)
-  `agent-browser` (token-lean browser CLI), Anthropic's `frontend-design`, and
-  Vercel's `web-design-guidelines`.
+  `agent-browser` (token-lean browser CLI), Anthropic's `frontend-design`,
+  Vercel's `web-design-guidelines`, `ast-grep` (structural code search),
+  `find-skills` (discover/install skills), `ui-ux-pro-max` (design suite, 7
+  skills), and `impeccable` (frontend polish/critique).
 - **gstack** ([garrytan/gstack](https://github.com/garrytan/gstack)) — Garry Tan's
   23-command framework (CEO/eng/design/QA/release review gates), installed
   **prefixed** as `/gstack-*` so it coexists with the commands above. Update with
   `gstack-upgrade`.
+- **Plugins** — `ai.sh` installs `feature-dev` + `code-review` (anthropics/claude-code),
+  `frontend-design` (anthropics/claude-plugins-official), `superpowers` (disabled
+  by default), and `ponytail` (DietrichGebert/ponytail — lazy/minimal-code mode,
+  `/ponytail*`).
+- **uv-tool CLIs** — `ai.sh` installs `code-review-graph` (backs the opt-in
+  code-review-graph MCP), `graphifyy` ([safishamsi/graphify](https://github.com/safishamsi/graphify)
+  — turns code/docs/media into a queryable knowledge graph; `ai.sh` also runs
+  `graphify install` to register the `/graphify` skill), and `specify` (GitHub
+  Spec Kit, used by the `spec` alias).
 - **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
   file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
@@ -291,6 +302,11 @@ Two paths for building whole features/apps:
   fresh `claude -p` per iteration against a `prd.json` backlog (TDD → commit →
   repeat), and [`claude-auto`](./bin/claude-auto) (`cauto`) is a headless,
   budget-capped runner.
+- **Hands-off, from a feature list** — [`autobuild`](./bin/autobuild)
+  (`autobuild-init` drops a `features.md` template) is Ralph's missing front-end:
+  it plans a `prd.json` backlog from a plain feature list, runs the Ralph loop in
+  an isolated branch, and opens a draft PR. Composes `claude-auto` + `ralph.sh` +
+  `gwt` — one loop, not a second one. Dry-run self-check: `AB_DRY_RUN=1 autobuild features.md`.
 
 > **Safe automation ("don't make Claude angry").** Run unattended loops on a
 > throwaway worktree, route them to **API billing** (`ANTHROPIC_API_KEY`) so they
@@ -376,7 +392,7 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`bin/claude-auto`](./bin/claude-auto) | Headless, budget-capped Claude runner for automation/CI |
 | [`bin/mcp-toggle`](./bin/mcp-toggle) | Enable/disable an opt-in MCP server on demand (keeps context lean) |
 | [`config/`](./config) | App configs symlinked into `~/.config` (ghostty, starship, zed) |
-| [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `claude-rules/`) |
+| [`templates/`](./templates) | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `features.md`, `claude-rules/`) |
 | [`.macos`](./.macos) | macOS system defaults |
 | [`.mackup.cfg`](./.mackup.cfg) | Mackup app-preferences sync config |
 | [`ai/`](./ai) | Versioned AI agent configs + hooks + skills (see above) |
@@ -395,7 +411,10 @@ hooks            # install Lefthook pre-commit hooks in this project
 claude-init      # drop a CLAUDE.md template into this project
 rules-init       # drop path-scoped .claude/rules into this project
 spec             # GitHub Spec Kit (specify init, then /speckit.* commands)
+graph-init       # build code-review-graph + install graph auto-update hooks here
 ralph-init       # drop the autonomous Ralph build loop into this project
+autobuild-init   # drop a features.md template for autobuild
+autobuild f.md   # feature list -> plan -> Ralph loop -> draft PR (unattended)
 cauto "..."      # headless, budget-capped Claude run for automation
 memview          # open the cavemem persistent-memory viewer
 github-on        # enable the (opt-in) github MCP for this session; github-off after

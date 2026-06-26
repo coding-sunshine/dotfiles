@@ -45,6 +45,12 @@ Keep the working context small and the durable context known:
   don't dump whole large files.
 - At milestones run `/compact`. Durable decisions persist via auto memory
   (`MEMORY.md`) and, when present, the cavemem store — don't re-derive them.
+- `/clear` (or a fresh session) when switching to an unrelated task — a
+  long-lived session re-reads its whole history every turn, so cost grows
+  quadratically with turn count. Don't run one rolling session for days.
+- Default effort is `high` (the cost/quality sweet spot). Reach for
+  `/effort xhigh`/`max` or ultracode/workflow orchestration only on genuinely
+  hard problems, not routine edits.
 - Keep `CLAUDE.md` and rules under ~200 lines; scope detail to `.claude/rules/`.
 - Watch the statusline / `/context` / `/cost`; keep the active MCP set lean and
   downshift the model (`/model`) for routine work.
