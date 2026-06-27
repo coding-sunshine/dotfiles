@@ -50,6 +50,32 @@ alias cx="codex"
 alias gem="gemini"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
 
+# Cheap tier: run Claude Code on GLM-5.2 (Z.ai) instead of Anthropic models —
+# ~7-8x cheaper, Sonnet-class for coding. Key lives in ~/.env as ZAI_API_KEY
+# (git-ignored, never hardcoded). Whole session runs on GLM-5.2; use plain
+# `claude` for hard reasoning. Manual toggle, not auto-switch — add
+# claude-code-router later if you want per-task routing.
+claude-glm() {
+  [ -n "$ZAI_API_KEY" ] || { echo "ZAI_API_KEY not set — add it to ~/.env, then reloadshell" >&2; return 1; }
+  ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic" \
+  ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" \
+    command claude --dangerously-skip-permissions "$@"
+}
+
+# Auto-switching tier: claude-code-router (CCR) routes Claude Code per task —
+# everyday/background to cheaper GLM tiers, hard reasoning to GLM-5.2 — and lets
+# you drop to the local Ornith model with `/model ornith,<model>` mid-session.
+# Routing config: ~/.claude-code-router/config.json (key interpolated from
+# $ZAI_API_KEY in ~/.env). Launch from a shell that has sourced ~/.env.
+alias claude-router="ccr code --dangerously-skip-permissions"  # Claude Code through the auto-router
+alias ccr-ui="ccr ui"            # web UI to view/edit routing + models
+alias ccr-restart="ccr restart"  # reload CCR after editing its config
+
+# Chat with the local Ornith-1.0-9B coding model directly (offline, ~6 GB,
+# self-scaffolding/self-healing). Standalone trial; for Ornith inside Claude
+# Code use `claude-router` then `/model ornith,...`.
+alias ornith="ollama run hf.co/deepreinforce-ai/Ornith-1.0-9B-GGUF"
+
 # Laravel Boost — give agents real project context via MCP (run inside a project)
 alias boost="composer require laravel/boost --dev && herd php artisan boost:install"
 

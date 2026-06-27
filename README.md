@@ -283,6 +283,15 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   permissions, hook-injection, and risky MCP servers in the harness config itself
   — the one piece worth cherry-picking from ECC. On-demand only (nothing
   always-on); add `--opus` for the deep red/blue/auditor multi-agent pass.
+- **Cheaper model tiers** — `claude-glm` runs Claude Code on GLM-5.2 (Z.ai,
+  ~7–8x cheaper, Sonnet-class) using a key in `~/.env`; `claude-router` adds
+  [claude-code-router](https://github.com/musistudio/claude-code-router) so Claude
+  Code auto-routes per task (everyday/background → cheaper GLM tiers, hard reasoning
+  → GLM-5.2) and can drop to a local model mid-session with `/model ornith,ornith`.
+  `ornith` chats with a local [Ornith-1.0-9B](https://www.ornith.site/) (Ollama,
+  offline, ~6 GB) for the free/experimental tier. Routing config lives in
+  [`ai/ccr/config.json`](./ai/ccr/config.json) (key interpolated from `$ZAI_API_KEY`,
+  never committed).
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
   into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
   (TypeScript/PHP/Python/tests) that load only when matching files are touched.
@@ -444,6 +453,9 @@ superpowers-on   # enable the Superpowers plugin for a heavy session; superpower
 caveman-off      # silence terse-output mode for a session (on by default)
 otel-up          # start the opt-in OpenTelemetry -> Grafana metrics stack; otel-down after
 claude-audit     # security-audit ~/.claude (AgentShield): secrets, perms, hook-injection
+claude-glm       # run Claude Code on cheap GLM-5.2 (Z.ai) for this session
+claude-router    # Claude Code via CCR: auto-route easy->cheap GLM, hard->GLM-5.2; /model ornith,ornith for local
+ornith           # chat with the local Ornith-1.0-9B model (offline, ~6 GB)
 gstack-upgrade   # update gstack to the latest /gstack-* commands
 mackup backup    # snapshot app preferences before a big change
 ```
