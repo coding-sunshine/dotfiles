@@ -122,5 +122,5 @@
   "effortLevel": "xhigh",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "theme": "dark"
+  "theme": "auto"
 }
