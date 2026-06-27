@@ -136,6 +136,11 @@ if command -v claude >/dev/null 2>&1; then
   # default every session); toggle ad-hoc with caveman-on / caveman-off.
   claude plugin marketplace add JuliusBrussee/caveman >/dev/null 2>&1 || true
   claude plugin install caveman@caveman >/dev/null 2>&1 || true
+
+  # agent-review-panel — opt-in multi-agent adversarial review for PR/plan
+  # boundaries (/roundtable:agent-review-panel). Token-heavy; invoke on demand.
+  claude plugin marketplace add wan-huiyan/agent-review-panel >/dev/null 2>&1 || true
+  claude plugin install roundtable@agent-review-panel >/dev/null 2>&1 || true
 else
   echo "  claude CLI not found yet — re-run ./ai.sh after Brewfile install."
 fi

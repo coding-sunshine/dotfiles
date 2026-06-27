@@ -180,7 +180,7 @@ idempotent — re-run it any time you change a config.
 | [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Global Claude Code instructions (imports `AGENTS.md`) |
 | [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json` | Model (Sonnet default) / permissions / hooks / statusline / auto memory |
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh` | Statusline: model · branch · context-usage bar · session cost |
-| [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `test-writer` & `debugger` (Sonnet) |
+| [`ai/claude/agents/`](./ai/claude/agents) | `~/.claude/agents` | Subagents: `code-reviewer` & `planner` (Opus), `debugger` (Sonnet), `test-writer` (Haiku — mechanical) |
 | [`ai/claude/commands/`](./ai/claude/commands) | `~/.claude/commands` | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship` |
 | [`ai/claude/skills/`](./ai/claude/skills) | `~/.claude/skills/*` (per-skill) | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `continuous-learning-v2` (instincts), `agent-eval`, `gstack` (`/gstack-*`) |
 | [`ai/codex/config.toml`](./ai/codex/config.toml) | `~/.codex/config.toml` | Codex CLI config |
@@ -263,8 +263,10 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
 - **Plugins** — `ai.sh` installs `feature-dev` + `code-review` (anthropics/claude-code),
   `frontend-design` (anthropics/claude-plugins-official), `superpowers` (disabled
   by default), `ponytail` (DietrichGebert/ponytail — lazy/minimal-code mode,
-  `/ponytail*`), and `caveman` (JuliusBrussee/caveman — terse-output mode, **on by
-  default**; `caveman-off` to silence for a session).
+  `/ponytail*`), `caveman` (JuliusBrussee/caveman — terse-output mode, **on by
+  default**; `caveman-off` to silence for a session), and `roundtable`
+  (wan-huiyan/agent-review-panel — opt-in multi-agent adversarial review at
+  PR/plan boundaries, `/roundtable:agent-review-panel`; token-heavy).
 - **uv-tool CLIs** — `ai.sh` installs `code-review-graph` (backs the opt-in
   code-review-graph MCP), `graphifyy` ([safishamsi/graphify](https://github.com/safishamsi/graphify)
   — turns code/docs/media into a queryable knowledge graph; `ai.sh` also runs
@@ -272,6 +274,10 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   Spec Kit, used by the `spec` alias).
 - **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
   file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
+- **Session visibility** — `ccusage` (bun global) appends today's spend + burn
+  rate to the [statusline](./ai/claude/statusline.sh) every session; `otel-up`
+  starts an opt-in local OpenTelemetry→Grafana stack (ColeMurray/claude-code-otel)
+  for per-session cost/token/cache dashboards (`otel-down` to stop).
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
   into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
   (TypeScript/PHP/Python/tests) that load only when matching files are touched.
@@ -430,6 +436,8 @@ memview          # open the cavemem persistent-memory viewer
 github-on        # enable the (opt-in) github MCP for this session; github-off after
 browser-on       # enable Playwright + Chrome DevTools MCP; browser-off after
 superpowers-on   # enable the Superpowers plugin for a heavy session; superpowers-off after
+caveman-off      # silence terse-output mode for a session (on by default)
+otel-up          # start the opt-in OpenTelemetry -> Grafana metrics stack; otel-down after
 gstack-upgrade   # update gstack to the latest /gstack-* commands
 mackup backup    # snapshot app preferences before a big change
 ```

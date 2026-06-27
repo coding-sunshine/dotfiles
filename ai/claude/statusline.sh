@@ -64,4 +64,16 @@ if [ -n "$cost" ]; then
   [ -n "$warn" ] && out="$out · $warn"
 fi
 
+# Cross-session spend (today's total + burn rate) via ccusage, if installed —
+# the always-on visibility layer. Graceful: skipped if ccusage is missing/errors.
+ccusage_bin="$(command -v ccusage 2>/dev/null || true)"
+[ -z "$ccusage_bin" ] && [ -x "$HOME/.bun/bin/ccusage" ] && ccusage_bin="$HOME/.bun/bin/ccusage"
+if [ -n "$ccusage_bin" ]; then
+  cc="$(printf '%s' "$input" | "$ccusage_bin" statusline --visual-burn-rate emoji 2>/dev/null || true)"
+  today="$(printf '%s' "$cc" | sed -n 's@.*/ \(\$[0-9.,]*\) today.*@\1@p')"
+  burn="$(printf '%s' "$cc" | grep -oE '🔥 \$[0-9.,]+/hr' | head -1)"
+  [ -n "$today" ] && out="$out · $today today"
+  [ -n "$burn" ] && out="$out · $burn"
+fi
+
 printf '%s' "$out"

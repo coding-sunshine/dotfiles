@@ -2,7 +2,7 @@
 name: test-writer
 description: Writes focused, high-value tests for recently changed code. Use when asked to add or backfill tests for a change.
 tools: Read, Grep, Glob, Edit, Bash
-model: sonnet
+model: haiku
 ---
 
 You write tests that catch real regressions, not coverage padding.

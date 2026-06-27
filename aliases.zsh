@@ -94,6 +94,19 @@ alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
 alias review-on="mcp-toggle code-review-graph on && echo 'code-review-graph on. Run \`code-review-graph build\` once in this repo first.'"
 alias review-off="mcp-toggle code-review-graph off"
 
+# OpenTelemetry observability (opt-in, heavy). `otel-up` clones+starts the local
+# Grafana/Prometheus/Loki stack (ColeMurray/claude-code-otel) and exports the
+# telemetry env into THIS shell, so any `claude` launched here streams per-session
+# cost/token/cache metrics. `otel-down` stops it. Grafana: localhost:3000.
+otel-up() {
+  local dir="$HOME/Code/claude-code-otel"
+  [ -d "$dir" ] || git clone --depth 1 https://github.com/ColeMurray/claude-code-otel.git "$dir" || return 1
+  export CLAUDE_CODE_ENABLE_TELEMETRY=1 OTEL_METRICS_EXPORTER=otlp OTEL_LOGS_EXPORTER=otlp \
+    OTEL_EXPORTER_OTLP_PROTOCOL=grpc OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+  ( cd "$dir" && make up ) && echo "OTel up → Grafana http://localhost:3000 (admin/admin). Launch 'claude' from THIS shell to capture."
+}
+otel-down() { ( cd "$HOME/Code/claude-code-otel" 2>/dev/null && make down ); unset CLAUDE_CODE_ENABLE_TELEMETRY; echo "OTel stack stopped."; }
+
 # Build the free code-only graph + install auto-update git hooks in this repo.
 # graphify's semantic graph stays manual (costs tokens): run `/graphify .`.
 alias graph-init="code-review-graph build && graphify hook install && echo 'graph built + auto-updates on commit. Run /graphify . for the full semantic graph.'"

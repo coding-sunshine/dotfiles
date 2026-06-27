@@ -74,6 +74,9 @@ fi
 if command -v npm >/dev/null 2>&1; then
   npm install -g cavemem >/dev/null 2>&1 || true   # persistent compressed memory (MCP)
 fi
+if command -v bun >/dev/null 2>&1; then
+  bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)
+fi
 if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
   uv tool install code-review-graph >/dev/null 2>&1 || true   # opt-in code-review graph (review-on)
