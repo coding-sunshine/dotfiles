@@ -32,6 +32,16 @@
     ]
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/route-hint.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "*",
