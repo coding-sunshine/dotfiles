@@ -26,7 +26,9 @@ before done · Python → uv + ruff. Fuller per-stack detail loads from
 ## Tooling
 
 `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`, `gh`,
-`docker`. Prefer `rg`/`fd` over `grep`/`find`.
+`docker`. Prefer `rg`/`fd` over `grep`/`find`. For code-structure/AST searches
+(call patterns, signatures, structural refactors) prefer `ast-grep`/`sg` over the
+Grep tool; keep `rg` for plain text.
 
 ## Capability map — reach for these automatically
 
