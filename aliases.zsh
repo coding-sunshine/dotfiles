@@ -77,9 +77,11 @@ alias rules-init="mkdir -p ./.claude/rules && cp -n $DOTFILES/templates/claude-r
 # Headless, budget-capped Claude for automation (bin/claude-auto)
 alias cauto="claude-auto"
 
-# Persistent-memory viewer (cavemem) + opt-in output compression (caveman)
+# Persistent-memory viewer (cavemem). caveman = terse-output mode, installed as a
+# plugin by ai.sh and ON by default; these just toggle it for the odd session.
 alias memview="cavemem viewer"
-alias caveman-on="curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash"
+alias caveman-on="claude plugin enable caveman@caveman"
+alias caveman-off="claude plugin disable caveman@caveman"
 
 # Opt-in MCP toggles (bin/mcp-toggle) — keep the always-on set lean, enable on demand
 alias github-on="mcp-toggle github on"

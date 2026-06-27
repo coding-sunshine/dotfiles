@@ -262,8 +262,9 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   `gstack-upgrade`.
 - **Plugins** — `ai.sh` installs `feature-dev` + `code-review` (anthropics/claude-code),
   `frontend-design` (anthropics/claude-plugins-official), `superpowers` (disabled
-  by default), and `ponytail` (DietrichGebert/ponytail — lazy/minimal-code mode,
-  `/ponytail*`).
+  by default), `ponytail` (DietrichGebert/ponytail — lazy/minimal-code mode,
+  `/ponytail*`), and `caveman` (JuliusBrussee/caveman — terse-output mode, **on by
+  default**; `caveman-off` to silence for a session).
 - **uv-tool CLIs** — `ai.sh` installs `code-review-graph` (backs the opt-in
   code-review-graph MCP), `graphifyy` ([safishamsi/graphify](https://github.com/safishamsi/graphify)
   — turns code/docs/media into a queryable knowledge graph; `ai.sh` also runs

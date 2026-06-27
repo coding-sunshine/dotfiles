@@ -131,6 +131,11 @@ if command -v claude >/dev/null 2>&1; then
   # ponytail — lazy/minimal-code mode (/ponytail*).
   claude plugin marketplace add DietrichGebert/ponytail >/dev/null 2>&1 || true
   claude plugin install ponytail@ponytail >/dev/null 2>&1 || true
+
+  # caveman — terse-output mode (pairs with ponytail). Installed ENABLED (on by
+  # default every session); toggle ad-hoc with caveman-on / caveman-off.
+  claude plugin marketplace add JuliusBrussee/caveman >/dev/null 2>&1 || true
+  claude plugin install caveman@caveman >/dev/null 2>&1 || true
 else
   echo "  claude CLI not found yet — re-run ./ai.sh after Brewfile install."
 fi
