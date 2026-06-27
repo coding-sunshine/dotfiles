@@ -58,6 +58,9 @@ Opt-in, toggle on then off: `superpowers-on`, `browser-on`, `github-on`,
 - Read just-in-time: keep paths/queries, read file *ranges*, not whole files.
 - `/compact` at milestones; `/clear` when switching tasks (a long session
   re-reads its history every turn — cost grows with turn count).
+- Protect the prompt cache (reads bill ~10% of input): pick model + effort at
+  session start, save `/compact` for natural task breaks. Mid-task model/effort/
+  fast-mode switches and MCP connect/disconnect each force a pricier uncached turn.
 - Durable decisions persist via `MEMORY.md` + cavemem — don't re-derive them.
 - Default effort `high`; reserve `xhigh`/`max` or workflow orchestration for
   genuinely hard problems.
