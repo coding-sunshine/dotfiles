@@ -278,6 +278,11 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   rate to the [statusline](./ai/claude/statusline.sh) every session; `otel-up`
   starts an opt-in local OpenTelemetry→Grafana stack (ColeMurray/claude-code-otel)
   for per-session cost/token/cache dashboards (`otel-down` to stop).
+- **Config security audit** — `claude-audit` runs [AgentShield](https://github.com/affaan-m/agentshield)
+  (`npx ecc-agentshield scan`) over `~/.claude` to catch leaked secrets, over-broad
+  permissions, hook-injection, and risky MCP servers in the harness config itself
+  — the one piece worth cherry-picking from ECC. On-demand only (nothing
+  always-on); add `--opus` for the deep red/blue/auditor multi-agent pass.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
   into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
   (TypeScript/PHP/Python/tests) that load only when matching files are touched.
@@ -438,6 +443,7 @@ browser-on       # enable Playwright + Chrome DevTools MCP; browser-off after
 superpowers-on   # enable the Superpowers plugin for a heavy session; superpowers-off after
 caveman-off      # silence terse-output mode for a session (on by default)
 otel-up          # start the opt-in OpenTelemetry -> Grafana metrics stack; otel-down after
+claude-audit     # security-audit ~/.claude (AgentShield): secrets, perms, hook-injection
 gstack-upgrade   # update gstack to the latest /gstack-* commands
 mackup backup    # snapshot app preferences before a big change
 ```

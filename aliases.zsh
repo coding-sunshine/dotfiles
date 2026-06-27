@@ -94,6 +94,13 @@ alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
 alias review-on="mcp-toggle code-review-graph on && echo 'code-review-graph on. Run \`code-review-graph build\` once in this repo first.'"
 alias review-off="mcp-toggle code-review-graph off"
 
+# Security-audit the Claude Code harness config itself — leaked secrets,
+# over-broad permissions, hook-injection, risky MCP servers — via AgentShield
+# (affaan-m/agentshield). On-demand only: npx, nothing always-on. Defaults to
+# ~/.claude; pass `-p .` to scan a project's .claude, or `--opus` for the deep
+# multi-agent (red/blue/auditor) pass. The one piece worth taking from ECC.
+alias claude-audit="npx --yes ecc-agentshield scan -p $HOME/.claude"
+
 # OpenTelemetry observability (opt-in, heavy). `otel-up` clones+starts the local
 # Grafana/Prometheus/Loki stack (ColeMurray/claude-code-otel) and exports the
 # telemetry env into THIS shell, so any `claude` launched here streams per-session

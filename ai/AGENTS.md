@@ -44,6 +44,7 @@ progressive (load only when invoked), so routing is free until used.
 | researching across many sources | `/deep-research` |
 | about to commit / open a PR | `verify` skill, then `/review` (or `/gstack-review`) |
 | planning a non-trivial feature | `/plan` (planner subagent) or `/gstack-spec` |
+| stress-testing a plan/spec or a tenancy / auth / security / money change before building | `agent-review-panel` (multi-agent adversarial debate) |
 | told to "just build it" from a feature list, unattended | `autobuild features.md` |
 | running a big/verbose search or test sweep | delegate to a subagent (summary only returns) |
 | running parallel agents on branches | `gwt new <branch>` |
