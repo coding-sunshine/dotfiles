@@ -11,6 +11,7 @@ brew 'coreutils' # Those that come with macOS are outdated
 brew 'ffmpeg'
 brew 'gh'
 brew 'git'
+brew 'gitleaks' # scan git history/staged changes for leaked secrets
 brew 'grep'
 brew 'httpie'
 brew 'jq' # Used for spatie/visit
