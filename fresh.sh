@@ -73,7 +73,6 @@ fi
 # Done before ai.sh so `cavemem install` can wire its MCP during that step.
 if command -v npm >/dev/null 2>&1; then
   npm install -g cavemem >/dev/null 2>&1 || true   # persistent compressed memory (MCP)
-  npm install -g @musistudio/claude-code-router >/dev/null 2>&1 || true  # CCR: route Claude Code to cheap GLM / local Ornith (ccr code)
 fi
 if command -v bun >/dev/null 2>&1; then
   bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)
@@ -81,18 +80,6 @@ fi
 if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
   uv tool install code-review-graph >/dev/null 2>&1 || true   # opt-in code-review graph (review-on)
-fi
-
-# Local model runner (ollama from the Brewfile) + the Ornith-1.0-9B coding model
-# for the cheap local/autonomous tier (CCR routes to it via `/model ornith,...`).
-# The pull is ~5.6 GB, so guard on it being absent. Best-effort.
-if command -v ollama >/dev/null 2>&1; then
-  brew services start ollama >/dev/null 2>&1 || true
-  if ! ollama list 2>/dev/null | grep -q "^ornith"; then
-    echo "Pulling Ornith-1.0-9B (~5.6 GB, one-time)..."
-    ollama pull hf.co/deepreinforce-ai/Ornith-1.0-9B-GGUF >/dev/null 2>&1 \
-      && ollama cp hf.co/deepreinforce-ai/Ornith-1.0-9B-GGUF:latest ornith >/dev/null 2>&1 || true  # short name CCR/aliases use
-  fi
 fi
 
 # Install the fzf-tab zsh plugin (fuzzy Tab completion). It's git-only (not on

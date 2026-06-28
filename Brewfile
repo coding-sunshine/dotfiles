@@ -79,7 +79,6 @@ brew 'cmatrix'    # matrix rain (pure eye-candy)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
-brew 'ollama'     # run local models (e.g. Ornith) — OpenAI endpoint at :11434
 
 # Apps
 cask 'antigravity-cli'

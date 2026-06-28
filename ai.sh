@@ -48,16 +48,6 @@ link "$AI/AGENTS.md"            "$HOME/.codex/AGENTS.md"
 link "$AI/gemini/settings.json" "$HOME/.gemini/settings.json"
 link "$AI/AGENTS.md"            "$HOME/.gemini/AGENTS.md"
 
-# claude-code-router (CCR) — deploy the routing config if the user has none yet.
-# COPIED, not symlinked, because CCR rewrites this file at runtime; the repo
-# template keeps the key as the literal $ZAI_API_KEY (interpolated from ~/.env at
-# start), so no secret ever lands in the file. CCR itself is installed by fresh.sh.
-if [ -f "$AI/ccr/config.json" ] && [ ! -f "$HOME/.claude-code-router/config.json" ]; then
-  mkdir -p "$HOME/.claude-code-router"
-  cp "$AI/ccr/config.json" "$HOME/.claude-code-router/config.json"
-  echo "  CCR config deployed -> ~/.claude-code-router/config.json"
-fi
-
 # Wire up the cavemem persistent-memory engine (local, compressed, survives
 # /compact). Best-effort — installed as a global npm package by fresh.sh.
 if command -v cavemem >/dev/null 2>&1; then
