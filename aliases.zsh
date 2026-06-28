@@ -47,10 +47,10 @@ alias venv="uv venv && source .venv/bin/activate"
 alias claude="claude --dangerously-skip-permissions"
 alias cc="claude"
 alias cx="codex"
-# Gemini CLI (installed via Brewfile). Auth, pick one:
-#   free  : run `gemini` -> "Login with Google" (no key, ~60 req/min, 1000/day)
-#   key   : set GEMINI_API_KEY in ~/.env (Google AI Studio key) for headless/scripted use
-# NB: this is the terminal CLI, separate from Gemini AI Pro (the app = your research tool).
+# Gemini in the terminal — two tools, different billing:
+#   agy : Antigravity CLI — agentic coding on the AI Pro sub (flat, no per-token). Run `agy`, sign in once.
+#   gem : Gemini CLI — metered Gemini via GEMINI_API_KEY in ~/.env (or a free Google login).
+# Research -> Gemini app (gemini.google.com); coding -> Antigravity (agy / app).
 alias gem="gemini"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
 

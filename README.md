@@ -283,10 +283,11 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   permissions, hook-injection, and risky MCP servers in the harness config itself
   — the one piece worth cherry-picking from ECC. On-demand only (nothing
   always-on); add `--opus` for the deep red/blue/auditor multi-agent pass.
-- **Gemini** — deep research runs in the [Gemini app](https://gemini.google.com) (AI Pro
-  subscription, no setup beyond signing in). The `gem` CLI is the terminal tool: auth with
-  `gemini` → "Login with Google" (free tier) or a `GEMINI_API_KEY` in `~/.env` (AI Studio
-  key) for headless use. The CLI is _not_ powered by the AI Pro sub.
+- **Gemini (AI Pro)** — flat-rate Gemini, no per-token billing: **Antigravity** (`agy` CLI +
+  app) is the agentic-coding surface on the AI Pro sub (replaced Gemini CLI/Code Assist for the
+  AI Pro tier in June 2026); **Jules** ([jules.google.com](https://jules.google.com)) runs async
+  cloud coding agents; the [Gemini app](https://gemini.google.com) handles Deep Research +
+  NotebookLM. `gem` (Gemini CLI) is the metered path via `GEMINI_API_KEY` in `~/.env`.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
   into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
   (TypeScript/PHP/Python/tests) that load only when matching files are touched.

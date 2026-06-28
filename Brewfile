@@ -81,7 +81,8 @@ brew 'cmatrix'    # matrix rain (pure eye-candy)
 brew 'gemini-cli' # Google Gemini CLI
 
 # Apps
-cask 'antigravity-cli'
+cask 'antigravity'     # Google Antigravity — agent-first IDE (Gemini, flat via AI Pro sub)
+cask 'antigravity-cli' # Antigravity CLI (agy) — terminal coding agent
 cask 'caffeine'
 cask 'claude'
 cask 'claude-code'
