@@ -49,7 +49,7 @@ alias cc="claude"
 alias cx="codex"
 # Gemini CLI (installed via Brewfile). Auth, pick one:
 #   free  : run `gemini` -> "Login with Google" (no key, ~60 req/min, 1000/day)
-#   key   : set GEMINI_API_KEY in ~/.env (AI Studio key, starts AIza…) for headless/scripted use
+#   key   : set GEMINI_API_KEY in ~/.env (Google AI Studio key) for headless/scripted use
 # NB: this is the terminal CLI, separate from Gemini AI Pro (the app = your research tool).
 alias gem="gemini"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
