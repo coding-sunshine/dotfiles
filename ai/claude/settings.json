@@ -74,7 +74,8 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "$HOME/.claude/statusline.sh"
+    "command": "bun x ccusage statusline --visual-burn-rate both --cost-source both",
+    "padding": 0
   },
   "enabledPlugins": {
     "code-review@claude-code-plugins": true,
