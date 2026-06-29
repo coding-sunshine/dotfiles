@@ -8,5 +8,8 @@
 # Runtime-cloned zsh plugin (installed by fresh.sh)
 plugins/fzf-tab/
 
+# Zed prompt-library state DB (binary LMDB, mutable runtime state — not config)
+config/zed/prompts/
+
 # macOS
 .DS_Store

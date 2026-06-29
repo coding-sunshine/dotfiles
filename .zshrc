@@ -224,3 +224,7 @@ add-zsh-hook preexec _modern_tool_nudge
 
 # System splash on new interactive shells (comment out the next line to disable)
 command -v fastfetch >/dev/null 2>&1 && [[ -o interactive ]] && fastfetch
+
+
+# Herd injected PHP 8.4 configuration.
+export HERD_PHP_84_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/84/"
