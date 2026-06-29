@@ -30,6 +30,16 @@
     "deny": ["Read(./.env)", "Read(./**/.env)", "Bash(rm -rf:*)"]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cost-guard.sh"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -74,7 +84,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bun x ccusage statusline --visual-burn-rate emoji-text --cost-source both",
+    "command": "bun x ccusage statusline --visual-burn-rate emoji-text --cost-source both --timezone Asia/Kolkata",
     "padding": 0
   },
   "enabledPlugins": {
