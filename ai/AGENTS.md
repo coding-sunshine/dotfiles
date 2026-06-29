@@ -43,6 +43,23 @@ discipline comes from process. Adds to Working style + `/ponytail`:
 Already covered above: simplicity, surgical diffs, stdlib-first, named failure
 modes (Working style + `/ponytail`).
 
+## Quality bar — what finished code looks like (checkable)
+
+The field notes above govern _how_ I work; these govern the _artifact_. Sloppy =
+fails one of these. Stack-specific depth lives in `.claude/rules/` (loaded on
+demand), not here.
+
+- **Names carry intent.** Descriptive names; booleans read as predicates
+  (`isReady`, `hasRows`); no cryptic abbreviations; bare `i` only for trivial loops.
+- **Fail loud, don't swallow.** No empty `catch`/`except: pass`; handle at the
+  boundary or propagate with context. Never silence an error to make a test pass.
+- **Comments earn their place.** Code says _what_; comment only the non-obvious
+  _why_. No commented-out code, no narrating the obvious.
+- **No litter in the diff.** No debug prints (`dd()`, `console.log`, `var_dump`),
+  no dead branches, no `TODO` without a tracked reference.
+- **One job per unit.** Need "and" to name a function → split it. Magic
+  value used twice or unexplained → named constant.
+
 ## Stack conventions
 
 PHP → Herd (`herd php artisan`, Pest, Pint) · JS/TS → pnpm/bun, type-check
