@@ -10,7 +10,7 @@
 set -eu
 
 input="$(cat 2>/dev/null || true)"
-model="$(printf '%s' "$input" | jq -r '(.model.id // .model) // empty' 2>/dev/null || true)"
+model="$(printf '%s' "$input" | jq -r '(.model | if type=="object" then .id else . end) // empty' 2>/dev/null || true)"
 
 printf '↳ cost discipline: haiku=trivial · sonnet=default · opus=hard only | no mid-session model/effort/fast switch (cache wipe) | /clear between tasks · /compact at breaks only · /mcp prune unused\n'
 
