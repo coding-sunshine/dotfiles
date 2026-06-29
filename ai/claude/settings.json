@@ -74,7 +74,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bun x ccusage statusline --visual-burn-rate both --cost-source both",
+    "command": "bun x ccusage statusline --visual-burn-rate emoji-text --cost-source both",
     "padding": 0
   },
   "enabledPlugins": {
