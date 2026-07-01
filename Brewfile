@@ -79,6 +79,7 @@ brew 'cmatrix'    # matrix rain (pure eye-candy)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
+brew 'opencode'   # OpenCode — AI coding agent for the terminal
 
 # Apps
 cask 'antigravity'     # Google Antigravity — agent-first IDE (Gemini, flat via AI Pro sub)
@@ -90,6 +91,7 @@ cask 'cleanshot'
 cask 'cmux' # Ghostty-based terminal for running AI coding agents in parallel
 cask 'codex'
 cask 'codex-app'
+cask 'opencode-desktop' # OpenCode desktop client
 cask 'copilot-cli'
 cask 'cursor'
 cask 'cursor-cli'

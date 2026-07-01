@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "sonnet",
   "env": {
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000",
     "BASH_MAX_OUTPUT_LENGTH": "30000",
@@ -27,7 +26,11 @@
       "Grep",
       "Glob"
     ],
-    "deny": ["Read(./.env)", "Read(./**/.env)", "Bash(rm -rf:*)"]
+    "deny": [
+      "Read(./.env)",
+      "Read(./**/.env)",
+      "Bash(rm -rf:*)"
+    ]
   },
   "hooks": {
     "SessionStart": [
@@ -84,7 +87,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bun x ccusage statusline --visual-burn-rate emoji-text --cost-source both --timezone Asia/Kolkata",
+    "command": "bash \"$HOME/.claude/hooks/statusline-combined.sh\"",
     "padding": 0
   },
   "enabledPlugins": {

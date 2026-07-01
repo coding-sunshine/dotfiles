@@ -13,3 +13,7 @@ config/zed/prompts/
 
 # macOS
 .DS_Store
+
+# Stray VS Code extension build artifact
+kickbacks.vsix
+*.vsix
