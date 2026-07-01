@@ -120,6 +120,20 @@ Default to the **Agent Browser** CLI (`agent-browser`, most token-efficient).
 `npx playwright` for standard E2E. Only `browser-on` (Playwright + Chrome
 DevTools MCP) for interactive/network/console debugging — `browser-off` after.
 
+## Prose humanization — auto-apply
+
+Any human-facing prose I'll send or publish (emails, explainers, docs,
+announcements, PR/release bodies, README/marketing copy) gets humanized before I
+see it — remove AI tells (em-dash overuse, rule-of-three, "moreover/additionally",
+inflated vocab, vague attributions, negative parallelism). Do it silently as part
+of drafting; don't ask first.
+
+- General prose (emails, explainers, docs) → `humanizer` skill.
+- UX/product/marketing copy, or scoring text → `humanize-text` skill.
+
+Exempt (leave as-is): code, commit messages, terminal/caveman replies to me,
+literal quotes, and anything I explicitly say to keep verbatim.
+
 ## Secrets
 
 Never print or commit secrets. Keys live in `~/.env` (git-ignored), exported
