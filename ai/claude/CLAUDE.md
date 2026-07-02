@@ -15,6 +15,10 @@ Claude-specific notes in this file.
 - Run independent tool calls in parallel.
 - Keep commits scoped and messages descriptive; never commit `.env` or
   `*.local.json`.
+- Model routing (see AGENTS.md table): apply via the Agent/Workflow `model`
+  param — `haiku` trivial mechanical, `sonnet` bulk, `opus` for work that
+  ships. Main session model via `/model` at session start only (mid-task
+  switch wipes the prompt cache).
 # graphify
 - **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
 When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.

@@ -98,6 +98,27 @@ Opt-in, toggle on then off: `superpowers-on`, `browser-on`, `github-on`,
 `review-on`. `continuous-learning-v2` auto-learns your patterns — check
 `/instinct-status` occasionally and promote good ones.
 
+## Model routing — subagents & delegation
+
+My economics: 2× Claude Max (sunk cost, weekly Opus/Fable caps), Codex CLI as
+overflow. So the cheap bulk model is **sonnet**, not an external API.
+
+| tier                                  | use for                                                        |
+| ------------------------------------- | -------------------------------------------------------------- |
+| haiku                                 | trivial mechanical: bulk greps, renames, format sweeps          |
+| sonnet                                | default bulk: clear-spec impl, migrations, codebase reading     |
+| opus / fable                          | anything that ships, user-facing taste (UI, copy, API design), plan/impl reviews |
+| gpt (via `gstack-codex`)              | cap-relief overflow when Claude weekly caps bite; second-opinion reviews |
+
+- Tie-break for anything that ships: **intelligence > taste > cost**. Cost
+  decides only between equals.
+- Standing permission to escalate: cheap model output misses the bar → redo on
+  a smarter model without asking. Judge the output, not the price tag.
+- User-facing work (UI, copy, API design) stays on opus/fable — never delegate
+  taste downward.
+- Codex missing/unauthenticated → stay on Claude models and say so; never fail
+  silently.
+
 ## Context & token discipline
 
 - Delegate broad search / verbose runs to subagents — only the summary returns.
