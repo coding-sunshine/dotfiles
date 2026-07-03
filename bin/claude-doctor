@@ -29,13 +29,15 @@ jq -er '.hooks.PostToolUse[]?|.hooks[].command' "$S" 2>/dev/null | grep -q forma
   ok "format.sh hook (PostToolUse)" || bad "format.sh hook missing"
 jq -er '.hooks.SessionStart[]?|.hooks[].command' "$S" 2>/dev/null | grep -q cost-guard && \
   ok "cost-guard hook (SessionStart)" || bad "cost-guard hook missing"
+jq -er '.hooks.Notification[]?|.hooks[].command' "$S" 2>/dev/null | grep -q notify.sh && \
+  ok "notify hook (Notification)" || bad "notify hook missing"
 jq -er '.enabledPlugins["caveman@caveman"]' "$S" 2>/dev/null | grep -q true && \
   ok "caveman plugin enabled" || bad "caveman plugin not enabled"
 jq -er '.enabledPlugins["ponytail@ponytail"]' "$S" 2>/dev/null | grep -q true && \
   ok "ponytail plugin enabled" || bad "ponytail plugin not enabled"
 
 echo "— hook scripts —"
-for h in git-guard.sh format.sh statusline-combined.sh; do
+for h in git-guard.sh format.sh statusline-combined.sh notify.sh; do
   f="$CL/hooks/$h"
   [[ -x "$f" ]] && bash -n "$f" 2>/dev/null && ok "$h executable + syntax" || bad "$h missing/broken at $f"
 done
