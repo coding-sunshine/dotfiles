@@ -79,6 +79,7 @@ brew 'cmatrix'    # matrix rain (pure eye-candy)
 
 # AI / agents
 brew 'gemini-cli' # Google Gemini CLI
+brew 'terminal-notifier' # clickable macOS notifications (Claude notify hook)
 brew 'opencode'   # OpenCode — AI coding agent for the terminal
 
 # Apps
