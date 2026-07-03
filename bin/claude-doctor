@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# claude-doctor: static check that the Claude Code setup is fully wired.
+# Green/red per item; exits non-zero if anything red.
+set -u
+DOT="$HOME/.dotfiles"
+CL="$HOME/.claude"
+fail=0
+
+ok()  { printf '\033[32m✓\033[0m %s\n' "$1"; }
+bad() { printf '\033[31m✗\033[0m %s\n' "$1"; fail=1; }
+
+check_link() { # $1 link, $2 expected target, $3 label
+  [[ "$(readlink "$1" 2>/dev/null)" == "$2" ]] && ok "$3" || bad "$3 — expected $1 -> $2"
+}
+
+echo "— symlinks —"
+check_link "$CL/settings.json" "$DOT/ai/claude/settings.json" "settings.json -> dotfiles"
+check_link "$CL/AGENTS.md"     "$DOT/ai/AGENTS.md"            "AGENTS.md -> dotfiles"
+check_link "$CL/CLAUDE.md"     "$DOT/ai/claude/CLAUDE.md"     "CLAUDE.md -> dotfiles"
+
+echo "— settings.json wiring —"
+S="$CL/settings.json"
+jq -e . "$S" >/dev/null 2>&1 && ok "settings.json valid JSON" || bad "settings.json invalid JSON"
+jq -er '.statusLine.command' "$S" 2>/dev/null | grep -q statusline-combined && \
+  ok "statusLine -> statusline-combined.sh" || bad "statusLine not pointing at combined script"
+jq -er '.hooks.PreToolUse[]?|select(.matcher=="Bash")|.hooks[].command' "$S" 2>/dev/null | grep -q git-guard && \
+  ok "git-guard hook (PreToolUse:Bash)" || bad "git-guard hook missing"
+jq -er '.hooks.PostToolUse[]?|.hooks[].command' "$S" 2>/dev/null | grep -q format.sh && \
+  ok "format.sh hook (PostToolUse)" || bad "format.sh hook missing"
+jq -er '.hooks.SessionStart[]?|.hooks[].command' "$S" 2>/dev/null | grep -q cost-guard && \
+  ok "cost-guard hook (SessionStart)" || bad "cost-guard hook missing"
+jq -er '.enabledPlugins["caveman@caveman"]' "$S" 2>/dev/null | grep -q true && \
+  ok "caveman plugin enabled" || bad "caveman plugin not enabled"
+jq -er '.enabledPlugins["ponytail@ponytail"]' "$S" 2>/dev/null | grep -q true && \
+  ok "ponytail plugin enabled" || bad "ponytail plugin not enabled"
+
+echo "— hook scripts —"
+for h in git-guard.sh format.sh statusline-combined.sh; do
+  f="$CL/hooks/$h"
+  [[ -x "$f" ]] && bash -n "$f" 2>/dev/null && ok "$h executable + syntax" || bad "$h missing/broken at $f"
+done
+
+echo "— git-guard behavior —"
+if echo '{"tool_input":{"command":"git push --force origin main"}}' | bash "$CL/hooks/git-guard.sh" >/dev/null 2>&1; then
+  bad "git-guard did NOT block force-push to main"
+else
+  ok "git-guard blocks force-push to main"
+fi
+
+echo "— statusline output —"
+out="$(echo '{"model":{"display_name":"x"},"workspace":{"current_dir":"'"$DOT"'"}}' | bash "$CL/hooks/statusline-combined.sh" 2>/dev/null)"
+case "$out" in *CAVEMAN*) ok "statusline renders CAVEMAN badge";; *) bad "statusline missing CAVEMAN badge";; esac
+case "$out" in *PONYTAIL*) ok "statusline renders PONYTAIL badge";; *) bad "statusline missing PONYTAIL badge";; esac
+
+echo "— agents pinned —"
+for spec in code-reviewer:opus planner:opus debugger:sonnet test-writer:sonnet; do
+  a="${spec%%:*}" m="${spec##*:}"
+  grep -q "^model: $m" "$DOT/ai/claude/agents/$a.md" 2>/dev/null && \
+    ok "agent $a -> $m" || bad "agent $a not pinned to $m"
+done
+
+echo "— rules in AGENTS.md —"
+for sect in "Answer shape" "Model routing" "Prose humanization"; do
+  grep -q "## $sect" "$DOT/ai/AGENTS.md" && ok "section: $sect" || bad "AGENTS.md missing section: $sect"
+done
+
+echo "— skills present —"
+for s in humanizer humanize-text; do
+  [[ -f "$CL/skills/$s/SKILL.md" ]] && ok "skill: $s" || bad "skill missing: $s"
+done
+
+echo
+[[ $fail -eq 0 ]] && { echo "all green — setup fully wired"; exit 0; } || { echo "issues found — fix reds above"; exit 1; }
