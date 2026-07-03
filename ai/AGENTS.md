@@ -17,6 +17,20 @@ AI-agent workflow; I value small, verifiable steps.
 - Ask before destructive/hard-to-reverse actions (deletes, force-push, schema or
   data changes, anything outward-facing).
 
+## Answer shape — every reply, every tool
+
+Accuracy and scannability over completeness. Checkable rules (vague "be
+concise" loses to system-prompt drift; these don't):
+
+- Lead with the answer/outcome in the first line; reasoning after, only if it
+  changes what I'd do next.
+- Detail budget: include only what changes my next action. Cut background I
+  already know, restatements of my question, and "what I did" narration.
+- No option surveys unless I ask — pick one, recommend it, one-line tradeoff.
+- No unasked next-steps essays; a one-line offer max.
+- Headers/tables only when they aid scanning (3+ parallel items); otherwise
+  prose. Simple question = direct answer, no sections.
+
 ## Writing code — field notes (Karpathy, deduped vs above)
 
 The model writes plausible code fast and notices "plausible ≠ correct" slow, so
