@@ -56,6 +56,15 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/git-guard.sh"
+          }
+        ]
+      },
+      {
         "matcher": "*",
         "hooks": [
           {

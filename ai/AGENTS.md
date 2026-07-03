@@ -104,7 +104,7 @@ progressive (load only when invoked), so routing is free until used.
 | stress-testing a plan/spec or a tenancy / auth / security / money change before building | `agent-review-panel` (multi-agent adversarial debate)     |
 | told to "just build it" from a feature list, unattended                                  | `autobuild features.md`                                   |
 | running a big/verbose search or test sweep                                               | delegate to a subagent (summary only returns)             |
-| running parallel agents on branches                                                      | `gwt new <branch>`                                        |
+| running parallel agents on branches                                                      | `claude --worktree` (native) or `gwt new <branch>`        |
 | a headless, budget-capped automation run                                                 | `claude-auto`                                             |
 | over-engineering creeping in                                                             | `/ponytail`                                               |
 
@@ -132,6 +132,10 @@ overflow. So the cheap bulk model is **sonnet**, not an external API.
   taste downward.
 - Codex missing/unauthenticated → stay on Claude models and say so; never fail
   silently.
+- Fan-out burns multiply: one agentic task can branch into 4–6 concurrent model
+  calls. On opus/fable sessions, pin workers to sonnet/haiku (agent frontmatter
+  or `model:` param) — orchestrate smart, execute cheap. Hard rules belong in
+  hooks, not CLAUDE.md (instructions ~70% followed; hooks 100%).
 
 ## Context & token discipline
 
