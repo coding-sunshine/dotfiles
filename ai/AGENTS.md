@@ -137,6 +137,17 @@ overflow. So the cheap bulk model is **sonnet**, not an external API.
   or `model:` param) — orchestrate smart, execute cheap. Hard rules belong in
   hooks, not CLAUDE.md (instructions ~70% followed; hooks 100%).
 
+### Fable sessions (per Anthropic's Fable prompting guide)
+
+- Long runs: verify with fresh-context subagents at intervals, not self-critique
+  — separate verifiers outperform reviewing your own work.
+- Before reporting progress, audit each claim against an actual tool result from
+  this session; unverified = say so explicitly.
+- Never echo/transcribe internal reasoning as response text (triggers
+  reasoning_extraction refusals → Opus fallback).
+- If my prompt lacks the why, ask for or infer the intent before a long run —
+  Fable performs better knowing what the output is for.
+
 ## Context & token discipline
 
 - Delegate broad search / verbose runs to subagents — only the summary returns.
