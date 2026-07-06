@@ -5,7 +5,7 @@
     "BASH_MAX_OUTPUT_LENGTH": "30000",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5"
   },
-  "includeCoAuthoredBy": true,
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(git status)",
@@ -104,11 +104,6 @@
         ]
       }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bash \"$HOME/.claude/hooks/statusline-combined.sh\"",
-    "padding": 0
   },
   "enabledPlugins": {
     "code-review@claude-code-plugins": true,
