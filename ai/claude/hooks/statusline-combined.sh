@@ -26,7 +26,7 @@ if [[ -n "$cwd" ]]; then
 fi
 
 ad="$(node "$HOME/.vibe-ads/vibe-ads-statusline.mjs" 2>/dev/null)"
-usage="$(printf '%s' "$input" | bun x ccusage statusline --visual-burn-rate emoji-text --cost-source both --timezone Asia/Kolkata 2>/dev/null)"
+usage="$(printf '%s' "$input" | bun x ccusage statusline --visual-burn-rate emoji-text --cost-source auto --timezone Asia/Kolkata 2>/dev/null)"
 
 # ccusage already shows the model; surface it ourselves only as a fallback.
 model=""
