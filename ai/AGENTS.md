@@ -70,7 +70,9 @@ demand), not here.
 - **Comments earn their place.** Code says _what_; comment only the non-obvious
   _why_. No commented-out code, no narrating the obvious.
 - **No litter in the diff.** No debug prints (`dd()`, `console.log`, `var_dump`),
-  no dead branches, no `TODO` without a tracked reference.
+  no dead branches, no `TODO` without a tracked reference. Remove orphans _your_
+  change created (unused imports/vars/functions); pre-existing dead code stays —
+  mention it, don't delete.
 - **One job per unit.** Need "and" to name a function → split it. Magic
   value used twice or unexplained → named constant.
 
