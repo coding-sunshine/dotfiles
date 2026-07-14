@@ -27,11 +27,10 @@
       "Glob"
     ],
     "deny": [
-      "Read(./.env)",
-      "Read(./**/.env)",
       "Bash(rm -rf:*)"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
