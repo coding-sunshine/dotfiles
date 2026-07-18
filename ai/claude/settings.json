@@ -152,5 +152,6 @@
   "effortLevel": "high",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "theme": "auto"
+  "theme": "auto",
+  "agentPushNotifEnabled": true
 }
