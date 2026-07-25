@@ -28,6 +28,9 @@ link "$AI/claude/hooks"          "$HOME/.claude/hooks"
 link "$AI/claude/agents"         "$HOME/.claude/agents"
 link "$AI/claude/commands"       "$HOME/.claude/commands"
 
+# Reusable prompt library (tool-agnostic; not auto-loaded, just kept handy).
+link "$AI/prompts"               "$HOME/.claude/prompts"
+
 # Skills: symlink each one individually so externally-installed skills (e.g.
 # caveman) can live alongside ours without writing into the repo.
 [ -L "$HOME/.claude/skills" ] && rm -f "$HOME/.claude/skills"
@@ -143,6 +146,41 @@ if command -v claude >/dev/null 2>&1; then
   claude plugin install roundtable@agent-review-panel >/dev/null 2>&1 || true
 else
   echo "  claude CLI not found yet — re-run ./ai.sh after Brewfile install."
+fi
+
+# --- Cinematic / motion web-design skill stack --------------------------------
+# Third-party skills for movie-feel, scroll-telling, WebGL sites. Cloned into
+# ~/.agents/skills, symlinked into ~/.claude/skills. Companion authored skill
+# `cinematic-scroll-video` is tracked in ai/claude/skills; reusable prompts in
+# ai/prompts/cinematic-web. Curation rationale: memory note cinematic-web-skills.
+# Best-effort — never fail setup.
+if command -v git >/dev/null 2>&1; then
+  AS="$HOME/.agents/skills"; mkdir -p "$AS"
+  _clone() { [ -d "$AS/$2" ] || git clone --depth 1 "https://github.com/$1" "$AS/$2" >/dev/null 2>&1 || true; }
+  _link()  { ln -sfn "$AS/$1" "$HOME/.claude/skills/$2"; }   # <clone-subpath> <link-name>
+
+  # GSAP official — 8 sub-skills (the cinematic scroll backbone).
+  _clone greensock/gsap-skills gsap-skills
+  for s in core timeline scrolltrigger plugins react frameworks utils performance; do
+    _link "gsap-skills/skills/gsap-$s" "gsap-$s"; done
+
+  # Single-skill repos (SKILL.md at clone root or one level down).
+  _clone tsogjavklann/awwwards-3d awwwards-3d;                       _link awwwards-3d awwwards-3d
+  _clone threerocks/hand-drawn-styles hand-drawn-styles;            _link hand-drawn-styles hand-drawn
+  _clone Vincentwei1021/video-shotcraft video-shotcraft;            _link video-shotcraft video-shotcraft
+  _clone wshuyi/remotion-video-skill remotion-video-skill;          _link remotion-video-skill remotion-video
+  _clone mvanhorn/last30days-skill last30days-skill;                _link last30days-skill/skills/last30days last30days
+  _clone 199-biotechnologies/motion-dev-animations-skill motion-dev-animations-skill; _link motion-dev-animations-skill motion-dev-animations
+  _clone leonxlnx/taste-skill taste-skill;                          _link taste-skill/skills/taste-skill taste-skill
+
+  # MengTo/Skills (aura.build's design system, 79 skills) — link the curated
+  # cinematic + editorial subset as mt-*. Add/remove names to re-curate.
+  _clone MengTo/Skills Skills
+  MT_PICKS="agency-grid-layout-minimal animation-on-scroll animation-systems background-grid-webgl book-serif-index cinematic-gsap-lenis-motion-system cinematic-scroll-storytelling clean-minimal-beige-light-mode documentary-brutalist-agency editorial-portfolio-chapters editorial-service-booking editorial-tech gsap-scrolltrigger-storytelling image-first-grid-layout light-mode-paper-technical marquee-loop masked-reveal nested-container-clean-agency number-details product-proof-saas progressive-blur reveal-hover-effect scroll-progress-timeline scroll-scrubbed-visual-sequence scroll-scrubbed-word-reveal scroll-world-storytelling shaders-cursor-ripples split-layout-technical staggered-word-reveal technical-wireframe-info-layout threejs unicorn-studio webgl-3d-object webgl-landing-steering webgl-laser"
+  for s in $MT_PICKS; do
+    [ -d "$AS/Skills/agent-skills/web-design/$s" ] && _link "Skills/agent-skills/web-design/$s" "mt-$s"; done
+
+  echo "  cinematic web skill stack linked"
 fi
 
 echo "AI agent layer ready. Edit configs in $AI and re-run ./ai.sh to update."
