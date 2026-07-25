@@ -15,7 +15,9 @@ model="$(printf '%s' "$input" | jq -r '(.model | if type=="object" then .id else
 printf '↳ cost discipline: haiku=trivial · sonnet=default · opus=hard only | no mid-session model/effort/fast switch (cache wipe) | /clear between tasks · /compact at breaks only · /mcp prune unused\n'
 
 case "$model" in
-  *opus*) printf '⚠ session on OPUS — burns the weekly Opus cap. Use /model sonnet for routine work.\n' ;;
+  # Fable went metered on 2026-07-07 ($10/$50 per Mtok) and was 54% of July spend. Loudest warning.
+  *fable*) printf '⚠ session on FABLE — metered credits on TOP of the subscription. Taste work only (UI, copy, API design). /model sonnet otherwise.\n' ;;
+  *opus*)  printf '⚠ session on OPUS — burns the weekly Opus cap. Use /model sonnet for routine work.\n' ;;
 esac
 
 exit 0

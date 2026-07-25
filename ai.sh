@@ -101,13 +101,11 @@ fi
 # Register MCP servers with the Claude CLI (best-effort).
 if command -v claude >/dev/null 2>&1; then
   echo "  registering MCP servers with claude..."
-  # Lean always-on set only. github/playwright/chrome-devtools are opt-in via
-  # `mcp-toggle <name> on` (github-on / browser-on) to keep per-turn tokens low.
-  for srv in filesystem context7; do
-    claude mcp add-json --scope user "$srv" \
-      "$(jq -c ".mcpServers.$srv | with_entries(select(.key|startswith(\"//\")|not))" "$AI/mcp/mcp.json")" 2>/dev/null \
-      || echo "  ($srv MCP already registered or failed — skipping)"
-  done
+  # Nothing is always-on. A July 2026 audit of a month of session logs found
+  # filesystem called 11 times (all covered by Read/Glob/Grep) and context7 zero,
+  # against ~5-7k tokens of schema re-sent every turn and on every subagent spawn.
+  # Everything is opt-in via `mcp-toggle <name> on` (github-on / browser-on).
+  echo "  (no always-on MCP servers — use mcp-toggle <name> on)"
   # composio is heavy — register only when an API key is present.
   if [ -n "$COMPOSIO_API_KEY" ]; then
     claude mcp add-json --scope user composio \

@@ -8,8 +8,9 @@ Claude-specific notes in this file.
 
 ## Claude Code specifics
 
-- Use the available MCP servers (see `~/.claude.json` / the shared `mcp.json`)
-  rather than shelling out when an MCP tool fits.
+- No MCP server is always-on (each re-sends its schema every turn and on every
+  subagent spawn). If a task needs one, tell me the toggle to run
+  (`github-on`, `browser-on`, `review-on`, `mcp-toggle <name> on`).
 - Prefer the dedicated file/search tools (Read, Grep, Glob) over `cat`/`grep`/
   `find` in Bash.
 - Run independent tool calls in parallel.
