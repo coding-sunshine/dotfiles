@@ -26,7 +26,10 @@ if [[ -n "$cwd" ]]; then
 fi
 
 ad="$(node "$HOME/.vibe-ads/vibe-ads-statusline.mjs" 2>/dev/null)"
-usage="$(printf '%s' "$input" | bun x ccusage statusline --visual-burn-rate emoji-text --cost-source auto --timezone Asia/Kolkata 2>/dev/null)"
+# ccusage DISABLED 2026-07-21: hung instances pinned 300-800% CPU (load avg 90+),
+# starving local test runs. Re-enable by restoring the line below.
+# usage="$(printf '%s' "$input" | bun x ccusage statusline --visual-burn-rate emoji-text --cost-source auto --timezone Asia/Kolkata 2>/dev/null)"
+usage=""
 
 # ccusage already shows the model; surface it ourselves only as a fallback.
 model=""
