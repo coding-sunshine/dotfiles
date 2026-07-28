@@ -92,6 +92,8 @@ alias github-on="mcp-toggle github on"
 alias github-off="mcp-toggle github off"
 alias browser-on="mcp-toggle playwright on && mcp-toggle chrome-devtools on && echo 'Browser MCP on. Agent Browser (npx agent-browser) is the lean default; run npx agent-browser install once.'"
 alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
+alias linear-on="mcp-toggle linear on && echo 'Linear MCP on. First use: run /mcp in Claude, pick linear, complete browser OAuth.'"
+alias linear-off="mcp-toggle linear off"
 
 # code-review-graph MCP (uv-installed by fresh.sh). Off by default; toggle on
 # from inside the target project, after the one-time per-repo build.

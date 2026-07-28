@@ -29,6 +29,11 @@
         "COMPOSIO_API_KEY": "${COMPOSIO_API_KEY}"
       }
     },
+    "linear": {
+      "// note": "Opt-in. Official Linear MCP (hosted, HTTP + OAuth — no API key). Enable with `linear-on`, then authenticate once via `/mcp` in a Claude session.",
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
     "playwright": {
       "// note": "Opt-in (heavy: ~13.7k tool-def tokens at startup). Prefer the Agent Browser / Playwright CLI instead; enable with `browser-on` only when you need interactive MCP control.",
       "command": "npx",
