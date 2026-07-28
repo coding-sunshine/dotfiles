@@ -139,7 +139,9 @@ overflow. So the cheap bulk model is **sonnet**, not an external API.
   or `model:` param) — orchestrate smart, execute cheap. Hard rules belong in
   hooks, not CLAUDE.md (instructions ~70% followed; hooks 100%).
 
-### Fable sessions (per Anthropic's Fable prompting guide)
+### Model-specific (self-route: apply the block for the model you are)
+
+**Fable 5 sessions** (per Anthropic's Fable prompting guide):
 
 - Long runs: verify with fresh-context subagents at intervals, not self-critique
   — separate verifiers outperform reviewing your own work.
@@ -149,6 +151,18 @@ overflow. So the cheap bulk model is **sonnet**, not an external API.
   reasoning_extraction refusals → Opus fallback).
 - If my prompt lacks the why, ask for or infer the intent before a long run —
   Fable performs better knowing what the output is for.
+
+**Opus 5 sessions** (per Anthropic's Opus 5 prompting guide):
+
+- Do NOT add verification/double-check steps — Opus 5 self-verifies; extra
+  instruction causes over-verification. The Fable verifier rule above does not
+  apply to you.
+- Reviews: report everything, filter in a second pass. Never "only
+  high-severity" / "be conservative" — Opus 5 obeys literally and misses bugs.
+- Subagents only for sizeable independent tracks; one if one suffices; never
+  to verify your own work.
+- `low`/`medium` effort holds quality on Opus 5 — primary cost/latency lever
+  for routine work.
 
 ## Context & token discipline
 
