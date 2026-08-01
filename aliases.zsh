@@ -94,6 +94,8 @@ alias browser-on="mcp-toggle playwright on && mcp-toggle chrome-devtools on && e
 alias browser-off="mcp-toggle playwright off && mcp-toggle chrome-devtools off"
 alias linear-on="mcp-toggle linear on && echo 'Linear MCP on. First use: run /mcp in Claude, pick linear, complete browser OAuth.'"
 alias linear-off="mcp-toggle linear off"
+alias trello-on="mcp-toggle trello on && echo 'Trello MCP on. First use: run /mcp in Claude, pick trello, complete browser OAuth.'"
+alias trello-off="mcp-toggle trello off"
 
 # code-review-graph MCP (uv-installed by fresh.sh). Off by default; toggle on
 # from inside the target project, after the one-time per-repo build.

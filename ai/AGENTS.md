@@ -100,8 +100,10 @@ progressive (load only when invoked), so routing is free until used.
 | tracing callers / impact / blast-radius of a change                                      | code-review-graph (`graph-init` once, then `review-on`)   |
 | doing a structural search or multi-file refactor                                         | the `ast-grep` skill (not regex)                          |
 | building or polishing UI                                                                 | `frontend-design` / `impeccable` / `ui-ux-pro-max` skills |
+| writing/punching up copy (titles, LinkedIn, blog, microcopy) or humanizing AI-sounding text | `ai-copywriter` skill (superset of `humanizer`/`humanize-text`) |
 | researching across many sources                                                          | `/deep-research`                                          |
 | about to commit / open a PR                                                              | `verify` skill, then `/review` (or `/gstack-review`)      |
+| CI-grade precision review of a diff/PR or auditing a whole unfamiliar directory          | `ocr review` / `ocr scan` (Open Code Review CLI)          |
 | planning a non-trivial feature                                                           | `/plan` (planner subagent) or `/gstack-spec`              |
 | stress-testing a plan/spec or a tenancy / auth / security / money change before building | `agent-review-panel` (multi-agent adversarial debate)     |
 | told to "just build it" from a feature list, unattended                                  | `autobuild features.md`                                   |

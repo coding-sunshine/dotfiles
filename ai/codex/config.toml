@@ -89,3 +89,6 @@ dock-icon-preference = "codex-system"
 
 [projects."/Users/hardikshah/Code/Cogneiss/fleetwyz"]
 trust_level = "trusted"
+
+[projects."/Users/hardikshah/Code/Personal/memex"]
+trust_level = "trusted"

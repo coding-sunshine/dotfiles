@@ -181,4 +181,16 @@ if command -v git >/dev/null 2>&1; then
   echo "  cinematic web skill stack linked"
 fi
 
+# --- Copywriting skill ---------------------------------------------------------
+# Third-party skill: clickbait titles, microcopy, LinkedIn/blog copy, plus an
+# AI-writing humanizer (Wikipedia Signs-of-AI-writing patterns). Overlaps our
+# authored humanizer/humanize-text skills but adds copywriting mode; kept
+# alongside rather than replacing them. Best-effort — never fail setup.
+if command -v git >/dev/null 2>&1; then
+  AS="$HOME/.agents/skills"; mkdir -p "$AS"
+  [ -d "$AS/ai-copywriter" ] || git clone --depth 1 https://github.com/mikiarlo3/ai-copywriter "$AS/ai-copywriter" >/dev/null 2>&1 || true
+  ln -sfn "$AS/ai-copywriter" "$HOME/.claude/skills/ai-copywriter"
+  echo "  ai-copywriter skill linked"
+fi
+
 echo "AI agent layer ready. Edit configs in $AI and re-run ./ai.sh to update."

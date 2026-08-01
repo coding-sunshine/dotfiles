@@ -34,6 +34,11 @@
       "type": "http",
       "url": "https://mcp.linear.app/mcp"
     },
+    "trello": {
+      "// note": "Opt-in. Official Trello MCP (hosted, HTTP + OAuth — no API key). Boards, lists, cards, checklists, search. Enable with `trello-on`, then authenticate once via `/mcp` in a Claude session.",
+      "type": "http",
+      "url": "https://mcp.trello.com/v1"
+    },
     "playwright": {
       "// note": "Opt-in (heavy: ~13.7k tool-def tokens at startup). Prefer the Agent Browser / Playwright CLI instead; enable with `browser-on` only when you need interactive MCP control.",
       "command": "npx",
