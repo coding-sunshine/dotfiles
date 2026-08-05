@@ -1,7 +1,7 @@
 # Prompts
 
-Reusable, tool-agnostic prompt library. Paste into any agent (Claude Code, Codex,
-Cursor, aura.build) or a video model. Kept in dotfiles so it's versioned and travels.
+Reusable, tool-agnostic prompt library. Paste into any agent (Claude Code,
+aura.build) or a video model. Kept in dotfiles so it's versioned and travels.
 
 Symlinked to `~/.claude/prompts` by `ai.sh` for quick access.
 

@@ -66,7 +66,6 @@ mkdir -p $HOME/Code/Cogneiss               # Cogneiss
 # or run `composer global require laravel/installer` manually).
 if command -v composer >/dev/null 2>&1; then
   composer global require laravel/installer
-  composer global require 'phploc/phploc=*'   # LOC/complexity metrics (abandoned upstream but still runs)
 fi
 
 # Install global AI tooling (best-effort; needs node/uv from the Brewfile).
@@ -103,9 +102,6 @@ done
 
 # Set up the AI agent config layer (symlinks + MCP registration)
 ./ai.sh
-
-# Symlink the Mackup config file to the home directory
-ln -sf $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
 # Upgrade everything Homebrew installed and run a health check. Done near the end
 # so it catches anything pulled in above. `brew doctor` is advisory (non-zero

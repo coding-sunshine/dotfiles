@@ -6,7 +6,7 @@ My personal dotfiles for setting up and maintaining a **macOS Tahoe (macOS 26)**
 machine on Apple Silicon. One script takes a clean Mac and installs my tooling
 for a **mixed PHP/Laravel + JS/TS + Python** stack, applies sensible macOS
 defaults, and — importantly — wires up a first-class **AI agent layer** (Claude
-Code, Codex, Cursor, Gemini CLI).
+Code).
 
 Originally forked from [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
 and adapted for an AI-agent-driven 2026 workflow.
@@ -24,9 +24,9 @@ and adapted for an AI-agent-driven 2026 workflow.
 - Zsh autosuggestions + syntax highlighting + `you-should-use` alias reminders, and a
   global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
-- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), Zed + Cursor (editors), and more
-- An [AI agent layer](#ai-agent-layer): versioned configs for Claude Code, Codex,
-  Gemini CLI, and shared MCP servers
+- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), Zed (editor), and more
+- An [AI agent layer](#ai-agent-layer): versioned Claude Code configs and shared
+  MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
   via git worktrees, and auto-format hooks
 - ~900 lines of opinionated [`.macos`](./.macos) system defaults
@@ -49,7 +49,6 @@ Before wiping or migrating, run through this checklist:
 - Saved important documents from non-iCloud directories?
 - Exported any local databases you care about?
 - Saved data from apps that don't sync to iCloud?
-- Ran `mackup backup` on the latest [mackup](https://github.com/lra/mackup)?
 
 ### 2. Set up an SSH key
 
@@ -119,8 +118,7 @@ Confirm success with `git --version` before continuing.
 6. Clone your repositories (edit [`clone.sh`](./clone.sh) first — it ships empty)
 7. Symlink [`config/`](./config) into `~/.config` and set up the
    [AI agent layer](#ai-agent-layer) via [`ai.sh`](./ai.sh)
-8. Symlink the Mackup config
-9. Apply [`.macos`](./.macos) system defaults (this reloads the shell at the end)
+8. Apply [`.macos`](./.macos) system defaults (this reloads the shell at the end)
 
 ### 4. Finish up
 
@@ -137,22 +135,13 @@ Confirm success with `git --version` before continuing.
 3. Add your SSH **public** key to GitHub as both an _Authentication_ and a
    _Signing_ key (commits are SSH-signed by default — see `.gitconfig`):
    <https://github.com/settings/keys>
-4. Restore app preferences once Mackup has synced from your cloud storage:
-   ```zsh
-   mackup restore
-   ```
-   > ⚠️ **Mackup is largely unmaintained** and has broken with newer macOS app
-   > sandboxing — some apps no longer restore cleanly. If it misbehaves, skip it
-   > and configure those apps by hand, or move their settings into this repo and
-   > symlink them like the `config/` files. (Alternatives: [chezmoi](https://chezmoi.io)
-   > or plain symlinks.)
-5. Restart your Mac to finalize everything.
+4. Restart your Mac to finalize everything.
 
 ### 5. Verify
 
 ```zsh
 brew bundle check --file ~/.dotfiles/Brewfile   # all packages installed?
-ls -l ~/.claude ~/.codex ~/.gemini              # agent configs symlinked?
+ls -l ~/.claude                                 # agent configs symlinked?
 claude mcp list                                 # MCP servers registered?
 git config --get commit.gpgsign                 # "true" -> SSH signing on
 echo $ANTHROPIC_API_KEY                          # ~/.env loaded? (non-empty)
@@ -176,15 +165,13 @@ idempotent — re-run it any time you change a config.
 
 | File                                                   | Symlinked to                                                       | Purpose                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ai/AGENTS.md`](./ai/AGENTS.md)                       | `~/.claude/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.gemini/AGENTS.md` | Shared, tool-agnostic instructions                                                                                                                                                                                                                                        |
+| [`ai/AGENTS.md`](./ai/AGENTS.md)                       | `~/.claude/AGENTS.md`                                              | Shared, tool-agnostic instructions                                                                                                                                                                                                                                        |
 | [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md)         | `~/.claude/CLAUDE.md`                                              | Global Claude Code instructions (imports `AGENTS.md`)                                                                                                                                                                                                                     |
 | [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json`                                          | Model (Sonnet default) / permissions / hooks / statusline / auto memory                                                                                                                                                                                                   |
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh`                                          | Statusline: model · branch · context-usage bar · session cost                                                                                                                                                                                                             |
 | [`ai/claude/agents/`](./ai/claude/agents)              | `~/.claude/agents`                                                 | Subagents: `code-reviewer` & `planner` (Opus), `debugger` (Sonnet), `test-writer` (Haiku — mechanical)                                                                                                                                                                    |
 | [`ai/claude/commands/`](./ai/claude/commands)          | `~/.claude/commands`                                               | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship`                                                                                                                                                                                                      |
 | [`ai/claude/skills/`](./ai/claude/skills)              | `~/.claude/skills/*` (per-skill)                                   | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `continuous-learning-v2` (instincts), `agent-eval`, `gstack` (`/gstack-*`) |
-| [`ai/codex/config.toml`](./ai/codex/config.toml)       | `~/.codex/config.toml`                                             | Codex CLI config                                                                                                                                                                                                                                                          |
-| [`ai/gemini/settings.json`](./ai/gemini/settings.json) | `~/.gemini/settings.json`                                          | Gemini CLI config                                                                                                                                                                                                                                                         |
 | [`ai/mcp/mcp.json`](./ai/mcp/mcp.json)                 | registered via `claude mcp add-json`                               | MCP servers: **always-on** filesystem, context7; **opt-in** github, playwright, chrome-devtools, composio                                                                                                                                                                 |
 
 To update: edit a file under `ai/`, then run `./ai.sh`. Skills are symlinked
@@ -275,19 +262,12 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
 - **Auto-format hook** — [`format.sh`](./ai/claude/hooks/format.sh) formats every
   file an agent edits (Pint/Ruff/Prettier) via a PostToolUse hook.
 - **Session visibility** — `ccusage` (bun global) appends today's spend + burn
-  rate to the [statusline](./ai/claude/statusline.sh) every session; `otel-up`
-  starts an opt-in local OpenTelemetry→Grafana stack (ColeMurray/claude-code-otel)
-  for per-session cost/token/cache dashboards (`otel-down` to stop).
+  rate to the [statusline](./ai/claude/statusline.sh) every session.
 - **Config security audit** — `claude-audit` runs [AgentShield](https://github.com/affaan-m/agentshield)
   (`npx ecc-agentshield scan`) over `~/.claude` to catch leaked secrets, over-broad
   permissions, hook-injection, and risky MCP servers in the harness config itself
   — the one piece worth cherry-picking from ECC. On-demand only (nothing
   always-on); add `--opus` for the deep red/blue/auditor multi-agent pass.
-- **Gemini (AI Pro)** — flat-rate Gemini, no per-token billing: **Antigravity** (`agy` CLI +
-  app) is the agentic-coding surface on the AI Pro sub (replaced Gemini CLI/Code Assist for the
-  AI Pro tier in June 2026); **Jules** ([jules.google.com](https://jules.google.com)) runs async
-  cloud coding agents; the [Gemini app](https://gemini.google.com) handles Deep Research +
-  NotebookLM. `gem` (Gemini CLI) is the metered path via `GEMINI_API_KEY` in `~/.env`.
 - **Project context** — `claude-init` drops a [`CLAUDE.md` template](./templates/CLAUDE.md)
   into any repo; `rules-init` drops path-scoped [`.claude/rules/`](./templates/claude-rules)
   (TypeScript/PHP/Python/tests) that load only when matching files are touched.
@@ -420,7 +400,6 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`config/`](./config)                      | App configs symlinked into `~/.config` (ghostty, starship, zed)                               |
 | [`templates/`](./templates)                | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `features.md`, `claude-rules/`) |
 | [`.macos`](./.macos)                       | macOS system defaults                                                                         |
-| [`.mackup.cfg`](./.mackup.cfg)             | Mackup app-preferences sync config                                                            |
 | [`ai/`](./ai)                              | Versioned AI agent configs + hooks + skills (see above)                                       |
 
 ## Day-to-day
@@ -447,10 +426,8 @@ github-on        # enable the (opt-in) github MCP for this session; github-off a
 browser-on       # enable Playwright + Chrome DevTools MCP; browser-off after
 superpowers-on   # enable the Superpowers plugin for a heavy session; superpowers-off after
 caveman-off      # silence terse-output mode for a session (on by default)
-otel-up          # start the opt-in OpenTelemetry -> Grafana metrics stack; otel-down after
 claude-audit     # security-audit ~/.claude (AgentShield): secrets, perms, hook-injection
 gstack-upgrade   # update gstack to the latest /gstack-* commands
-mackup backup    # snapshot app preferences before a big change
 ```
 
 ### Keeping a machine in sync
@@ -490,14 +467,7 @@ Want to base your own dotfiles on this? Fork the repo, then:
 - List the repos you want cloned in [`clone.sh`](./clone.sh).
 - Tailor the agent instructions in [`ai/AGENTS.md`](./ai/AGENTS.md).
 
-Back up your app preferences with Mackup (synced to iCloud by default):
-
-```zsh
-brew install mackup
-mackup backup
-```
-
-> This repo deliberately uses a simple **symlink + Brewfile + Mackup** approach
+> This repo deliberately uses a simple **symlink + Brewfile** approach
 > rather than a dedicated manager (chezmoi, stow, yadm). It's easy to read and
 > extend; reach for one of those tools only if you need cross-platform templating
 > or encrypted, multi-machine secret sync.

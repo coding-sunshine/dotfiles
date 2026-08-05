@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dotfiles Software Inventory</title>
+<meta name="description" content="Every package, app, agent and plugin this dotfiles repo installs, with what each one is for.">
+<style>
+  :root{
+    --bg:#faf9f7; --bg-2:#f2f0ec; --surface:#ffffff;
+    --ink:#171614; --ink-2:#54514b; --ink-3:#8b8780;
+    --line:#e2ded6; --line-2:#cfc9be;
+    --accent:#b8420f; --accent-soft:#fdeee6;
+    /* Two-step radius scale: containers use --radius, inline chips use --radius-sm. */
+    --radius:6px; --radius-sm:3px;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131211; --bg-2:#191817; --surface:#1c1b19;
+      --ink:#eceae6; --ink-2:#a5a099; --ink-3:#736e67;
+      --line:#2b2926; --line-2:#3a3733;
+      --accent:#f08a52; --accent-soft:#2a1c14;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131211; --bg-2:#191817; --surface:#1c1b19;
+    --ink:#eceae6; --ink-2:#a5a099; --ink-3:#736e67;
+    --line:#2b2926; --line-2:#3a3733;
+    --accent:#f08a52; --accent-soft:#2a1c14;
+  }
+  :root[data-theme="light"]{
+    --bg:#faf9f7; --bg-2:#f2f0ec; --surface:#ffffff;
+    --ink:#171614; --ink-2:#54514b; --ink-3:#8b8780;
+    --line:#e2ded6; --line-2:#cfc9be;
+    --accent:#b8420f; --accent-soft:#fdeee6;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1240px; margin:0 auto; padding:0 24px}
+  @media (max-width:640px){ .wrap{padding:0 16px} }
+
+  /* ---------- masthead ---------- */
+  .masthead{border-bottom:1px solid var(--line); padding:56px 0 28px; background:var(--bg-2)}
+  .kicker{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 14px;
+  }
+  h1{
+    margin:0 0 12px; font-size:clamp(30px,5vw,46px); line-height:1.05;
+    letter-spacing:-.028em; font-weight:660;
+  }
+  .lede{margin:0; max-width:62ch; color:var(--ink-2); font-size:16px}
+  .lede code{font-family:var(--mono); font-size:.88em; color:var(--ink); background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--radius-sm); padding:1px 5px}
+
+  .stats{display:flex; flex-wrap:wrap; gap:0; margin:26px 0 0; border:1px solid var(--line);
+    border-radius:var(--radius); background:var(--surface); overflow:hidden}
+  .stat{flex:1 1 130px; padding:12px 16px; border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat b{display:block; font-family:var(--mono); font-size:22px; font-weight:600; letter-spacing:-.02em}
+  .stat span{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.09em}
+
+  /* ---------- controls ---------- */
+  .controls{
+    position:sticky; top:0; z-index:20; background:var(--bg);
+    border-bottom:1px solid var(--line); padding:14px 0 12px;
+    backdrop-filter:saturate(140%) blur(8px);
+  }
+  .searchrow{display:flex; gap:10px; align-items:center}
+  .field{position:relative; flex:1 1 auto}
+  .field svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--ink-3)}
+  #q{
+    width:100%; font-family:var(--mono); font-size:14px; color:var(--ink);
+    background:var(--surface); border:1px solid var(--line-2); border-radius:var(--radius);
+    padding:11px 74px 11px 38px; outline:none;
+  }
+  #q::placeholder{color:var(--ink-3)}
+  #q:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .hint{
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    font-family:var(--mono); font-size:11px; color:var(--ink-3);
+    border:1px solid var(--line-2); border-radius:var(--radius-sm); padding:2px 6px; pointer-events:none;
+  }
+  .iconbtn{
+    flex:0 0 auto; width:42px; height:42px; display:grid; place-items:center;
+    background:var(--surface); color:var(--ink-2); border:1px solid var(--line-2);
+    border-radius:var(--radius); cursor:pointer; transition:transform .12s, border-color .12s;
+  }
+  .iconbtn:hover{border-color:var(--accent); color:var(--accent)}
+  .iconbtn:active{transform:translateY(1px)}
+  .iconbtn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px}
+  .chip{
+    font-family:var(--mono); font-size:12px; color:var(--ink-2);
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:5px 10px; cursor:pointer; transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{border-color:var(--line-2); color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+  .chip .n{opacity:.6; margin-left:6px}
+  .chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .count{font-family:var(--mono); font-size:12px; color:var(--ink-3); margin-top:10px}
+  .count b{color:var(--ink); font-weight:600}
+
+  /* ---------- results ---------- */
+  main{padding:26px 0 96px}
+  .group{margin:0 0 34px}
+  .grouphead{
+    display:flex; align-items:baseline; gap:12px; padding-bottom:8px;
+    border-bottom:1px solid var(--line-2); margin-bottom:16px;
+  }
+  .grouphead h2{margin:0; font-size:17px; letter-spacing:-.01em; font-weight:640}
+  .grouphead .gn{font-family:var(--mono); font-size:12px; color:var(--ink-3)}
+  .grouphead .gd{margin-left:auto; font-size:13px; color:var(--ink-3); text-align:right}
+  @media (max-width:700px){ .grouphead .gd{display:none} }
+
+  .grid{display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+  .item{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 14px 11px; transition:border-color .12s;
+  }
+  .item:hover{border-color:var(--line-2)}
+  .top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:5px}
+  .name{font-family:var(--mono); font-size:13.5px; font-weight:600; letter-spacing:-.01em}
+  .name mark{background:var(--accent-soft); color:var(--accent); padding:0 1px; border-radius:var(--radius-sm)}
+  .tag{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-3); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1px 5px;
+  }
+  .tag.optin{color:var(--accent); border-color:var(--accent); background:var(--accent-soft)}
+  .desc{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.5}
+  .desc mark{background:var(--accent-soft); color:var(--accent); padding:0 1px; border-radius:var(--radius-sm)}
+  .src{
+    margin-top:7px; font-family:var(--mono); font-size:11px; color:var(--ink-3);
+    display:flex; align-items:center; gap:5px;
+  }
+  .src::before{content:""; width:5px; height:1px; background:var(--line-2); flex:0 0 auto}
+
+  .empty{
+    border:1px dashed var(--line-2); border-radius:var(--radius); padding:44px 24px;
+    text-align:center; color:var(--ink-3);
+  }
+  .empty b{display:block; color:var(--ink); font-size:16px; margin-bottom:6px}
+
+  footer{border-top:1px solid var(--line); padding:22px 0 40px; color:var(--ink-3); font-size:13px}
+  footer code{font-family:var(--mono); color:var(--ink-2)}
+
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">hardikshah / .dotfiles</p>
+    <h1>Software inventory</h1>
+    <p class="lede">
+      Everything a fresh run of <code>./fresh.sh</code> puts on the machine: Homebrew formulae and casks,
+      language toolchains, global packages, shell plugins, AI agents, and the Claude Code layer wired up by
+      <code>./ai.sh</code>. Search or filter to find what a tool is for and which file installs it.
+    </p>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="searchrow">
+      <div class="field">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path>
+        </svg>
+        <input id="q" type="search" placeholder="Search name, purpose, or file…" autocomplete="off" spellcheck="false" aria-label="Search software">
+        <span class="hint" id="hint">/</span>
+      </div>
+      <button class="iconbtn" id="theme" type="button" aria-label="Toggle colour theme" title="Toggle theme">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M20.5 14.2A8.4 8.4 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+    <p class="count" id="count"></p>
+  </div>
+</div>
+
+<main class="wrap" id="out"></main>
+
+<footer>
+  <div class="wrap">
+    Generated from <code>Brewfile</code>, <code>fresh.sh</code>, <code>ai.sh</code>, <code>.zshrc</code>,
+    <code>aliases.zsh</code> and <code>ai/mcp/mcp.json</code>. Re-check those files after changing this list.
+  </div>
+</footer>
+
+<script>
+/* group key -> [label, one-line description] */
+const GROUPS = {
+  boot:  ["Bootstrap",        "Installed before anything else, by fresh.sh"],
+  cli:   ["Command line",     "Homebrew formulae on PATH"],
+  lang:  ["Languages & package managers", "Runtimes, package managers, linters"],
+  app:   ["Desktop apps",     "Homebrew casks and Mac App Store"],
+  ai:    ["AI agents & CLIs", "Coding agents, terminal AI, agent tooling"],
+  shell: ["Shell layer",      "Oh My Zsh plugins and zsh enhancements"],
+  cc:    ["Claude Code layer","Plugins, skills, agents, commands, MCP servers"],
+  repo:  ["Repo scripts & templates", "Shipped in this repo, symlinked or copied"],
+};
+
+/* n=name, g=group, t=tag, d=description, s=source file, o=opt-in flag */
+const DATA = [
+/* ---------------- bootstrap ---------------- */
+{n:"Xcode Command Line Tools",g:"boot",t:"toolchain",d:"Apple compilers, headers and system git. Prerequisite for Homebrew and most native builds.",s:"fresh.sh"},
+{n:"Homebrew",g:"boot",t:"package manager",d:"macOS package manager. Every formula and cask below is installed through it.",s:"fresh.sh"},
+{n:"Oh My Zsh",g:"boot",t:"framework",d:"Zsh framework that loads the plugin set, completions and update checks.",s:"fresh.sh"},
+{n:"brew bundle",g:"boot",t:"step",d:"Installs the whole Brewfile in one pass. Taps are trusted first so a blocked tap cannot abort the run.",s:"fresh.sh"},
+{n:".macos defaults",g:"boot",t:"system prefs",d:"About 970 lines of `defaults write` for Finder, Dock, keyboard, screenshots, Safari and security. Runs last because it reloads the shell.",s:".macos"},
+{n:"Project directories",g:"boot",t:"scaffold",d:"Creates ~/Herd, ~/Code/Personal, ~/Code/Clients and ~/Code/Cogneiss.",s:"fresh.sh"},
+
+/* ---------------- CLI: core ---------------- */
+{n:"awscli",g:"cli",t:"cloud",d:"Amazon Web Services API from the terminal: S3, EC2, IAM, credentials.",s:"Brewfile"},
+{n:"bash",g:"cli",t:"shell",d:"Current Bash. macOS still ships 3.2 from 2007, so scripts using modern syntax need this one.",s:"Brewfile"},
+{n:"bat",g:"cli",t:"viewer",d:"cat with syntax highlighting, git gutters and paging. Aliased over cat.",s:"Brewfile"},
+{n:"coreutils",g:"cli",t:"unix",d:"GNU ls, date, realpath and friends. The BSD versions bundled with macOS lag behind. Powers the `ll` alias.",s:"Brewfile"},
+{n:"ffmpeg",g:"cli",t:"media",d:"Transcode, trim, resize and capture video and audio.",s:"Brewfile"},
+{n:"gh",g:"cli",t:"git",d:"GitHub CLI: pull requests, issues, releases, auth, gh api.",s:"Brewfile"},
+{n:"git",g:"cli",t:"git",d:"Current Git. macOS bundles an older build behind the Xcode tools.",s:"Brewfile"},
+{n:"gitleaks",g:"cli",t:"security",d:"Scans git history and staged changes for leaked secrets and keys.",s:"Brewfile"},
+{n:"grep",g:"cli",t:"unix",d:"GNU grep, for the flags BSD grep does not have. Day to day, rg is aliased over grep.",s:"Brewfile"},
+{n:"httpie",g:"cli",t:"http",d:"HTTP client with readable output and sane defaults for poking APIs.",s:"Brewfile"},
+{n:"jq",g:"cli",t:"json",d:"Query and reshape JSON in a pipe. Used by ai.sh to slice mcp.json.",s:"Brewfile"},
+{n:"mas",g:"cli",t:"app store",d:"Installs Mac App Store apps from the terminal, so the Brewfile can list them.",s:"Brewfile"},
+{n:"pkg-config",g:"cli",t:"build",d:"Reports compile and link flags for installed libraries. Several formulae fail to build without it.",s:"Brewfile"},
+{n:"stripe",g:"cli",t:"payments",d:"Stripe CLI: forward webhooks to localhost, tail live events, trigger test payments.",s:"Brewfile"},
+{n:"terminal-notifier",g:"cli",t:"notify",d:"Sends clickable macOS notifications. Backs the Claude Code notification hook.",s:"Brewfile"},
+
+/* ---------------- CLI: modern replacements ---------------- */
+{n:"ripgrep",g:"cli",t:"search",d:"Fast recursive search that respects .gitignore. Aliased as grep and the default search tool for agents.",s:"Brewfile"},
+{n:"ast-grep",g:"cli",t:"search",d:"Structural search and rewrite over the syntax tree. For call patterns and signatures, where regex breaks down.",s:"Brewfile"},
+{n:"fd",g:"cli",t:"search",d:"Friendlier find: sane defaults, gitignore-aware, much faster to type.",s:"Brewfile"},
+{n:"fzf",g:"cli",t:"picker",d:"Fuzzy finder. Powers Ctrl-T, Ctrl-R history and the fzf-tab completion menu.",s:"Brewfile"},
+{n:"eza",g:"cli",t:"files",d:"Modern ls with icons, git status and tree mode. Aliased as ls, la and lt.",s:"Brewfile"},
+{n:"zoxide",g:"cli",t:"navigation",d:"Learns the directories you visit so `z proj` jumps straight there.",s:"Brewfile"},
+{n:"git-delta",g:"cli",t:"git",d:"Syntax-highlighted, side-by-side git diffs with proper word-level highlighting.",s:"Brewfile"},
+{n:"lazygit",g:"cli",t:"git",d:"Terminal UI for staging hunks, rebasing and resolving conflicts. Aliased as lg.",s:"Brewfile"},
+{n:"lefthook",g:"cli",t:"git hooks",d:"Fast parallel git hooks. The `hooks` alias drops templates/lefthook.yml into a project and installs it.",s:"Brewfile"},
+{n:"direnv",g:"cli",t:"env",d:"Loads and unloads per-directory environment from .envrc as you cd around.",s:"Brewfile"},
+{n:"tldr",g:"cli",t:"docs",d:"Example-first man pages. Shows the five commands you actually wanted.",s:"Brewfile"},
+{n:"starship",g:"cli",t:"prompt",d:"Cross-shell prompt showing git state, language versions and exit codes. Owns the prompt; the Oh My Zsh theme is off.",s:"Brewfile"},
+{n:"sd",g:"cli",t:"text",d:"Find and replace with plain strings instead of sed's escaping rules.",s:"Brewfile"},
+{n:"dust",g:"cli",t:"disk",d:"du with a visual tree of what is eating the disk.",s:"Brewfile"},
+{n:"duf",g:"cli",t:"disk",d:"df with readable, colour-coded mount and usage tables.",s:"Brewfile"},
+{n:"procs",g:"cli",t:"process",d:"ps replacement with colour, tree view and search by name or port.",s:"Brewfile"},
+{n:"gping",g:"cli",t:"network",d:"ping with a live latency graph, and multiple hosts side by side.",s:"Brewfile"},
+
+/* ---------------- CLI: TUI and terminal ---------------- */
+{n:"atuin",g:"cli",t:"history",d:"SQLite-backed shell history with full-screen fuzzy Ctrl-R. Up-arrow stays normal zsh history.",s:"Brewfile"},
+{n:"btop",g:"cli",t:"monitor",d:"Resource monitor for CPU, memory, disk, network and processes. Aliased as btm.",s:"Brewfile"},
+{n:"yazi",g:"cli",t:"files",d:"TUI file manager with image and PDF previews. Aliased as y.",s:"Brewfile"},
+{n:"zellij",g:"cli",t:"multiplexer",d:"Terminal multiplexer with persistent split sessions and layouts.",s:"Brewfile"},
+{n:"glow",g:"cli",t:"markdown",d:"Renders markdown in the terminal, so READMEs and agent output stay readable.",s:"Brewfile"},
+{n:"jless",g:"cli",t:"json",d:"Interactive pager for JSON and YAML: fold, search, navigate large payloads.",s:"Brewfile"},
+{n:"fastfetch",g:"cli",t:"system info",d:"System summary printed on every new interactive shell.",s:"Brewfile"},
+{n:"sevenzip",g:"cli",t:"archive",d:"7-Zip archives. Also a preview dependency for yazi.",s:"Brewfile"},
+{n:"poppler",g:"cli",t:"pdf",d:"PDF utilities and the text layer behind yazi's PDF previews.",s:"Brewfile"},
+{n:"lolcat",g:"cli",t:"fun",d:"Rainbow-colours anything piped into it.",s:"Brewfile"},
+{n:"cmatrix",g:"cli",t:"fun",d:"Matrix rain screensaver for the terminal.",s:"Brewfile"},
+
+/* ---------------- CLI: media optimisation ---------------- */
+{n:"imagemagick",g:"cli",t:"images",d:"Convert, resize and composite images from scripts. Required by most PHP image pipelines.",s:"Brewfile"},
+{n:"jpegoptim",g:"cli",t:"images",d:"Lossless and lossy JPEG compression. Spatie Medialibrary optimiser.",s:"Brewfile"},
+{n:"optipng",g:"cli",t:"images",d:"Lossless PNG recompression. Spatie Medialibrary optimiser.",s:"Brewfile"},
+{n:"pngquant",g:"cli",t:"images",d:"Lossy PNG quantisation, big size wins on screenshots. Spatie Medialibrary optimiser.",s:"Brewfile"},
+{n:"svgo",g:"cli",t:"images",d:"Strips editor cruft and shrinks SVGs. Spatie Medialibrary optimiser.",s:"Brewfile"},
+{n:"gifsicle",g:"cli",t:"images",d:"Optimises and edits animated GIFs. Spatie Medialibrary optimiser.",s:"Brewfile"},
+
+/* ---------------- languages ---------------- */
+{n:"Herd",g:"lang",t:"php",d:"PHP 7.4 through 8.5, nginx, Composer, Node and NVM in one app. All PHP work runs through `herd php`.",s:"Brewfile (cask)"},
+{n:"Composer",g:"lang",t:"php",d:"PHP dependency manager, provided by Herd and aliased to `herd composer`.",s:"Herd"},
+{n:"laravel/installer",g:"lang",t:"php",d:"Global `laravel new` scaffolder for fresh Laravel apps.",s:"fresh.sh (composer global)"},
+{n:"Node.js + NVM",g:"lang",t:"js",d:"Node runtime and version manager, injected by Herd rather than Homebrew.",s:"Herd"},
+{n:"pnpm",g:"lang",t:"js",d:"Fast, disk-efficient Node package manager. Default for JS and TS projects here.",s:"Brewfile"},
+{n:"bun",g:"lang",t:"js",d:"JavaScript runtime, bundler and package manager. Also installs the ccusage global and runs gstack's setup.",s:"Brewfile"},
+{n:"vercel-cli",g:"lang",t:"deploy",d:"Deploys and previews Vercel projects, pulls env vars, tails logs.",s:"Brewfile"},
+{n:"uv",g:"lang",t:"python",d:"Fast Python package and project manager. Also installs the standalone Python CLIs below via `uv tool`.",s:"Brewfile"},
+{n:"ruff",g:"lang",t:"python",d:"Python linter and formatter, replaces flake8 plus black plus isort.",s:"Brewfile"},
+{n:"Docker Desktop",g:"lang",t:"containers",d:"Containers and local service stacks. Backs the `mssql` alias.",s:"Brewfile (cask)"},
+
+/* ---------------- AI: CLIs and agents ---------------- */
+{n:"Claude Code",g:"ai",t:"agent cli",d:"Primary terminal coding agent. Aliased to skip permission prompts in interactive shells only.",s:"Brewfile (cask)"},
+{n:"Claude",g:"ai",t:"desktop",d:"Anthropic desktop app for chat, projects and desktop MCP connectors.",s:"Brewfile (cask)"},
+{n:"cmux",g:"ai",t:"terminal",d:"Ghostty-based terminal built for running several coding agents in parallel.",s:"Brewfile (cask)"},
+{n:"Warp",g:"ai",t:"terminal",d:"AI-assisted terminal with blocks, command search and agent mode.",s:"Brewfile (cask)"},
+{n:"Maestro",g:"ai",t:"orchestrator",d:"RunMaestro.ai command centre for coordinating AI agents.",s:"Brewfile (cask)"},
+{n:"cavemem",g:"ai",t:"memory",d:"Local compressed persistent memory for agents. Survives /compact and wires itself in as an MCP server.",s:"fresh.sh (npm global)"},
+{n:"ocr",g:"ai",t:"review",d:"Open Code Review CLI. `ocr review` for CI-grade diff review, `ocr scan` to audit a whole directory.",s:"fresh.sh (npm global)"},
+{n:"ccusage",g:"ai",t:"cost",d:"Per-session token and cost visibility. Feeds the Claude Code statusline.",s:"fresh.sh (bun global)"},
+{n:"specify",g:"ai",t:"spec",d:"GitHub Spec Kit CLI for spec-driven development. `specify init`, then the /speckit.* commands. Aliased as spec.",s:"ai.sh (uv tool)"},
+{n:"code-review-graph",g:"ai",t:"graph",d:"Builds a caller and dependency graph of a repo for blast-radius analysis. Backs the opt-in review MCP.",s:"ai.sh (uv tool)"},
+{n:"graphifyy",g:"ai",t:"graph",d:"Turns a codebase or any input into a queryable knowledge graph. Installs the /graphify skill and a git hook.",s:"ai.sh (uv tool)"},
+{n:"Agent Browser",g:"ai",t:"browser",d:"Token-lean browser automation CLI. The default for browser work before reaching for Playwright MCP.",s:"ai.sh (npx skills)"},
+{n:"AgentShield",g:"ai",t:"security",d:"Audits the Claude Code harness itself for leaked secrets, over-broad permissions, hook injection and risky MCP servers. On demand via the claude-audit alias, nothing resident.",s:"aliases.zsh (npx)"},
+{n:"Laravel Boost",g:"ai",t:"mcp",d:"Gives agents real Laravel project context through MCP. Installed per project by the boost alias.",s:"aliases.zsh"},
+
+/* ---------------- apps: development ---------------- */
+{n:"Zed",g:"app",t:"editor",d:"Primary GUI editor and the shell $EDITOR locally. Config symlinked from config/zed.",s:"Brewfile (cask)"},
+{n:"Sublime Text",g:"app",t:"editor",d:"Fast scratch editor for large files and quick greps.",s:"Brewfile (cask)"},
+{n:"Ghostty",g:"app",t:"terminal",d:"Native Metal-accelerated terminal. Config symlinked from config/ghostty.",s:"Brewfile (cask)"},
+{n:"GitHub Desktop",g:"app",t:"git",d:"GUI for reviewing diffs and history when the terminal is not the right tool.",s:"Brewfile (cask)"},
+{n:"Tinkerwell",g:"app",t:"php",d:"Runs PHP against a live Laravel app, local or remote. A tinker session with an editor.",s:"Brewfile (cask)"},
+{n:"TablePlus",g:"app",t:"database",d:"Multi-engine database GUI: MySQL, Postgres, SQLite, Redis.",s:"Brewfile (cask)"},
+{n:"Sequel Ace",g:"app",t:"database",d:"MySQL and MariaDB GUI, the maintained successor to Sequel Pro.",s:"Brewfile (cask)"},
+{n:"HTTPie Desktop",g:"app",t:"http",d:"GUI API client for building and saving requests.",s:"Brewfile (cask)"},
+{n:"Cyberduck",g:"app",t:"transfer",d:"FTP, SFTP and S3 browser.",s:"Brewfile (cask)"},
+{n:"Transmit",g:"app",t:"transfer",d:"Fast file transfer and cloud storage mounting.",s:"Brewfile (cask)"},
+{n:"Helo",g:"app",t:"email",d:"Catches outgoing mail from local apps so test emails never leave the machine.",s:"Brewfile (cask)"},
+{n:"Tuple",g:"app",t:"pairing",d:"Low-latency remote pair programming with proper remote control.",s:"Brewfile (cask)"},
+
+/* ---------------- apps: design and media ---------------- */
+{n:"Figma",g:"app",t:"design",d:"Interface design and handoff.",s:"Brewfile (cask)"},
+{n:"CleanShot",g:"app",t:"capture",d:"Screenshots and screen recording with annotation, scrolling capture and cloud links.",s:"Brewfile (cask)"},
+{n:"Screen Studio",g:"app",t:"capture",d:"Screen recordings with automatic zoom and motion, for demos.",s:"Brewfile (cask)"},
+{n:"Loom",g:"app",t:"capture",d:"Quick async video messages with a shareable link.",s:"Brewfile (cask)"},
+{n:"ImageOptim",g:"app",t:"images",d:"Drag-and-drop lossless image compression.",s:"Brewfile (cask)"},
+{n:"Reflex",g:"app",t:"media",d:"Media playback and conversion.",s:"Brewfile (cask)"},
+
+/* ---------------- apps: browsers ---------------- */
+{n:"Google Chrome",g:"app",t:"browser",d:"Primary test browser and the target for Chrome DevTools MCP.",s:"Brewfile (cask)"},
+{n:"Firefox",g:"app",t:"browser",d:"Second engine for cross-browser checks.",s:"Brewfile (cask)"},
+
+/* ---------------- apps: communication ---------------- */
+{n:"Slack",g:"app",t:"chat",d:"Team and client communication.",s:"Brewfile (cask)"},
+{n:"Discord",g:"app",t:"chat",d:"Community and open-source project channels.",s:"Brewfile (cask)"},
+{n:"Telegram",g:"app",t:"chat",d:"Native Telegram desktop client.",s:"Brewfile (cask)"},
+{n:"WhatsApp",g:"app",t:"chat",d:"Native WhatsApp desktop client.",s:"Brewfile (cask)"},
+{n:"Zoom",g:"app",t:"video",d:"Video calls with clients and teams.",s:"Brewfile (cask)"},
+
+/* ---------------- apps: utilities ---------------- */
+{n:"Raycast",g:"app",t:"launcher",d:"Launcher covering window management, clipboard history, snippets, scripts and AI.",s:"Brewfile (cask)"},
+{n:"Pastebot",g:"app",t:"clipboard",d:"Clipboard history with saved, reusable snippets.",s:"Brewfile (cask)"},
+{n:"Caffeine",g:"app",t:"power",d:"Keeps the Mac awake during long builds, recordings and unattended agent runs.",s:"Brewfile (cask)"},
+{n:"The Unarchiver",g:"app",t:"archive",d:"Handles archive formats the built-in extractor refuses.",s:"Brewfile (cask)"},
+{n:"TunnelBear",g:"app",t:"vpn",d:"VPN for untrusted networks and region checks.",s:"Brewfile (cask)"},
+{n:"Speedtest",g:"app",t:"network",d:"Ookla connection test. Installed from the Mac App Store through mas.",s:"Brewfile (mas)"},
+{n:"JetBrains Mono Nerd Font",g:"app",t:"font",d:"Monospace font with the glyph set Starship icons and TUI tools need.",s:"Brewfile (cask)"},
+
+/* ---------------- shell ---------------- */
+{n:"zsh-autosuggestions",g:"shell",t:"zsh",d:"Suggests the rest of a command from history as you type, accepted with the right arrow.",s:"Brewfile + .zshrc"},
+{n:"zsh-syntax-highlighting",g:"shell",t:"zsh",d:"Colours commands as valid or invalid before you press enter. Sourced last so it sees every widget.",s:"Brewfile + .zshrc"},
+{n:"zsh-you-should-use",g:"shell",t:"zsh",d:"When you type the long form of something you already aliased, it reminds you of the alias.",s:"Brewfile + .zshrc"},
+{n:"fzf-tab",g:"shell",t:"omz plugin",d:"Replaces the Tab completion menu with a fuzzy fzf picker, including directory previews via eza. Cloned from git, not Homebrew.",s:"fresh.sh + .zshrc"},
+{n:"artisan",g:"shell",t:"omz plugin",d:"Completion for Laravel artisan commands. Ships in this repo under plugins/artisan.",s:".zshrc"},
+{n:"git",g:"shell",t:"omz plugin",d:"The standard Oh My Zsh git aliases and completions.",s:".zshrc"},
+{n:"sudo",g:"shell",t:"omz plugin",d:"Press Esc twice to prepend sudo to the last command.",s:".zshrc"},
+{n:"dirhistory",g:"shell",t:"omz plugin",d:"Alt with arrow keys to move through directory history and up or down the tree.",s:".zshrc"},
+{n:"colored-man-pages",g:"shell",t:"omz plugin",d:"Syntax colours in man output.",s:".zshrc"},
+{n:"extract",g:"shell",t:"omz plugin",d:"`x <archive>` unpacks any archive format without remembering the flags.",s:".zshrc"},
+{n:"copypath / copyfile",g:"shell",t:"omz plugin",d:"Copies the current path or a file's contents to the clipboard.",s:".zshrc"},
+{n:"composer / npm / docker / brew / gh",g:"shell",t:"omz plugin",d:"Completions and short aliases for each of those CLIs.",s:".zshrc"},
+{n:"macos",g:"shell",t:"omz plugin",d:"macOS helpers: open the current dir in Finder, quick-look, manage Safari tabs.",s:".zshrc"},
+{n:"web-search",g:"shell",t:"omz plugin",d:"`google <query>` and friends, straight from the prompt.",s:".zshrc"},
+{n:"Modern tool nudges",g:"shell",t:"custom",d:"When you run find, du, df, ps, sed, man, ping, top or cd, it prints the modern replacement once per shell, only if that tool is installed.",s:".zshrc"},
+{n:"~/.env loader",g:"shell",t:"secrets",d:"Auto-exports every key in the git-ignored ~/.env into the shell. See .env.example for the template.",s:".zshrc"},
+
+/* ---------------- Claude Code: plugins ---------------- */
+{n:"feature-dev",g:"cc",t:"plugin",d:"Anthropic's feature workflow: code-explorer, code-architect and code-reviewer subagents.",s:"ai.sh"},
+{n:"code-review",g:"cc",t:"plugin",d:"Anthropic's review plugin, including the multi-agent /code-review ultra pass.",s:"ai.sh"},
+{n:"frontend-design",g:"cc",t:"plugin",d:"Anthropic's UI plugin, aimed at output that does not look machine-generated.",s:"ai.sh"},
+{n:"superpowers",g:"cc",t:"plugin",o:1,d:"Structured development toolkit. Installed but disabled, because it preloads roughly 22k tokens. Toggle with superpowers-on and off.",s:"ai.sh"},
+{n:"ponytail",g:"cc",t:"plugin",d:"Lazy senior developer mode: smallest change that fully solves the task, no speculative abstractions.",s:"ai.sh"},
+{n:"caveman",g:"cc",t:"plugin",d:"Terse output mode, on by default. Keeps the technical substance, drops the filler. Toggle with caveman-on and off.",s:"ai.sh"},
+{n:"agent-review-panel",g:"cc",t:"plugin",o:1,d:"Multi-agent adversarial debate over a plan or diff. Token-heavy, so it is invoked on demand at PR and plan boundaries.",s:"ai.sh"},
+{n:"gstack",g:"cc",t:"framework",d:"Garry Tan's command framework, installed under a /gstack-* prefix so it does not collide with the local /review, /ship and /plan.",s:"ai.sh"},
+
+/* ---------------- Claude Code: authored skills ---------------- */
+{n:"verify",g:"cc",t:"skill",d:"Pre-commit check: run the tests, the linter and the type checker before claiming anything works.",s:"ai/claude/skills"},
+{n:"humanizer",g:"cc",t:"skill",d:"Strips AI tells from general prose: em-dash overuse, rule-of-three, inflated vocabulary, vague attribution.",s:"ai/claude/skills"},
+{n:"humanize-text",g:"cc",t:"skill",d:"Same job aimed at UX, product and marketing copy, with scoring.",s:"ai/claude/skills"},
+{n:"skill-creator",g:"cc",t:"skill",d:"Scaffolds a new skill with the right frontmatter and progressive-disclosure structure.",s:"ai/claude/skills"},
+{n:"agent-eval",g:"cc",t:"skill",d:"Evaluates agent output quality against a defined rubric.",s:"ai/claude/skills"},
+{n:"continuous-learning-v2",g:"cc",t:"skill",d:"Watches for repeated patterns in your work and proposes them as durable instincts. Check /instinct-status now and then.",s:"ai/claude/skills"},
+{n:"cinematic-scroll-video",g:"cc",t:"skill",d:"Scroll-scrubbed video and sequence sections, the companion to the third-party cinematic stack.",s:"ai/claude/skills"},
+{n:"pdf",g:"cc",t:"skill",d:"Reads and extracts from PDFs.",s:"ai/claude/skills"},
+
+/* ---------------- Claude Code: subagents and commands ---------------- */
+{n:"code-reviewer",g:"cc",t:"subagent",d:"Reviews a diff for correctness bugs, security issues and simplifications before a commit or PR.",s:"ai/claude/agents"},
+{n:"debugger",g:"cc",t:"subagent",d:"Reproduces a failure, isolates the root cause and applies a minimal fix with a regression test.",s:"ai/claude/agents"},
+{n:"planner",g:"cc",t:"subagent",d:"Read-only architect that researches the codebase and returns a step-by-step implementation plan.",s:"ai/claude/agents"},
+{n:"test-writer",g:"cc",t:"subagent",d:"Writes focused tests for recently changed code.",s:"ai/claude/agents"},
+{n:"/plan /pr /review /ship /spec /test",g:"cc",t:"commands",d:"The local slash commands: plan a feature, open a PR, review a diff, ship it, write a spec, run tests.",s:"ai/claude/commands"},
+
+/* ---------------- Claude Code: third-party skills ---------------- */
+{n:"impeccable",g:"cc",t:"skill",d:"Frontend polish and critique with sub-commands for craft, critique, audit, polish, animate and more.",s:"ai.sh (npx skills)"},
+{n:"taste-skill",g:"cc",t:"skill",d:"Anti-slop frontend skill for landing pages and portfolios. Design read, three dials, a long list of banned AI tells.",s:"ai.sh (git)"},
+{n:"web-design-guidelines",g:"cc",t:"skill",d:"Audits a page against Vercel's web design guidelines.",s:"ai.sh (npx skills)"},
+{n:"ui-ux-pro-max",g:"cc",t:"skill",d:"Seven-skill UI and UX design suite: brand, design system, layout, styling, slides, banners.",s:"ai.sh (npx skills)"},
+{n:"ast-grep",g:"cc",t:"skill",d:"Teaches the agent to reach for structural search instead of regex on refactors.",s:"ai.sh (npx skills)"},
+{n:"find-skills",g:"cc",t:"skill",d:"Discovers and installs new skills from the ecosystem.",s:"ai.sh (npx skills)"},
+{n:"ai-copywriter",g:"cc",t:"skill",d:"Titles, microcopy, LinkedIn and blog copy, plus an AI-writing humanizer built on the Wikipedia signs-of-AI-writing list.",s:"ai.sh (git)"},
+{n:"GSAP skills",g:"cc",t:"skill set",d:"GreenSock's official eight skills: core, timeline, ScrollTrigger, plugins, react, frameworks, utils, performance. The backbone of the cinematic scroll work.",s:"ai.sh (git)"},
+{n:"MengTo web-design skills",g:"cc",t:"skill set",d:"Thirty-five curated skills from aura.build's design system, linked as mt-*: cinematic scroll, editorial layouts, WebGL, shaders, marquees, reveals.",s:"ai.sh (git)"},
+{n:"awwwards-3d",g:"cc",t:"skill",d:"Award-site style 3D and WebGL scenes.",s:"ai.sh (git)"},
+{n:"motion-dev-animations",g:"cc",t:"skill",d:"Motion (formerly Framer Motion) animation patterns.",s:"ai.sh (git)"},
+{n:"hand-drawn-styles",g:"cc",t:"skill",d:"Sketch and hand-drawn visual treatments.",s:"ai.sh (git)"},
+{n:"video-shotcraft",g:"cc",t:"skill",d:"Shot composition and framing for video sections.",s:"ai.sh (git)"},
+{n:"remotion-video",g:"cc",t:"skill",d:"Programmatic video built in React with Remotion.",s:"ai.sh (git)"},
+{n:"last30days",g:"cc",t:"skill",d:"Summarises the last thirty days of repository activity.",s:"ai.sh (git)"},
+
+/* ---------------- Claude Code: MCP servers ---------------- */
+{n:"github (MCP)",g:"cc",t:"mcp",o:1,d:"Repos, issues, pull requests and Actions as tools. Toggle with github-on and github-off.",s:"ai/mcp/mcp.json"},
+{n:"playwright (MCP)",g:"cc",t:"mcp",o:1,d:"Drives a real browser for interactive debugging. Enabled together with chrome-devtools by browser-on.",s:"ai/mcp/mcp.json"},
+{n:"chrome-devtools (MCP)",g:"cc",t:"mcp",o:1,d:"Network, console and performance traces from Chrome. Paired with playwright under browser-on.",s:"ai/mcp/mcp.json"},
+{n:"code-review-graph (MCP)",g:"cc",t:"mcp",o:1,d:"Caller and blast-radius queries over the repo graph. Run `code-review-graph build` once per repo, then review-on.",s:"ai/mcp/mcp.json"},
+{n:"linear (MCP)",g:"cc",t:"mcp",o:1,d:"Linear issues and projects. First use needs browser OAuth through /mcp. Toggle with linear-on.",s:"ai/mcp/mcp.json"},
+{n:"trello (MCP)",g:"cc",t:"mcp",o:1,d:"Trello boards and cards, same OAuth flow. Toggle with trello-on.",s:"ai/mcp/mcp.json"},
+{n:"context7 (MCP)",g:"cc",t:"mcp",o:1,d:"Up-to-date library documentation lookups. Registered but off; an audit found zero calls against a constant schema cost.",s:"ai/mcp/mcp.json"},
+{n:"filesystem (MCP)",g:"cc",t:"mcp",o:1,d:"File access as MCP tools. Off, because the built-in Read, Glob and Grep already cover it.",s:"ai/mcp/mcp.json"},
+{n:"composio (MCP)",g:"cc",t:"mcp",o:1,d:"Large third-party app integration surface. Registered only when COMPOSIO_API_KEY is set, because it is heavy.",s:"ai/mcp/mcp.json"},
+
+/* ---------------- repo scripts ---------------- */
+{n:"fresh.sh",g:"repo",t:"script",d:"The full new-Mac run: Xcode tools, Homebrew, Brewfile, directories, global packages, AI layer, macOS defaults.",s:"repo root"},
+{n:"ai.sh",g:"repo",t:"script",d:"Symlinks every agent config into place and registers plugins, skills and MCP servers. Idempotent, safe to re-run.",s:"repo root"},
+{n:"clone.sh",g:"repo",t:"script",d:"Clones your GitHub repositories. Ships empty, edit before running fresh.sh.",s:"repo root"},
+{n:"ssh.sh",g:"repo",t:"script",d:"Generates an SSH key and copies the public half to the clipboard.",s:"repo root"},
+{n:"dotup",g:"repo",t:"bin",d:"One-command update: pull the repo, run brew bundle and upgrade, refresh the AI layer. Aliased as update.",s:"bin/"},
+{n:"mcp-toggle",g:"repo",t:"bin",d:"Turns a single MCP server on or off. Every *-on and *-off alias is a thin wrapper around it.",s:"bin/"},
+{n:"gwt",g:"repo",t:"bin",d:"Git worktree helper for running agents on parallel branches. `gwt new <branch>`, and gwtcd to jump in.",s:"bin/"},
+{n:"claude-auto",g:"repo",t:"bin",d:"Headless, budget-capped Claude run for automation. Aliased as cauto.",s:"bin/"},
+{n:"autobuild",g:"repo",t:"bin",d:"Takes a feature list, plans it, runs the Ralph loop and opens a PR. Start from templates/features.md.",s:"bin/"},
+{n:"claude-doctor",g:"repo",t:"bin",d:"Health check on the Claude Code setup: symlinks, plugins, MCP registration.",s:"bin/"},
+{n:"setup",g:"repo",t:"bin",d:"Per-project bootstrap helper.",s:"bin/"},
+{n:"templates/CLAUDE.md",g:"repo",t:"template",d:"Starter project instructions, dropped in by the claude-init alias.",s:"templates/"},
+{n:"templates/claude-rules",g:"repo",t:"template",d:"Path-scoped rules loaded on demand instead of living in CLAUDE.md. Copied by rules-init.",s:"templates/"},
+{n:"templates/lefthook.yml",g:"repo",t:"template",d:"Starter format and lint hooks. Copied and installed by the hooks alias.",s:"templates/"},
+{n:"templates/features.md",g:"repo",t:"template",d:"Feature-list template that autobuild consumes. Copied by autobuild-init.",s:"templates/"},
+{n:"templates/ralph",g:"repo",t:"template",d:"Autonomous loop scaffold. Copied to .ralph by ralph-init; run it on a throwaway branch.",s:"templates/"},
+{n:"config/ghostty",g:"repo",t:"config",d:"Ghostty terminal config, symlinked to ~/.config/ghostty.",s:"config/"},
+{n:"config/starship.toml",g:"repo",t:"config",d:"Starship prompt config, symlinked to ~/.config/starship.toml.",s:"config/"},
+{n:"config/zed",g:"repo",t:"config",d:"Zed editor settings and keymap, symlinked to ~/.config/zed.",s:"config/"},
+];
+
+/* ---------------- rendering ---------------- */
+const out = document.getElementById("out");
+const qEl = document.getElementById("q");
+const chipsEl = document.getElementById("chips");
+const countEl = document.getElementById("count");
+const order = Object.keys(GROUPS);
+let active = new Set();
+
+/* stats bar */
+const optInCount = DATA.filter(d => d.o).length;
+document.getElementById("stats").innerHTML = [
+  [DATA.length, "entries"],
+  [DATA.filter(d => String(d.s).startsWith("Brewfile")).length, "via Brewfile"],
+  [DATA.filter(d => d.g === "cc").length, "Claude Code layer"],
+  [optInCount, "opt-in, off by default"],
+].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
+
+/* chips */
+chipsEl.innerHTML = order.map(k => {
+  const n = DATA.filter(d => d.g === k).length;
+  return `<button class="chip" type="button" data-g="${k}" aria-pressed="false">${GROUPS[k][0]}<span class="n">${n}</span></button>`;
+}).join("");
+chipsEl.addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  const k = b.dataset.g;
+  active.has(k) ? active.delete(k) : active.add(k);
+  b.setAttribute("aria-pressed", active.has(k));
+  render();
+});
+
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hl = (s, terms) => {
+  let h = esc(s);
+  for (const t of terms) {
+    if (t.length < 2) continue;
+    h = h.replace(new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"), "<mark>$1</mark>");
+  }
+  return h;
+};
+
+function render() {
+  const raw = qEl.value.trim().toLowerCase();
+  const terms = raw ? raw.split(/\s+/) : [];
+  const hits = DATA.filter(d => {
+    if (active.size && !active.has(d.g)) return false;
+    if (!terms.length) return true;
+    const hay = `${d.n} ${d.t} ${d.d} ${d.s} ${GROUPS[d.g][0]}`.toLowerCase();
+    return terms.every(t => hay.includes(t));
+  });
+
+  countEl.innerHTML = `Showing <b>${hits.length}</b> of ${DATA.length}` +
+    (active.size ? ` in ${[...active].map(k => GROUPS[k][0]).join(", ")}` : "") +
+    (raw ? ` matching "${esc(raw)}"` : "");
+
+  if (!hits.length) {
+    out.innerHTML = `<div class="empty"><b>Nothing matches that.</b>Try a shorter term, or clear the filters with Escape.</div>`;
+    return;
+  }
+
+  out.innerHTML = order.filter(k => hits.some(d => d.g === k)).map(k => {
+    const rows = hits.filter(d => d.g === k).map(d => `
+      <article class="item">
+        <div class="top">
+          <span class="name">${hl(d.n, terms)}</span>
+          <span class="tag${d.o ? " optin" : ""}">${esc(d.o ? d.t + " · opt-in" : d.t)}</span>
+        </div>
+        <p class="desc">${hl(d.d, terms)}</p>
+        <div class="src">${esc(d.s)}</div>
+      </article>`).join("");
+    return `<section class="group">
+      <div class="grouphead">
+        <h2>${GROUPS[k][0]}</h2>
+        <span class="gn">${hits.filter(d => d.g === k).length}</span>
+        <span class="gd">${GROUPS[k][1]}</span>
+      </div>
+      <div class="grid">${rows}</div>
+    </section>`;
+  }).join("");
+}
+
+qEl.addEventListener("input", render);
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== qEl) { e.preventDefault(); qEl.focus(); qEl.select(); }
+  if (e.key === "Escape") {
+    qEl.value = "";
+    active.clear();
+    chipsEl.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+    render();
+    qEl.blur();
+  }
+});
+
+/* theme toggle, remembers the choice */
+const root = document.documentElement;
+const saved = localStorage.getItem("theme");
+if (saved) root.dataset.theme = saved;
+document.getElementById("theme").addEventListener("click", () => {
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const now = root.dataset.theme || (dark ? "dark" : "light");
+  root.dataset.theme = now === "dark" ? "light" : "dark";
+  localStorage.setItem("theme", root.dataset.theme);
+});
+
+render();
+</script>
+</body>
+</html>

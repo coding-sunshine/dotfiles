@@ -43,14 +43,6 @@ for skill in "$AI"/claude/skills/*/; do
   echo "  linked ~/.claude/skills/$name -> ${skill%/}"
 done
 
-# Codex CLI (reads AGENTS.md automatically)
-link "$AI/codex/config.toml"    "$HOME/.codex/config.toml"
-link "$AI/AGENTS.md"            "$HOME/.codex/AGENTS.md"
-
-# Gemini CLI
-link "$AI/gemini/settings.json" "$HOME/.gemini/settings.json"
-link "$AI/AGENTS.md"            "$HOME/.gemini/AGENTS.md"
-
 # Wire up the cavemem persistent-memory engine (local, compressed, survives
 # /compact). Best-effort — installed as a global npm package by fresh.sh.
 if command -v cavemem >/dev/null 2>&1; then

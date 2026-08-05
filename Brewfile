@@ -15,7 +15,6 @@ brew 'gitleaks' # scan git history/staged changes for leaked secrets
 brew 'grep'
 brew 'httpie'
 brew 'jq' # Used for spatie/visit
-brew 'mackup'
 brew 'mas' # Mac App Store CLI (for the `mas` app entries below)
 brew 'pkg-config' # https://github.com/driesvints/dotfiles/issues/20
 brew 'stripe/stripe-cli/stripe'
@@ -29,7 +28,6 @@ brew 'gifsicle'
 
 # Development
 brew 'imagemagick'
-brew 'yarn'
 
 # JS/TS toolchain (Node itself comes from Herd's NVM)
 brew 'pnpm'
@@ -78,24 +76,14 @@ brew 'lolcat'     # rainbow text (pipe into it for fun)
 brew 'cmatrix'    # matrix rain (pure eye-candy)
 
 # AI / agents
-brew 'gemini-cli' # Google Gemini CLI
 brew 'terminal-notifier' # clickable macOS notifications (Claude notify hook)
-brew 'opencode'   # OpenCode — AI coding agent for the terminal
 
 # Apps
-cask 'antigravity'     # Google Antigravity — agent-first IDE (Gemini, flat via AI Pro sub)
-cask 'antigravity-cli' # Antigravity CLI (agy) — terminal coding agent
 cask 'caffeine'
 cask 'claude'
 cask 'claude-code'
 cask 'cleanshot'
 cask 'cmux' # Ghostty-based terminal for running AI coding agents in parallel
-cask 'codex'
-cask 'codex-app'
-cask 'opencode-desktop' # OpenCode desktop client
-cask 'copilot-cli'
-cask 'cursor'
-cask 'cursor-cli'
 cask 'cyberduck'
 cask 'discord'
 cask 'docker'

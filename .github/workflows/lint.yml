@@ -20,12 +20,12 @@ jobs:
 
       - name: Validate JSON configs
         run: |
-          for f in ai/claude/settings.json ai/gemini/settings.json ai/mcp/mcp.json; do
+          for f in ai/claude/settings.json ai/mcp/mcp.json; do
             jq -e . "$f" > /dev/null
           done
 
       - name: Validate TOML configs
         run: |
-          for f in ai/codex/config.toml config/starship.toml; do
+          for f in config/starship.toml; do
             python3 -c "import tomllib; tomllib.load(open('$f','rb'))"
           done

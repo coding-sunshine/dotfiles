@@ -46,12 +46,6 @@ alias venv="uv venv && source .venv/bin/activate"
 # `claude ...` calls inside scripts like ai.sh / bin/claude-auto.
 alias claude="claude --dangerously-skip-permissions"
 alias cc="claude"
-alias cx="codex"
-# Gemini in the terminal — two tools, different billing:
-#   agy : Antigravity CLI — agentic coding on the AI Pro sub (flat, no per-token). Run `agy`, sign in once.
-#   gem : Gemini CLI — metered Gemini via GEMINI_API_KEY in ~/.env (or a free Google login).
-# Research -> Gemini app (gemini.google.com); coding -> Antigravity (agy / app).
-alias gem="gemini"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
 
 # Laravel Boost — give agents real project context via MCP (run inside a project)
@@ -108,19 +102,6 @@ alias review-off="mcp-toggle code-review-graph off"
 # ~/.claude; pass `-p .` to scan a project's .claude, or `--opus` for the deep
 # multi-agent (red/blue/auditor) pass. The one piece worth taking from ECC.
 alias claude-audit="npx --yes ecc-agentshield scan -p $HOME/.claude"
-
-# OpenTelemetry observability (opt-in, heavy). `otel-up` clones+starts the local
-# Grafana/Prometheus/Loki stack (ColeMurray/claude-code-otel) and exports the
-# telemetry env into THIS shell, so any `claude` launched here streams per-session
-# cost/token/cache metrics. `otel-down` stops it. Grafana: localhost:3000.
-otel-up() {
-  local dir="$HOME/Code/claude-code-otel"
-  [ -d "$dir" ] || git clone --depth 1 https://github.com/ColeMurray/claude-code-otel.git "$dir" || return 1
-  export CLAUDE_CODE_ENABLE_TELEMETRY=1 OTEL_METRICS_EXPORTER=otlp OTEL_LOGS_EXPORTER=otlp \
-    OTEL_EXPORTER_OTLP_PROTOCOL=grpc OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
-  ( cd "$dir" && make up ) && echo "OTel up → Grafana http://localhost:3000 (admin/admin). Launch 'claude' from THIS shell to capture."
-}
-otel-down() { ( cd "$HOME/Code/claude-code-otel" 2>/dev/null && make down ); unset CLAUDE_CODE_ENABLE_TELEMETRY; echo "OTel stack stopped."; }
 
 # Build the free code-only graph + install auto-update git hooks in this repo.
 # graphify's semantic graph stays manual (costs tokens): run `/graphify .`.
