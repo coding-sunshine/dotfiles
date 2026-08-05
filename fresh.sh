@@ -92,7 +92,7 @@ fi
 # Clone Github repositories (edit clone.sh first — ships empty)
 ./clone.sh
 
-# Symlink ~/.config app configs (ghostty, starship, ...)
+# Symlink ~/.config app configs (starship, zed, ...)
 mkdir -p $HOME/.config
 for item in $HOME/.dotfiles/config/*; do
   name=$(basename "$item")

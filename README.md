@@ -15,7 +15,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 
 - **Homebrew** packages and casks from a single [`Brewfile`](./Brewfile)
 - **Zsh + Oh My Zsh**, a [Starship](https://starship.rs) prompt, and `$PATH` setup
-- **Terminal:** [Ghostty](https://ghostty.org) (fast, native Metal) with the JetBrains Mono Nerd Font
+- **Terminal:** [Warp](https://warp.dev) with the JetBrains Mono Nerd Font
 - Modern CLI tooling: `rg`, `ast-grep`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`,
   plus `btop`, `yazi`, `glow`, `jless`, `dust`, `duf`, `procs`, `sd`, `gping`, `zellij`
 - Smart shell: `atuin` (fuzzy Ctrl-R history), `fzf-tab` (fuzzy Tab completion),
@@ -24,7 +24,7 @@ and adapted for an AI-agent-driven 2026 workflow.
 - Zsh autosuggestions + syntax highlighting + `you-should-use` alias reminders, and a
   global git config (delta diffs, sane defaults, SSH-signed commits)
 - Per-language toolchains: Herd (PHP), `pnpm`/`bun` (JS/TS), `uv`/`ruff` (Python)
-- GUI apps: Raycast (launcher), Sequel Ace + TablePlus (DB), Zed (editor), and more
+- GUI apps: Raycast (launcher), Sequel Ace (DB), Zed (editor), and more
 - An [AI agent layer](#ai-agent-layer): versioned Claude Code configs and shared
   MCP servers
 - [Productivity workflows](#productivity-workflows): Laravel Boost, parallel agents
@@ -147,8 +147,8 @@ git config --get commit.gpgsign                 # "true" -> SSH signing on
 echo $ANTHROPIC_API_KEY                          # ~/.env loaded? (non-empty)
 ```
 
-> 💡 Set your terminal/editor font to **"JetBrainsMono Nerd Font"** (Ghostty is
-> preconfigured) so the Starship prompt icons render instead of as empty boxes.
+> 💡 Set your terminal/editor font to **"JetBrainsMono Nerd Font"** so the
+> Starship prompt icons render instead of as empty boxes.
 
 Your Mac is now ready to use! 🎉
 
@@ -375,9 +375,9 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 
 ### Terminal
 
-[Ghostty](https://ghostty.org) is the terminal (fast, native Metal) and
-[Starship](https://starship.rs) the prompt. Their configs live under
-[`config/`](./config) and symlink into `~/.config`.
+[Warp](https://warp.dev) is the terminal and [Starship](https://starship.rs) the
+prompt. `cmux` handles parallel agent sessions. The Starship config lives under
+[`config/`](./config) and symlinks into `~/.config`.
 
 ## What's in here
 
@@ -397,7 +397,7 @@ re-stages the fixes, so nothing unformatted lands. See [`templates/lefthook.yml`
 | [`bin/gwt`](./bin/gwt)                     | Git worktree helper for parallel agents                                                       |
 | [`bin/claude-auto`](./bin/claude-auto)     | Headless, budget-capped Claude runner for automation/CI                                       |
 | [`bin/mcp-toggle`](./bin/mcp-toggle)       | Enable/disable an opt-in MCP server on demand (keeps context lean)                            |
-| [`config/`](./config)                      | App configs symlinked into `~/.config` (ghostty, starship, zed)                               |
+| [`config/`](./config)                      | App configs symlinked into `~/.config` (starship, zed)                                        |
 | [`templates/`](./templates)                | Drop-in project files (`CLAUDE.md`, `lefthook.yml`, `ralph/`, `features.md`, `claude-rules/`) |
 | [`.macos`](./.macos)                       | macOS system defaults                                                                         |
 | [`ai/`](./ai)                              | Versioned AI agent configs + hooks + skills (see above)                                       |
@@ -440,7 +440,7 @@ What updates how:
 
 | Thing                                                             | How it updates                                                                                                                                                                         |
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.zshrc`, aliases, `starship.toml`, ghostty, `.gitconfig`, `ai/*` | **Live on `git pull`** — they're symlinks into the repo. Just `exec zsh` to reload.                                                                                                    |
+| `.zshrc`, aliases, `starship.toml`, `.gitconfig`, `ai/*`          | **Live on `git pull`** — they're symlinks into the repo. Just `exec zsh` to reload.                                                                                                    |
 | Homebrew packages                                                 | `update` installs new Brewfile entries and upgrades existing ones. It does **not** remove packages you deleted — prune with `brew bundle cleanup --file ~/.dotfiles/Brewfile --force`. |
 | `.macos` system defaults                                          | Not auto-applied (it can restart apps). Re-apply with `source ~/.dotfiles/.macos` when it changes.                                                                                     |
 

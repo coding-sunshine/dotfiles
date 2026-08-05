@@ -2,7 +2,7 @@
 
 # Bring this machine fully in sync with the dotfiles: pull the latest, install
 # new Homebrew packages, upgrade existing ones, and refresh the AI agent layer.
-# Config files (.zshrc, starship, ghostty, git, ai/*) are symlinked, so they go
+# Config files (.zshrc, starship, git, ai/*) are symlinked, so they go
 # live the moment the pull lands — just reload your shell afterwards.
 #
 # Usage: dotup            (alias: `update`)

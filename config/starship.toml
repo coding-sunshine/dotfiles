@@ -21,7 +21,7 @@ $jobs$character"""
 
 right_format = "$time"
 
-# Gruvbox palette to match the Ghostty "GruvboxDark" theme
+# Gruvbox palette
 [palettes.gruvbox]
 fg     = "#ebdbb2"
 red    = "#fb4934"

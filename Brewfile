@@ -15,7 +15,7 @@ brew 'gitleaks' # scan git history/staged changes for leaked secrets
 brew 'grep'
 brew 'httpie'
 brew 'jq' # Used for spatie/visit
-brew 'mas' # Mac App Store CLI (for the `mas` app entries below)
+brew 'mas' # Mac App Store CLI
 brew 'pkg-config' # https://github.com/driesvints/dotfiles/issues/20
 brew 'stripe/stripe-cli/stripe'
 
@@ -84,39 +84,27 @@ cask 'claude'
 cask 'claude-code'
 cask 'cleanshot'
 cask 'cmux' # Ghostty-based terminal for running AI coding agents in parallel
-cask 'cyberduck'
-cask 'discord'
 cask 'docker'
 cask 'figma'
 cask 'firefox'
 cask 'font-jetbrains-mono-nerd-font' # prompt/terminal glyphs (Starship icons)
-cask 'ghostty' # fast, native Metal terminal (best for AI-CLI workflows)
 cask 'github'
 cask 'google-chrome'
 cask 'helo'
 cask 'herd'
 cask 'httpie'
 cask 'imageoptim'
-cask 'loom'
 cask 'maestro' # RunMaestro.ai — AI agent command center
 cask 'pastebot'
 cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
-cask 'reflex'
-cask 'screen-studio'
 cask 'sequel-ace' # MySQL/MariaDB GUI
 cask 'slack'
 cask 'sublime-text'
-cask 'tableplus'
 cask 'telegram-desktop'
 cask 'the-unarchiver'
 cask 'tinkerwell'
-cask 'transmit'
 cask 'tunnelbear'
-cask 'tuple'
 cask 'warp' # AI-powered terminal
 cask 'whatsapp' # native WhatsApp desktop client
 cask 'zed' # primary GUI editor
 cask 'zoom'
-
-# Mac App Store apps (needs `mas`, installed above)
-mas 'Speedtest', id: 1153157709
