@@ -99,6 +99,7 @@ cask 'maestro' # RunMaestro.ai — AI agent command center
 cask 'pastebot'
 cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
 cask 'sequel-ace' # MySQL/MariaDB GUI
+cask 'setapp' # app subscription launcher
 cask 'slack'
 cask 'sublime-text'
 cask 'telegram-desktop'
