@@ -87,6 +87,7 @@ cask 'cmux' # Ghostty-based terminal for running AI coding agents in parallel
 cask 'docker'
 cask 'figma'
 cask 'firefox'
+cask 'flock-app' # Flock team messaging
 cask 'font-jetbrains-mono-nerd-font' # prompt/terminal glyphs (Starship icons)
 cask 'github'
 cask 'google-chrome'
