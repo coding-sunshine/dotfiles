@@ -30,7 +30,7 @@
       "Bash(rm -rf:*)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "skillOverrides": {
     "_gstack-command": "user-invocable-only",
     "aesthetic-direction": "user-invocable-only",
@@ -247,7 +247,8 @@
     "caveman@caveman": true,
     "roundtable@agent-review-panel": true,
     "laravel@laravel": true,
-    "improve@improve": true
+    "improve@improve": true,
+    "warp@claude-code-warp": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
@@ -297,12 +298,18 @@
         "source": "github",
         "repo": "shadcn/improve"
       }
+    },
+    "claude-code-warp": {
+      "source": {
+        "source": "github",
+        "repo": "warpdotdev/claude-code-warp"
+      }
     }
   },
   "effortLevel": "medium",
+  "tui": "fullscreen",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
-  "agentPushNotifEnabled": true,
-  "tui": "fullscreen"
+  "agentPushNotifEnabled": true
 }

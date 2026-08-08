@@ -77,6 +77,9 @@ fi
 if command -v bun >/dev/null 2>&1; then
   bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)
 fi
+if [ ! -x "$HOME/.local/bin/warp" ]; then
+  curl -fsSL https://app.warp.dev/download/agent-cli | bash || true   # Warp Agent CLI (`warp` in ~/.local/bin, self-updates)
+fi
 if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
   uv tool install code-review-graph >/dev/null 2>&1 || true   # opt-in code-review graph (review-on)
