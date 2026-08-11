@@ -11,9 +11,6 @@ Claude-specific notes in this file.
 - No MCP server is always-on (each re-sends its schema every turn and on every
   subagent spawn). If a task needs one, tell me the toggle to run
   (`github-on`, `browser-on`, `review-on`, `mcp-toggle <name> on`).
-- Prefer the dedicated file/search tools (Read, Grep, Glob) over `cat`/`grep`/
-  `find` in Bash.
-- Run independent tool calls in parallel.
 - Keep commits scoped and messages descriptive; never commit `.env` or
   `*.local.json`.
 - Model routing (see AGENTS.md table): apply via the Agent/Workflow `model`

@@ -38,51 +38,6 @@ concise" loses to system-prompt drift; these don't):
 - Headers/tables only when they aid scanning (3+ parallel items); otherwise
   prose. Simple question = direct answer, no sections.
 
-## Writing code — field notes (Karpathy, deduped vs above)
-
-The model writes plausible code fast and notices "plausible ≠ correct" slow, so
-discipline comes from process. Adds to Working style + `/ponytail`:
-
-- **Read before write.** Read the files you'll touch; copy patterns that already
-  exist; check the real imports/deps (no `axios` where it's all `fetch`). No
-  pattern found → ask, don't guess.
-- **Think before code.** State assumptions and name the tradeoff of the option
-  you picked. Genuinely confused → stop and ask; never fill the gap with
-  plausible code (that's what passes casual review and fails when it matters).
-- **Verify by behavior.** On a bug, write the failing test first, watch it fail,
-  then fix — proof you fixed the cause, not the symptom. Test behavior that can
-  break, not that a constructor sets a field. Hard to test = design signal.
-- **Goal first.** Restate the success criterion before coding ("reject malformed
-  email → 400 + message, test both cases"); multi-step → state the plan first.
-- **Debug, don't guess.** Read the whole error + stack, reproduce, change one
-  thing at a time. Don't paper over an unexpected null with a null check — find
-  why it's null.
-- **Communicate.** Say what changed and why; flag concerns even when you did
-  exactly what was asked; be precise about uncertainty ("unsure this lib supports
-  streaming" beats "should work").
-
-Already covered above: simplicity, surgical diffs, stdlib-first, named failure
-modes (Working style + `/ponytail`).
-
-## Quality bar — what finished code looks like (checkable)
-
-The field notes above govern _how_ I work; these govern the _artifact_. Sloppy =
-fails one of these. Stack-specific depth lives in `.claude/rules/` (loaded on
-demand), not here.
-
-- **Names carry intent.** Descriptive names; booleans read as predicates
-  (`isReady`, `hasRows`); no cryptic abbreviations; bare `i` only for trivial loops.
-- **Fail loud, don't swallow.** No empty `catch`/`except: pass`; handle at the
-  boundary or propagate with context. Never silence an error to make a test pass.
-- **Comments earn their place.** Code says _what_; comment only the non-obvious
-  _why_. No commented-out code, no narrating the obvious.
-- **No litter in the diff.** No debug prints (`dd()`, `console.log`, `var_dump`),
-  no dead branches, no `TODO` without a tracked reference. Remove orphans _your_
-  change created (unused imports/vars/functions); pre-existing dead code stays —
-  mention it, don't delete.
-- **One job per unit.** Need "and" to name a function → split it. Magic
-  value used twice or unexplained → named constant.
-
 ## Stack conventions
 
 PHP → Herd (`herd php artisan`, Pest, Pint) · JS/TS → pnpm/bun, type-check

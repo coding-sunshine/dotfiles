@@ -30,7 +30,7 @@
       "Bash(rm -rf:*)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "skillOverrides": {
     "_gstack-command": "user-invocable-only",
     "aesthetic-direction": "user-invocable-only",
@@ -248,7 +248,8 @@
     "roundtable@agent-review-panel": true,
     "laravel@laravel": true,
     "improve@improve": true,
-    "warp@claude-code-warp": true
+    "warp@claude-code-warp": true,
+    "stripe@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
