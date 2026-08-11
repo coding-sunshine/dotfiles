@@ -111,9 +111,22 @@ if command -v claude >/dev/null 2>&1; then
     claude plugin install "$plugin" >/dev/null 2>&1 || true
   done
 
-  # frontend-design — from Anthropic's claude-plugins-official marketplace.
+  # frontend-design, stripe — from Anthropic's claude-plugins-official marketplace.
   claude plugin marketplace add anthropics/claude-plugins-official >/dev/null 2>&1 || true
   claude plugin install frontend-design@claude-plugins-official >/dev/null 2>&1 || true
+  claude plugin install stripe@claude-plugins-official >/dev/null 2>&1 || true
+
+  # laravel — official Laravel Claude Code plugin.
+  claude plugin marketplace add laravel/claude-code >/dev/null 2>&1 || true
+  claude plugin install laravel@laravel >/dev/null 2>&1 || true
+
+  # improve — shadcn's prompt/code improvement plugin.
+  claude plugin marketplace add shadcn/improve >/dev/null 2>&1 || true
+  claude plugin install improve@improve >/dev/null 2>&1 || true
+
+  # warp — Warp terminal integration commands.
+  claude plugin marketplace add warpdotdev/claude-code-warp >/dev/null 2>&1 || true
+  claude plugin install warp@claude-code-warp >/dev/null 2>&1 || true
 
   # Superpowers: install but DISABLE by default (it preloads ~22k tokens when
   # active). Toggle per session with `superpowers-on` / `superpowers-off`.

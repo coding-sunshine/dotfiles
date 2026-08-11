@@ -7,6 +7,7 @@ tap 'manaflow-ai/cmux' # for the cmux cask below
 brew 'awscli'
 brew 'bash' # Latest Bash version
 brew 'bat' # Used for spatie/visit
+brew 'caddy' # reverse proxy / local HTTPS
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ffmpeg'
 brew 'gh'
