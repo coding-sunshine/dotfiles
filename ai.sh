@@ -185,4 +185,16 @@ if command -v git >/dev/null 2>&1; then
   echo "  ai-copywriter skill linked"
 fi
 
+# --- Daily auto-update of skills + plugins (launchd, 09:00) -------------------
+# Pulls gstack + all skill git clones, runs `claude plugin update` for every
+# installed plugin. Script: bin/ai-tools-update.sh. Log: ~/.local/state/ai-tools-update.log
+if [ "$(uname)" = "Darwin" ]; then
+  PLIST="$HOME/Library/LaunchAgents/com.hardikshah.ai-tools-update.plist"
+  mkdir -p "$HOME/Library/LaunchAgents"
+  cp "$DOTFILES/config/launchd/com.hardikshah.ai-tools-update.plist" "$PLIST"
+  launchctl bootout "gui/$(id -u)/com.hardikshah.ai-tools-update" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null || true
+  echo "  daily ai-tools auto-update scheduled (launchd, 09:00)"
+fi
+
 echo "AI agent layer ready. Edit configs in $AI and re-run ./ai.sh to update."
