@@ -16,6 +16,13 @@ AI-agent workflow; I value small, verifiable steps.
 - State how you verified (tests run, output). Don't claim it works unchecked.
 - Ask before destructive/hard-to-reverse actions (deletes, force-push, schema or
   data changes, anything outward-facing).
+- **Task state goes in JSON, never Markdown.** Anything with a status field —
+  task lists, checklists, build progress, feature lists — lives in a `.json`
+  file. Markdown state gets "tidied up" mid-run and done items silently vanish;
+  JSON survives. Markdown stays for narrative (plans, specs, notes, memory).
+  Status fields are binary: `passing` or `failing`, never `in_progress` or
+  `partial`. Unproven is `failing`. Every item carries the exact command that
+  decides it.
 
 ## Answer shape — every reply, every tool
 
@@ -105,6 +112,7 @@ progressive (load only when invoked), so routing is free until used.
 | about to commit / open a PR                                                              | `verify` skill, then `/review` (or `/gstack-review`)      |
 | CI-grade precision review of a diff/PR or auditing a whole unfamiliar directory          | `ocr review` / `ocr scan` (Open Code Review CLI)          |
 | planning a non-trivial feature                                                           | `/plan` (planner subagent) or `/gstack-spec`              |
+| building anything multi-step where "done" is arguable                                    | `/contract` — criteria frozen by an adversarial critic before code, graded against them after |
 | stress-testing a plan/spec or a tenancy / auth / security / money change before building | `agent-review-panel` (multi-agent adversarial debate)     |
 | told to "just build it" from a feature list, unattended                                  | `autobuild features.md`                                   |
 | running a big/verbose search or test sweep                                               | delegate to a subagent (summary only returns)             |

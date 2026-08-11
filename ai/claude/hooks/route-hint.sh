@@ -23,6 +23,8 @@ case "$p" in
     hint="understanding a codebase → /graphify . then query it; code-review-graph for callers/impact" ;;
   *"best practice"*|*"which library"*|*"compare options"*|*"latest version"*)
     hint="cross-source research → /deep-research" ;;
+  *"build me"*|*"implement the"*|*"add support for"*|*"make it work"*|*"ship this"*)
+    hint="multi-step build → /contract (freeze acceptance criteria with the auditor first, grade against them after); task state in .work/feature_list.json, not Markdown" ;;
   *"build the app"*|*"from this feature list"*|*"build it unattended"*|*"overnight"*)
     hint="unattended build from a feature list → autobuild features.md" ;;
 esac

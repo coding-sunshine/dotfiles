@@ -45,6 +45,7 @@ Thumbs.db
 graphify-out/          # graphify knowledge-graph output
 .code-review-graph/    # code-review-graph DB
 .code-review-graph.db
+.work/                 # /contract loop state (contract.md + feature_list.json)
 
 polyscope.local.json
 **/.claude/settings.local.json
