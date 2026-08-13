@@ -76,6 +76,7 @@ fi
 if command -v npm >/dev/null 2>&1; then
   npm install -g cavemem >/dev/null 2>&1 || true   # persistent compressed memory (MCP)
   npm install -g @alibaba-group/open-code-review >/dev/null 2>&1 || true   # `ocr` — diff/scan code review CLI
+  npm install -g @socketsecurity/cli >/dev/null 2>&1 || true   # `socket` — supply-chain scanner, wraps npm/pnpm installs (see .zshrc)
 fi
 if command -v bun >/dev/null 2>&1; then
   bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)

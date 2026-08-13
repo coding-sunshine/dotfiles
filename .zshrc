@@ -189,6 +189,27 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Route npm/pnpm/bun installs through Socket's supply-chain firewall (scans for
+# known-malicious/typosquat packages before they land) — catches what
+# ignore-scripts alone can't (malicious code baked into the package itself,
+# not just install hooks). Falls through untouched if socket isn't installed.
+if command -v socket >/dev/null 2>&1; then
+  npm() {
+    if [[ "$1" == "install" || "$1" == "i" || "$1" == "add" ]]; then
+      socket npm "$@"
+    else
+      command npm "$@"
+    fi
+  }
+  pnpm() {
+    if [[ "$1" == "install" || "$1" == "i" || "$1" == "add" ]]; then
+      socket pnpm "$@"
+    else
+      command pnpm "$@"
+    fi
+  }
+fi
+
 # Zsh syntax highlighting MUST be sourced last (after all ZLE widgets)
 [ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
@@ -256,3 +277,7 @@ export HERD_PHP_81_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/H
 
 # Herd injected PHP binary.
 export PATH="/Users/hardikshah/Library/Application Support/Herd/bin/":$PATH
+
+
+# Herd injected PHP 8.4 configuration.
+export HERD_PHP_84_INI_SCAN_DIR="/Users/hardik/Library/Application Support/Herd/config/php/84/"
