@@ -112,3 +112,6 @@ cask 'warp-agent-cli' # `warp` agent CLI (replaces the old curl|bash installer i
 cask 'whatsapp' # native WhatsApp desktop client
 cask 'zed' # primary GUI editor
 cask 'zoom'
+
+# No Homebrew cask exists for these — install manually, tracked here so `brew bundle` isn't the only record:
+# - Grok (x.ai desktop bot): https://x.ai/bot

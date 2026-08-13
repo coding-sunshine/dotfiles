@@ -623,6 +623,14 @@ defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnab
 # Rebuild the index from scratch
 # sudo mdutil -E / > /dev/null
 
+# Free Cmd+Space from Spotlight so Raycast can take it (Raycast auto-offers
+# to bind Cmd+Space once Spotlight releases it — accept the prompt on next
+# launch, or set it manually in Raycast → Settings → General → Raycast Hotkey).
+/usr/libexec/PlistBuddy -c "Delete :AppleSymbolicHotKeys:64" ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>/dev/null
+/usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+/usr/libexec/PlistBuddy -c "Delete :AppleSymbolicHotKeys:65" ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>/dev/null
+/usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:65:enabled bool false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+
 ###############################################################################
 # Terminal & iTerm 2                                                          #
 ###############################################################################
