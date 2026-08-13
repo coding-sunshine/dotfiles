@@ -96,6 +96,7 @@ cask 'helo'
 cask 'herd'
 cask 'httpie'
 cask 'imageoptim'
+cask 'lulu' # outbound-connection firewall — alerts on new persistence/exfil, not just inbound like the built-in one
 cask 'maestro' # RunMaestro.ai — AI agent command center
 cask 'pastebot'
 cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Snapshot persistence points (LaunchAgents/Daemons, login items, cron, shell
+# rc files) and diff against the last known-good baseline. Malware persists
+# via these; catching a diff here beats noticing your Code folder is gone.
+#
+# Usage:
+#   security-check           diff current state against baseline, exit 1 if changed
+#   security-check --update  accept current state as the new baseline
+set -euo pipefail
+
+BASELINE_DIR="$HOME/.dotfiles/.security-baseline"
+mkdir -p "$BASELINE_DIR"
+
+snapshot() {
+  {
+    echo "== LaunchAgents (user) =="
+    ls -la "$HOME/Library/LaunchAgents" 2>/dev/null || true
+    echo "== LaunchAgents (global) =="
+    ls -la /Library/LaunchAgents 2>/dev/null || true
+    echo "== LaunchDaemons =="
+    ls -la /Library/LaunchDaemons 2>/dev/null || true
+    echo "== crontab =="
+    crontab -l 2>/dev/null || true
+    echo "== login items =="
+    osascript -e 'tell application "System Events" to get the name of every login item' 2>/dev/null || true
+    echo "== npm global packages =="
+    npm ls -g --depth=0 2>/dev/null || true
+  }
+}
+
+if [[ "${1:-}" == "--update" ]]; then
+  snapshot > "$BASELINE_DIR/snapshot.txt"
+  echo "Baseline updated: $BASELINE_DIR/snapshot.txt"
+  exit 0
+fi
+
+if [[ ! -f "$BASELINE_DIR/snapshot.txt" ]]; then
+  snapshot > "$BASELINE_DIR/snapshot.txt"
+  echo "No baseline found — created one from current state."
+  exit 0
+fi
+
+CURRENT=$(mktemp)
+snapshot > "$CURRENT"
+
+if diff -u "$BASELINE_DIR/snapshot.txt" "$CURRENT" > /tmp/security-check.diff; then
+  echo "No new persistence points. Clean."
+  rm -f "$CURRENT"
+else
+  echo "CHANGED since baseline:"
+  cat /tmp/security-check.diff
+  rm -f "$CURRENT"
+  exit 1
+fi

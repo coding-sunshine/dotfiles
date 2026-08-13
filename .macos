@@ -14,6 +14,25 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ###############################################################################
+# Security                                                                    #
+###############################################################################
+
+# Gatekeeper: only allow apps from identified developers / App Store
+sudo spctl --master-enable
+
+# Application Firewall: on + stealth (don't respond to unsolicited probes) +
+# don't auto-allow every signed binary to listen without a prompt
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned off
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp off
+
+# Quarantine downloaded files (Gatekeeper's "are you sure you want to open
+# this file downloaded from the internet" prompt) — on by default, but some
+# malware/installers flip this off to skip the warning
+defaults write com.apple.LaunchServices LSQuarantine -bool true
+
+###############################################################################
 # General UI/UX                                                               #
 ###############################################################################
 

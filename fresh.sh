@@ -30,6 +30,9 @@ ln -sw $HOME/.dotfiles/.zshrc $HOME/.zshrc
 # Symlink the global git config
 ln -sf $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
 
+# Symlink npm config (ignore-scripts=true — blocks malicious postinstall scripts)
+ln -sf $HOME/.dotfiles/.npmrc $HOME/.npmrc
+
 # Update Homebrew recipes
 brew update
 
@@ -118,6 +121,11 @@ if command -v brew >/dev/null 2>&1; then
   brew upgrade
   brew doctor || true
 fi
+
+# Snapshot the known-good persistence baseline (LaunchAgents/Daemons, cron,
+# login items, npm globals) for `security-check` to diff future changes
+# against — run `security-check` any time something feels off.
+$HOME/.dotfiles/bin/security-check --update
 
 # Set macOS preferences - we will run this last because this will reload the shell
 source ./.macos

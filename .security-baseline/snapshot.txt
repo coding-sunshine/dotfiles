@@ -1,0 +1,28 @@
+== LaunchAgents (user) ==
+total 24
+drwx------@  5 hardik  staff   160 Aug 13 14:27 .
+drwx------+ 84 hardik  staff  2688 Aug 13 15:45 ..
+-rw-r--r--@  1 hardik  staff   873 Aug 13 12:34 com.google.GoogleUpdater.wake.plist
+-rw-r--r--@  1 hardik  staff   181 Aug 13 12:34 com.google.keystone.agent.plist
+-rw-r--r--@  1 hardik  staff   181 Aug 13 12:34 com.google.keystone.xpcservice.plist
+== LaunchAgents (global) ==
+total 16
+drwxr-xr-x   4 root  wheel   128 Aug 13 13:33 .
+drwxr-xr-x  67 root  wheel  2144 Aug 13 13:33 ..
+-rw-r--r--   1 root  wheel   604 Aug 13 13:33 us.zoom.updater.login.check.plist
+-rw-r--r--   1 root  wheel   639 Aug 13 13:33 us.zoom.updater.plist
+== LaunchDaemons ==
+total 24
+drwxr-xr-x   5 root  wheel   160 Aug 13 15:01 .
+drwxr-xr-x  67 root  wheel  2144 Aug 13 13:33 ..
+-rw-r--r--@  1 root  wheel   674 Aug 13 15:01 com.docker.socket.plist
+-rw-r--r--@  1 root  wheel   667 Aug 13 15:01 com.docker.vmnetd.plist
+-rw-r--r--   1 root  wheel   622 Aug 13 13:33 us.zoom.ZoomDaemon.plist
+== crontab ==
+== login items ==
+Raycast
+== npm global packages ==
+/opt/homebrew/lib
+├── @alibaba-group/open-code-review@1.9.2
+└── npm@11.19.0
+
