@@ -108,6 +108,7 @@ cask 'the-unarchiver'
 cask 'tinkerwell'
 cask 'tunnelbear'
 cask 'warp' # AI-powered terminal
+cask 'warp-agent-cli' # `warp` agent CLI (replaces the old curl|bash installer in fresh.sh)
 cask 'whatsapp' # native WhatsApp desktop client
 cask 'zed' # primary GUI editor
 cask 'zoom'

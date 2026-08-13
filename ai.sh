@@ -54,27 +54,45 @@ fi
 # Install agent skills via the `npx skills` ecosystem (best-effort). These are
 # thin, progressive-disclosure skills (~100 tokens frontmatter each), so they're
 # cheap to keep always-on. Land in the user skills dir, coexisting with ours.
+# The `skills` CLI itself is the only thing that EXECUTES here (npx runs it);
+# the source repos are fetched as markdown and read by the agent, not run. So
+# the CLI version is pinned — bump it deliberately after reading the diff.
+# The CLI has no --ref flag, so sources still track their default branch.
+SKILLS_CLI="skills@1.5.22"
 if command -v npx >/dev/null 2>&1; then
-  echo "  installing agent skills (npx skills)..."
-  npx -y skills add vercel-labs/agent-browser -g -y >/dev/null 2>&1 || true            # token-lean browser CLI
-  npx -y skills add anthropics/skills@frontend-design -g -y >/dev/null 2>&1 || true     # non-AI-looking UI
-  npx -y skills add vercel-labs/agent-skills@web-design-guidelines -g -y >/dev/null 2>&1 || true  # UI audit
-  npx -y skills add ast-grep/agent-skill@ast-grep -g -y >/dev/null 2>&1 || true        # structural code search
-  npx -y skills add vercel-labs/skills@find-skills -g -y >/dev/null 2>&1 || true        # discover/install skills
-  npx -y skills add nextlevelbuilder/ui-ux-pro-max-skill -g -y >/dev/null 2>&1 || true  # UI/UX design suite (7 skills)
-  npx -y skills add pbakaus/impeccable -g -y >/dev/null 2>&1 || true                    # frontend polish/critique
+  echo "  installing agent skills (npx $SKILLS_CLI)..."
+  npx -y "$SKILLS_CLI" add vercel-labs/agent-browser -g -y >/dev/null 2>&1 || true            # token-lean browser CLI
+  npx -y "$SKILLS_CLI" add anthropics/skills@frontend-design -g -y >/dev/null 2>&1 || true     # non-AI-looking UI
+  npx -y "$SKILLS_CLI" add vercel-labs/agent-skills@web-design-guidelines -g -y >/dev/null 2>&1 || true  # UI audit
+  npx -y "$SKILLS_CLI" add ast-grep/agent-skill@ast-grep -g -y >/dev/null 2>&1 || true        # structural code search
+  npx -y "$SKILLS_CLI" add vercel-labs/skills@find-skills -g -y >/dev/null 2>&1 || true        # discover/install skills
+  npx -y "$SKILLS_CLI" add nextlevelbuilder/ui-ux-pro-max-skill -g -y >/dev/null 2>&1 || true  # UI/UX design suite (7 skills)
+  npx -y "$SKILLS_CLI" add pbakaus/impeccable -g -y >/dev/null 2>&1 || true                    # frontend polish/critique
 fi
 
 # gstack — Garry Tan's command framework. Installed PREFIXED (/gstack-*) so it
 # coexists with our /review //ship //plan instead of colliding. Best-effort.
+#
+# NOTE: this is the ONLY skill install that executes code from the clone
+# (`./setup`), and gstack is also the most privileged thing here — it can ask
+# for a Supabase PAT with full-account scope and registers MCP servers into
+# ~/.claude.json. It is therefore PINNED. To upgrade: read the diff between
+# GSTACK_SHA and the new HEAD, then bump the SHA. Never unpin it.
+GSTACK_SHA="d078622b73539fc1a7a27e709861e9b6b058ae98"  # 2026-08-12
 if command -v bun >/dev/null 2>&1 && command -v git >/dev/null 2>&1; then
   if [ ! -d "$HOME/.claude/skills/gstack" ]; then
-    echo "  installing gstack (/gstack-* commands)..."
-    git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git \
-      "$HOME/.claude/skills/gstack" >/dev/null 2>&1 \
-      && ( cd "$HOME/.claude/skills/gstack" && ./setup --prefix >/dev/null 2>&1 ) \
-      && echo "  gstack installed" \
-      || echo "  (gstack install skipped)"
+    echo "  installing gstack (/gstack-* commands, pinned)..."
+    if git clone --single-branch https://github.com/garrytan/gstack.git \
+         "$HOME/.claude/skills/gstack" >/dev/null 2>&1 \
+       && git -C "$HOME/.claude/skills/gstack" checkout -q "$GSTACK_SHA" 2>/dev/null; then
+      ( cd "$HOME/.claude/skills/gstack" && ./setup --prefix >/dev/null 2>&1 ) \
+        && echo "  gstack installed (pinned)" \
+        || echo "  (gstack setup failed)"
+    else
+      # Pin didn't resolve — remove the clone rather than run an unpinned tree.
+      rm -rf "$HOME/.claude/skills/gstack"
+      echo "  (gstack skipped — pinned commit $GSTACK_SHA not found; update GSTACK_SHA)"
+    fi
   fi
 else
   echo "  (skipping gstack — needs bun + git)"
@@ -159,26 +177,38 @@ fi
 # Best-effort — never fail setup.
 if command -v git >/dev/null 2>&1; then
   AS="$HOME/.agents/skills"; mkdir -p "$AS"
-  _clone() { [ -d "$AS/$2" ] || git clone --depth 1 "https://github.com/$1" "$AS/$2" >/dev/null 2>&1 || true; }
+
+  # _clone <owner/repo> <dir> <sha> — PINNED. A floating clone means whoever
+  # controls that repo controls what lands in ~/.claude/skills on every fresh
+  # install. If the pin can't be checked out, the clone is removed rather than
+  # left at an unreviewed HEAD. To upgrade: read the diff, then bump the SHA.
+  _clone() {
+    [ -d "$AS/$2" ] && return 0
+    git clone --filter=blob:none "https://github.com/$1" "$AS/$2" >/dev/null 2>&1 || return 0
+    git -C "$AS/$2" checkout -q "$3" 2>/dev/null || {
+      rm -rf "$AS/$2"
+      echo "  (skipped $1 — pinned commit $3 not found; update the SHA)"
+    }
+  }
   _link()  { ln -sfn "$AS/$1" "$HOME/.claude/skills/$2"; }   # <clone-subpath> <link-name>
 
   # GSAP official — 8 sub-skills (the cinematic scroll backbone).
-  _clone greensock/gsap-skills gsap-skills
+  _clone greensock/gsap-skills gsap-skills aed9cfd3277740755f6bfc1155c7aa645403b760
   for s in core timeline scrolltrigger plugins react frameworks utils performance; do
     _link "gsap-skills/skills/gsap-$s" "gsap-$s"; done
 
   # Single-skill repos (SKILL.md at clone root or one level down).
-  _clone tsogjavklann/awwwards-3d awwwards-3d;                       _link awwwards-3d awwwards-3d
-  _clone threerocks/hand-drawn-styles hand-drawn-styles;            _link hand-drawn-styles hand-drawn
-  _clone Vincentwei1021/video-shotcraft video-shotcraft;            _link video-shotcraft video-shotcraft
-  _clone wshuyi/remotion-video-skill remotion-video-skill;          _link remotion-video-skill remotion-video
-  _clone mvanhorn/last30days-skill last30days-skill;                _link last30days-skill/skills/last30days last30days
-  _clone 199-biotechnologies/motion-dev-animations-skill motion-dev-animations-skill; _link motion-dev-animations-skill motion-dev-animations
-  _clone leonxlnx/taste-skill taste-skill;                          _link taste-skill/skills/taste-skill taste-skill
+  _clone tsogjavklann/awwwards-3d awwwards-3d 01072bd4a16f2936633b6209ee3b2aa3fb3b2e4f;     _link awwwards-3d awwwards-3d
+  _clone threerocks/hand-drawn-styles hand-drawn-styles 9f150d9f4c90f3a4ace78a751d2d8263d818220c; _link hand-drawn-styles hand-drawn
+  _clone Vincentwei1021/video-shotcraft video-shotcraft 41ee360d82f4c491ba9d88a24a4add7d8ff1cf8b;  _link video-shotcraft video-shotcraft
+  _clone wshuyi/remotion-video-skill remotion-video-skill d16ebd9ca330d636cf82bfd33d48ae12df74fadd; _link remotion-video-skill remotion-video
+  _clone mvanhorn/last30days-skill last30days-skill 1004324ad35a3ba656e6df0faabd54749e398455;      _link last30days-skill/skills/last30days last30days
+  _clone 199-biotechnologies/motion-dev-animations-skill motion-dev-animations-skill 3feedfb4dba8adae40fc9a5f9a23e3dda2121205; _link motion-dev-animations-skill motion-dev-animations
+  _clone leonxlnx/taste-skill taste-skill e988add20dab0fa97d7a76781c48961c8184288e;               _link taste-skill/skills/taste-skill taste-skill
 
   # MengTo/Skills (aura.build's design system, 79 skills) — link the curated
   # cinematic + editorial subset as mt-*. Add/remove names to re-curate.
-  _clone MengTo/Skills Skills
+  _clone MengTo/Skills Skills 3f4c22d10055d3fdddb17248d59d0c1b731cb8d3
   MT_PICKS="agency-grid-layout-minimal animation-on-scroll animation-systems background-grid-webgl book-serif-index cinematic-gsap-lenis-motion-system cinematic-scroll-storytelling clean-minimal-beige-light-mode documentary-brutalist-agency editorial-portfolio-chapters editorial-service-booking editorial-tech gsap-scrolltrigger-storytelling image-first-grid-layout light-mode-paper-technical marquee-loop masked-reveal nested-container-clean-agency number-details product-proof-saas progressive-blur reveal-hover-effect scroll-progress-timeline scroll-scrubbed-visual-sequence scroll-scrubbed-word-reveal scroll-world-storytelling shaders-cursor-ripples split-layout-technical staggered-word-reveal technical-wireframe-info-layout threejs unicorn-studio webgl-3d-object webgl-landing-steering webgl-laser"
   for s in $MT_PICKS; do
     [ -d "$AS/Skills/agent-skills/web-design/$s" ] && _link "Skills/agent-skills/web-design/$s" "mt-$s"; done
@@ -193,21 +223,34 @@ fi
 # alongside rather than replacing them. Best-effort — never fail setup.
 if command -v git >/dev/null 2>&1; then
   AS="$HOME/.agents/skills"; mkdir -p "$AS"
-  [ -d "$AS/ai-copywriter" ] || git clone --depth 1 https://github.com/mikiarlo3/ai-copywriter "$AS/ai-copywriter" >/dev/null 2>&1 || true
-  ln -sfn "$AS/ai-copywriter" "$HOME/.claude/skills/ai-copywriter"
-  echo "  ai-copywriter skill linked"
+  if [ ! -d "$AS/ai-copywriter" ]; then
+    if git clone --filter=blob:none https://github.com/mikiarlo3/ai-copywriter "$AS/ai-copywriter" >/dev/null 2>&1; then
+      git -C "$AS/ai-copywriter" checkout -q 08b53b1ad39887cd94cbaab61cac3b6aae2d8518 2>/dev/null \
+        || { rm -rf "$AS/ai-copywriter"; echo "  (ai-copywriter skipped — pin not found)"; }
+    fi
+  fi
+  [ -d "$AS/ai-copywriter" ] && ln -sfn "$AS/ai-copywriter" "$HOME/.claude/skills/ai-copywriter" \
+    && echo "  ai-copywriter skill linked"
 fi
 
-# --- Daily auto-update of skills + plugins (launchd, 09:00) -------------------
-# Pulls gstack + all skill git clones, runs `claude plugin update` for every
-# installed plugin. Script: bin/ai-tools-update.sh. Log: ~/.local/state/ai-tools-update.log
+# --- Daily auto-update: REMOVED (deliberately) --------------------------------
+# There used to be a launchd agent here that ran bin/ai-tools-update.sh every
+# day at 09:00: git pull on gstack + every repo in ~/.agents/skills, re-run
+# gstack's ./setup, and `claude plugin update` for every plugin.
+#
+# That was an unattended daily arbitrary-code-execution channel from ~30
+# third-party upstreams, with no pinning and no review. It is exactly the kind
+# of standing exposure that turns one upstream compromise into a local one.
+# Update deliberately instead: bump a pin, read the diff, re-run ./ai.sh.
+#
+# If the old agent is still loaded from a previous install, remove it:
 if [ "$(uname)" = "Darwin" ]; then
-  PLIST="$HOME/Library/LaunchAgents/com.hardikshah.ai-tools-update.plist"
-  mkdir -p "$HOME/Library/LaunchAgents"
-  cp "$DOTFILES/config/launchd/com.hardikshah.ai-tools-update.plist" "$PLIST"
-  launchctl bootout "gui/$(id -u)/com.hardikshah.ai-tools-update" 2>/dev/null || true
-  launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null || true
-  echo "  daily ai-tools auto-update scheduled (launchd, 09:00)"
+  if launchctl print "gui/$(id -u)/com.hardikshah.ai-tools-update" >/dev/null 2>&1; then
+    launchctl bootout "gui/$(id -u)/com.hardikshah.ai-tools-update" 2>/dev/null || true
+    launchctl disable "gui/$(id -u)/com.hardikshah.ai-tools-update" 2>/dev/null || true
+    rm -f "$HOME/Library/LaunchAgents/com.hardikshah.ai-tools-update.plist"
+    echo "  removed legacy daily auto-update agent"
+  fi
 fi
 
 echo "AI agent layer ready. Edit configs in $AI and re-run ./ai.sh to update."

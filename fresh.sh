@@ -77,9 +77,10 @@ fi
 if command -v bun >/dev/null 2>&1; then
   bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)
 fi
-if [ ! -x "$HOME/.local/bin/warp" ]; then
-  curl -fsSL https://app.warp.dev/download/agent-cli | bash || true   # Warp Agent CLI (`warp` in ~/.local/bin, self-updates)
-fi
+# Warp Agent CLI now comes from the `warp-agent-cli` cask in the Brewfile
+# (provides the same `warp` binary) instead of `curl … | bash`. Piping a remote
+# script straight into a shell means the vendor — or anyone who can spoof that
+# endpoint — executes as you, with nothing pinned and nothing reviewable.
 if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
   uv tool install code-review-graph >/dev/null 2>&1 || true   # opt-in code-review graph (review-on)
@@ -88,8 +89,12 @@ fi
 # Install the fzf-tab zsh plugin (fuzzy Tab completion). It's git-only (not on
 # Homebrew) and git-ignored, so it lives in the custom plugins dir without
 # dirtying the repo. Best-effort.
+# Pinned: this one is sourced by .zshrc, so it runs in every shell you open.
 if command -v git >/dev/null 2>&1 && [ ! -d "$HOME/.dotfiles/plugins/fzf-tab" ]; then
-  git clone --depth 1 https://github.com/Aloxaf/fzf-tab "$HOME/.dotfiles/plugins/fzf-tab" >/dev/null 2>&1 || true
+  if git clone --filter=blob:none https://github.com/Aloxaf/fzf-tab "$HOME/.dotfiles/plugins/fzf-tab" >/dev/null 2>&1; then
+    git -C "$HOME/.dotfiles/plugins/fzf-tab" checkout -q 24105b15714bfec37989ed5c5b6e60f572253019 2>/dev/null \
+      || { rm -rf "$HOME/.dotfiles/plugins/fzf-tab"; echo "  (fzf-tab skipped — pin not found)"; }
+  fi
 fi
 
 # Clone Github repositories (edit clone.sh first — ships empty)
