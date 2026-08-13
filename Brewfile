@@ -80,6 +80,7 @@ brew 'cmatrix'    # matrix rain (pure eye-candy)
 brew 'terminal-notifier' # clickable macOS notifications (Claude notify hook)
 
 # Apps
+cask 'blockblock' # alerts on new persistence (LaunchAgents/Daemons, cron, login items) before it can run again
 cask 'caffeine'
 cask 'claude'
 cask 'claude-code'
