@@ -97,6 +97,7 @@ cask 'herd'
 cask 'httpie'
 cask 'imageoptim'
 cask 'little-snitch' # outbound network firewall — blocks C2/exfil/mining callbacks, unlike the built-in inbound-only firewall
+cask 'micro-snitch' # alerts on mic/camera access — catches spyware component of a compromise
 cask 'maestro' # RunMaestro.ai — AI agent command center
 cask 'pastebot'
 cask 'raycast' # launcher: window mgmt, clipboard, snippets, AI
