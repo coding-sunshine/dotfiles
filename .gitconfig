@@ -3,7 +3,7 @@
 
 [user]
 	name = Hardik Shah
-	email = mail.hardikshah@gmail.com
+	email = sunshine.mahant@gmail.com
 	signingkey = ~/.ssh/id_ed25519.pub
 
 [core]
@@ -51,6 +51,11 @@
 	navigate = true
 	line-numbers = true
 	side-by-side = false
+
+# delta stays the default pager for line diffs. `git dft` opts into difftastic's
+# AST-aware diff for the cases delta reads as noise (reformats, moved blocks).
+[alias]
+	dft = -c diff.external=difft diff
 
 [column]
 	ui = auto
