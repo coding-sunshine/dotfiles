@@ -239,7 +239,7 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "code-review@claude-code-plugins": true,
+    "code-review@claude-code-plugins": false,
     "feature-dev@claude-code-plugins": true,
     "superpowers@superpowers-marketplace": false,
     "ponytail@ponytail": true,
