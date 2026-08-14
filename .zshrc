@@ -251,6 +251,10 @@ alias splash='fastfetch'
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# OrbStack CLI shims (docker, docker-compose, kubectl). Docker Desktop used to
+# provide the docker binary; OrbStack replaces it and ships its own here.
+export PATH="$HOME/.orbstack/bin:$PATH"
+
 # pnpm global binaries (eas-cli and friends)
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME/bin:$PATH"

@@ -40,7 +40,7 @@ brew update
 # formulae from untrusted taps, which aborts `brew bundle` partway (everything
 # after the offending line — bun, claude-code, etc. — then silently fails to
 # install). Best-effort so it's a no-op on Homebrew versions without `trust`.
-for tap in stripe/stripe-cli oven-sh/bun; do
+for tap in stripe/stripe-cli oven-sh/bun manaflow-ai/cmux mobile-dev-inc/tap; do
   brew tap "$tap" >/dev/null 2>&1 || true
   brew trust "$tap" >/dev/null 2>&1 || true
 done
@@ -81,6 +81,21 @@ fi
 if command -v bun >/dev/null 2>&1; then
   bun add -g ccusage >/dev/null 2>&1 || true       # per-session cost/token visibility (statusline)
 fi
+# EAS CLI for Expo/React Native builds and submissions. Expo itself stays
+# per-project (`npx expo`); only this one is global. PNPM_HOME must be set (see
+# .zshrc) or pnpm refuses to install global binaries.
+if command -v pnpm >/dev/null 2>&1; then
+  PNPM_HOME="$HOME/.local/share/pnpm" PATH="$HOME/.local/share/pnpm/bin:$PATH" \
+    pnpm add -g eas-cli >/dev/null 2>&1 || true
+fi
+# rustup installs no toolchain by default, so `cargo` would not exist yet.
+if [ -x "/opt/homebrew/opt/rustup/bin/rustup" ]; then
+  /opt/homebrew/opt/rustup/bin/rustup default stable >/dev/null 2>&1 || true
+fi
+# The maestro formula cannot link while the RunMaestro.ai cask of the same name
+# is installed. That cask ships only Maestro.app with no CLI, so overriding is
+# safe and is what puts the mobile E2E `maestro` binary on PATH.
+brew link --overwrite maestro >/dev/null 2>&1 || true
 # Warp Agent CLI now comes from the `warp-agent-cli` cask in the Brewfile
 # (provides the same `warp` binary) instead of `curl … | bash`. Piping a remote
 # script straight into a shell means the vendor — or anyone who can spoof that
@@ -88,6 +103,13 @@ fi
 if command -v uv >/dev/null 2>&1; then
   uv tool install specify-cli --from git+https://github.com/github/spec-kit.git >/dev/null 2>&1 || true  # GitHub Spec Kit
   uv tool install code-review-graph >/dev/null 2>&1 || true   # opt-in code-review graph (review-on)
+fi
+
+# Check out git submodules (plugins/artisan — the zsh-artisan plugin). Without
+# this the directory exists but is empty, and every shell you open prints
+# "[oh-my-zsh] plugin 'artisan' not found".
+if command -v git >/dev/null 2>&1; then
+  git -C "$HOME/.dotfiles" submodule update --init --recursive || true
 fi
 
 # Install the fzf-tab zsh plugin (fuzzy Tab completion). It's git-only (not on
