@@ -139,3 +139,4 @@ cask 'zoom'
 
 # No Homebrew cask exists for these — install manually, tracked here so `brew bundle` isn't the only record:
 # - Grok (x.ai desktop bot): https://x.ai/bot
+# - V3Code (dev.v3code.code): https://v3code.dev — installed directly, no cask
