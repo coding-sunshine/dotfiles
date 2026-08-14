@@ -30,7 +30,7 @@
       "Bash(rm -rf:*)"
     ]
   },
-  "model": "sonnet",
+  "model": "claude-fable-5[1m]",
   "skillOverrides": {
     "_gstack-command": "user-invocable-only",
     "aesthetic-direction": "user-invocable-only",
