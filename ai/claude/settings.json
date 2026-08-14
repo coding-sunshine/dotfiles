@@ -238,58 +238,7 @@
     "command": "bash \"$HOME/.claude/hooks/statusline-combined.sh\"",
     "padding": 0
   },
-  "enabledPlugins": {
-    "ponytail@ponytail": true,
-    "caveman@caveman": true,
-    "roundtable@agent-review-panel": true,
-    "laravel@laravel": true,
-    "improve@improve": true,
-    "warp@claude-code-warp": true
-  },
-  "extraKnownMarketplaces": {
-    "superpowers-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "obra/superpowers-marketplace"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
-      }
-    },
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "agent-review-panel": {
-      "source": {
-        "source": "github",
-        "repo": "wan-huiyan/agent-review-panel"
-      }
-    },
-    "laravel": {
-      "source": {
-        "source": "github",
-        "repo": "laravel/claude-code"
-      }
-    },
-    "improve": {
-      "source": {
-        "source": "github",
-        "repo": "shadcn/improve"
-      }
-    },
-    "claude-code-warp": {
-      "source": {
-        "source": "github",
-        "repo": "warpdotdev/claude-code-warp"
-      }
-    }
-  },
+  "enabledPlugins": {},
   "effortLevel": "medium",
   "tui": "fullscreen",
   "autoMemoryEnabled": true,
