@@ -243,41 +243,20 @@ _modern_tool_nudge() {
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec _modern_tool_nudge
 
-# System splash on new interactive shells (comment out the next line to disable)
-command -v fastfetch >/dev/null 2>&1 && [[ -o interactive ]] && fastfetch
+# System splash: on demand only. Running fastfetch on every new interactive
+# shell costs ~100ms per terminal for information you rarely read.
+alias splash='fastfetch'
 
+# Rust toolchain (rustup is keg-only, so Homebrew does not link it)
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/84/"
+# pnpm global binaries (eas-cli and friends)
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PNPM_HOME/bin:$PATH"
 
-
-# Herd injected PHP 8.0 configuration.
-export HERD_PHP_80_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/80/"
-
-
-# Herd injected PHP 7.4 configuration.
-export HERD_PHP_74_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/74/"
-
-
-# Herd injected PHP 8.5 configuration.
-export HERD_PHP_85_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/85/"
-
-
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/83/"
-
-
-# Herd injected PHP 8.2 configuration.
-export HERD_PHP_82_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/82/"
-
-
-# Herd injected PHP 8.1 configuration.
-export HERD_PHP_81_INI_SCAN_DIR="/Users/hardikshah/Library/Application Support/Herd/config/php/81/"
-
-
-# Herd injected PHP binary.
-export PATH="/Users/hardikshah/Library/Application Support/Herd/bin/":$PATH
-
-
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/hardik/Library/Application Support/Herd/config/php/84/"
+# NOTE: Herd re-injects its PHP_INI_SCAN_DIR / PATH exports at the bottom of
+# this file on every update. The canonical, $HOME-based copies live above
+# (lines ~126-160). If Herd appends duplicates here again, delete them rather
+# than letting them accumulate — the stale ones hardcoded /Users/hardikshah,
+# which is not this machine's home directory.
