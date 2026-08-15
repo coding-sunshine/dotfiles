@@ -68,7 +68,11 @@ if command -v npx >/dev/null 2>&1; then
   npx -y "$SKILLS_CLI" add vercel-labs/skills@find-skills -g -y >/dev/null 2>&1 || true        # discover/install skills
   npx -y "$SKILLS_CLI" add nextlevelbuilder/ui-ux-pro-max-skill -g -y >/dev/null 2>&1 || true  # UI/UX design suite (7 skills)
   npx -y "$SKILLS_CLI" add pbakaus/impeccable -g -y >/dev/null 2>&1 || true                    # frontend polish/critique
-  npx -y "$SKILLS_CLI" add mattpocock/skills -g -y >/dev/null 2>&1 || true                     # grill-me/wayfinder/tdd etc (35 skills)
+  # mattpocock/skills — ideation set only; full repo has 35 skills, rest bloat
+  # every session's context (~100 tok frontmatter each). Add more per-skill.
+  for _mp in grill-me grilling grill-with-docs domain-modeling wayfinder to-tickets; do
+    npx -y "$SKILLS_CLI" add "mattpocock/skills@$_mp" -g -y >/dev/null 2>&1 || true
+  done
 fi
 
 # gstack — Garry Tan's command framework. Installed PREFIXED (/gstack-*) so it
