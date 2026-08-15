@@ -340,8 +340,8 @@
     "roundtable@agent-review-panel": true,
     "laravel@laravel": true,
     "improve@improve": true,
-    "warp@claude-code-warp": true,
-    "stripe@claude-plugins-official": true
+    "stripe@claude-plugins-official": true,
+    "warp@claude-code-warp": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
