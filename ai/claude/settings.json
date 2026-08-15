@@ -239,14 +239,25 @@
     "padding": 0
   },
   "enabledPlugins": {
+    "code-review@claude-code-plugins": false,
+    "feature-dev@claude-code-plugins": true,
+    "superpowers@superpowers-marketplace": false,
     "ponytail@ponytail": true,
+    "frontend-design@claude-plugins-official": true,
     "caveman@caveman": true,
     "roundtable@agent-review-panel": true,
     "laravel@laravel": true,
     "improve@improve": true,
-    "warp@claude-code-warp": true
+    "warp@claude-code-warp": true,
+    "stripe@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
     "superpowers-marketplace": {
       "source": {
         "source": "github",
@@ -275,6 +286,12 @@
       "source": {
         "source": "github",
         "repo": "laravel/claude-code"
+      }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
       }
     },
     "improve": {
