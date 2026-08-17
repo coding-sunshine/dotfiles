@@ -13,6 +13,10 @@ AI-agent workflow; I value small, verifiable steps.
 - Smallest change that fully solves the task; match surrounding style, don't
   reformat unrelated lines.
 - Reuse existing functions/utilities before adding new ones.
+- Ambiguous request: state your chosen interpretation in one line before
+  building; ask only if interpretations diverge materially.
+- Clean up orphans your change created (imports/vars/functions now unused).
+  Pre-existing dead code: mention it, never delete unasked.
 - State how you verified (tests run, output). Don't claim it works unchecked.
 - Ask before destructive/hard-to-reverse actions (deletes, force-push, schema or
   data changes, anything outward-facing).

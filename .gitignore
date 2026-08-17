@@ -1,6 +1,4 @@
 # Local secrets — never commit
-.env
-.env.local
 
 # Local-only agent settings
 .claude/settings.local.json
@@ -17,3 +15,9 @@ config/zed/prompts/
 # Stray VS Code extension build artifact
 kickbacks.vsix
 *.vsix
+config.bat
+node_modules
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
