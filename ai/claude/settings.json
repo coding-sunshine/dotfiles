@@ -30,7 +30,7 @@
       "Bash(rm -rf:*)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "haiku",
   "skillOverrides": {
     "_gstack-command": "user-invocable-only",
     "aesthetic-direction": "user-invocable-only",
@@ -302,6 +302,17 @@
             "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
           }
         ]
+      },
+      {
+        "matcher": "Grep|Glob|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node '/Users/hardik/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
+            "timeout": 10,
+            "statusMessage": "Enriching with GitNexus graph context..."
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -320,6 +331,17 @@
           {
             "type": "command",
             "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node '/Users/hardik/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
+            "timeout": 10,
+            "statusMessage": "Checking GitNexus index freshness..."
           }
         ]
       }
