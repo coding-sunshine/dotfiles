@@ -41,6 +41,10 @@ concise" loses to system-prompt drift; these don't):
 - No unasked next-steps essays; a one-line offer max.
 - Headers/tables only when they aid scanning (3+ parallel items); otherwise
   prose. Simple question = direct answer, no sections.
+- Reporting information back to me: extremely concise. Sacrifice grammar for
+  concision — fragments, dropped articles, no full sentences needed.
+- Go visual when it carries the point faster than prose (table, diff, tree,
+  short code block). Otherwise stay text.
 
 ## Stack conventions
 
@@ -60,24 +64,24 @@ Grep tool; keep `rg` for plain text.
 When a task matches a row, use that tool without being asked. Skills are
 progressive (load only when invoked), so routing is free until used.
 
-| When you're…                                                                             | Reach for                                                 |
-| ---------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| exploring an unfamiliar codebase / "how does X relate to Y"                              | `/graphify .` then query the graph                        |
-| tracing callers / impact / blast-radius of a change                                      | code-review-graph (`graph-init` once, then `review-on`)   |
-| doing a structural search or multi-file refactor                                         | the `ast-grep` skill (not regex)                          |
-| building or polishing UI                                                                 | `frontend-design` / `impeccable` / `ui-ux-pro-max` skills |
-| writing/punching up copy (titles, LinkedIn, blog, microcopy) or humanizing AI-sounding text | `ai-copywriter` skill (superset of `humanizer`/`humanize-text`) |
-| researching across many sources                                                          | `/deep-research`                                          |
-| about to commit / open a PR                                                              | `verify` skill, then `/review` (or `/gstack-review`)      |
-| CI-grade precision review of a diff/PR or auditing a whole unfamiliar directory          | `ocr review` / `ocr scan` (Open Code Review CLI)          |
-| planning a non-trivial feature                                                           | `/plan` (planner subagent) or `/gstack-spec`              |
-| building anything multi-step where "done" is arguable                                    | `/contract` — criteria frozen by an adversarial critic before code, graded against them after |
-| stress-testing a plan/spec or a tenancy / auth / security / money change before building | `agent-review-panel` (multi-agent adversarial debate)     |
-| told to "just build it" from a feature list, unattended                                  | `autobuild features.md`                                   |
-| running a big/verbose search or test sweep                                               | delegate to a subagent (summary only returns)             |
-| running parallel agents on branches                                                      | `claude --worktree` (native) or `gwt new <branch>`        |
-| a headless, budget-capped automation run                                                 | `claude-auto`                                             |
-| over-engineering creeping in                                                             | `/ponytail`                                               |
+| When you're…                                                                                | Reach for                                                                                     |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| exploring an unfamiliar codebase / "how does X relate to Y"                                 | `/graphify .` then query the graph                                                            |
+| tracing callers / impact / blast-radius of a change                                         | code-review-graph (`graph-init` once, then `review-on`)                                       |
+| doing a structural search or multi-file refactor                                            | the `ast-grep` skill (not regex)                                                              |
+| building or polishing UI                                                                    | `frontend-design` / `impeccable` / `ui-ux-pro-max` skills                                     |
+| writing/punching up copy (titles, LinkedIn, blog, microcopy) or humanizing AI-sounding text | `ai-copywriter` skill (superset of `humanizer`/`humanize-text`)                               |
+| researching across many sources                                                             | `/deep-research`                                                                              |
+| about to commit / open a PR                                                                 | `verify` skill, then `/review` (or `/gstack-review`)                                          |
+| CI-grade precision review of a diff/PR or auditing a whole unfamiliar directory             | `ocr review` / `ocr scan` (Open Code Review CLI)                                              |
+| planning a non-trivial feature                                                              | `/plan` (planner subagent) or `/gstack-spec`                                                  |
+| building anything multi-step where "done" is arguable                                       | `/contract` — criteria frozen by an adversarial critic before code, graded against them after |
+| stress-testing a plan/spec or a tenancy / auth / security / money change before building    | `agent-review-panel` (multi-agent adversarial debate)                                         |
+| told to "just build it" from a feature list, unattended                                     | `autobuild features.md`                                                                       |
+| running a big/verbose search or test sweep                                                  | delegate to a subagent (summary only returns)                                                 |
+| running parallel agents on branches                                                         | `claude --worktree` (native) or `gwt new <branch>`                                            |
+| a headless, budget-capped automation run                                                    | `claude-auto`                                                                                 |
+| over-engineering creeping in                                                                | `/ponytail`                                                                                   |
 
 Opt-in, toggle on then off: `superpowers-on`, `browser-on`, `github-on`,
 `review-on`. `continuous-learning-v2` auto-learns your patterns — check
