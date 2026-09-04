@@ -83,7 +83,7 @@ fi
 # for a Supabase PAT with full-account scope and registers MCP servers into
 # ~/.claude.json. It is therefore PINNED. To upgrade: read the diff between
 # GSTACK_SHA and the new HEAD, then bump the SHA. Never unpin it.
-GSTACK_SHA="d078622b73539fc1a7a27e709861e9b6b058ae98"  # 2026-08-12
+GSTACK_SHA="0d1bd5616c0ef096bb7ccee336f63c60ee408618"  # 2026-09-04
 if command -v bun >/dev/null 2>&1 && command -v git >/dev/null 2>&1; then
   if [ ! -d "$HOME/.claude/skills/gstack" ]; then
     echo "  installing gstack (/gstack-* commands, pinned)..."
@@ -205,15 +205,15 @@ if command -v git >/dev/null 2>&1; then
   # Single-skill repos (SKILL.md at clone root or one level down).
   _clone tsogjavklann/awwwards-3d awwwards-3d 01072bd4a16f2936633b6209ee3b2aa3fb3b2e4f;     _link awwwards-3d awwwards-3d
   _clone threerocks/hand-drawn-styles hand-drawn-styles 9f150d9f4c90f3a4ace78a751d2d8263d818220c; _link hand-drawn-styles hand-drawn
-  _clone Vincentwei1021/video-shotcraft video-shotcraft 41ee360d82f4c491ba9d88a24a4add7d8ff1cf8b;  _link video-shotcraft video-shotcraft
+  _clone Vincentwei1021/video-shotcraft video-shotcraft 6c116cbd24eeb43c99d396696b509f8d88e58789;  _link video-shotcraft video-shotcraft
   _clone wshuyi/remotion-video-skill remotion-video-skill d16ebd9ca330d636cf82bfd33d48ae12df74fadd; _link remotion-video-skill remotion-video
-  _clone mvanhorn/last30days-skill last30days-skill 1004324ad35a3ba656e6df0faabd54749e398455;      _link last30days-skill/skills/last30days last30days
+  _clone mvanhorn/last30days-skill last30days-skill 56ba5ace27e4697aedc60aa0b1e1bfdcd592ff20;      _link last30days-skill/skills/last30days last30days
   _clone 199-biotechnologies/motion-dev-animations-skill motion-dev-animations-skill 3feedfb4dba8adae40fc9a5f9a23e3dda2121205; _link motion-dev-animations-skill motion-dev-animations
-  _clone leonxlnx/taste-skill taste-skill e988add20dab0fa97d7a76781c48961c8184288e;               _link taste-skill/skills/taste-skill taste-skill
+  _clone leonxlnx/taste-skill taste-skill ccbc15639c97057cbfcf32ecebc38ef716e4bb37;               _link taste-skill/skills/taste-skill taste-skill
 
   # MengTo/Skills (aura.build's design system, 79 skills) — link the curated
   # cinematic + editorial subset as mt-*. Add/remove names to re-curate.
-  _clone MengTo/Skills Skills 3f4c22d10055d3fdddb17248d59d0c1b731cb8d3
+  _clone MengTo/Skills Skills 321c769739b823de5eb94eb3a52aa1974fe783a2
   MT_PICKS="agency-grid-layout-minimal animation-on-scroll animation-systems background-grid-webgl book-serif-index cinematic-gsap-lenis-motion-system cinematic-scroll-storytelling clean-minimal-beige-light-mode documentary-brutalist-agency editorial-portfolio-chapters editorial-service-booking editorial-tech gsap-scrolltrigger-storytelling image-first-grid-layout light-mode-paper-technical marquee-loop masked-reveal nested-container-clean-agency number-details product-proof-saas progressive-blur reveal-hover-effect scroll-progress-timeline scroll-scrubbed-visual-sequence scroll-scrubbed-word-reveal scroll-world-storytelling shaders-cursor-ripples split-layout-technical staggered-word-reveal technical-wireframe-info-layout threejs unicorn-studio webgl-3d-object webgl-landing-steering webgl-laser"
   for s in $MT_PICKS; do
     [ -d "$AS/Skills/agent-skills/web-design/$s" ] && _link "Skills/agent-skills/web-design/$s" "mt-$s"; done
