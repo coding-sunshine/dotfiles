@@ -18,3 +18,5 @@ kickbacks.vsix
 config.bat
 node_modules
 .gitignore
+.env
+.env.production
