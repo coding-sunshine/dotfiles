@@ -295,3 +295,13 @@ export HERD_PHP_74_INI_SCAN_DIR="/Users/hardik/Library/Application Support/Herd/
 
 # opencode
 export PATH=/Users/hardik/.opencode/bin:$PATH
+
+
+# Herd injected PHP 8.6 configuration.
+export HERD_PHP_86_INI_SCAN_DIR="/Users/hardik/Library/Application Support/Herd/config/php/86"
+
+# bun completions
+[ -s "/Users/hardik/.bun/_bun" ] && source "/Users/hardik/.bun/_bun"
+
+# kimi-code
+export PATH="/Users/hardik/.kimi-code/bin:$PATH"
