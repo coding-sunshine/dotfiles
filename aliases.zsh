@@ -116,7 +116,8 @@ alias superpowers-off="claude plugin disable superpowers@superpowers-marketplace
 alias gstack-upgrade="(cd ~/.claude/skills/gstack && git pull && ./setup --prefix)"
 
 # Modern CLI replacements (only if installed)
-command -v eza >/dev/null 2>&1 && alias ls="eza --icons --group-directories-first" \
+# Skipped inside Claude Code's shell: eza rejects BSD flags such as `ls -1t`.
+[[ -z "$CLAUDECODE" ]] && command -v eza >/dev/null 2>&1 && alias ls="eza --icons --group-directories-first" \
   && alias la="eza --icons --group-directories-first -a" \
   && alias lt="eza --icons --tree --level=2"
 command -v bat >/dev/null 2>&1 && alias cat="bat --paging=never"
