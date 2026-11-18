@@ -34,6 +34,16 @@
       "type": "http",
       "url": "https://mcp.linear.app/mcp"
     },
+    "dropbox": {
+      "// note": "Opt-in. Official Dropbox MCP (hosted, HTTP + OAuth, open beta). Browse/search/read/move/share files, Sign, Paper. Cannot create developer apps or API keys. Enable with `mcp-toggle dropbox on`, then authenticate once via `/mcp`.",
+      "type": "http",
+      "url": "https://mcp.dropbox.com/mcp"
+    },
+    "huggingface": {
+      "// note": "Opt-in. Official Hugging Face MCP (hosted, HTTP + OAuth via ?login). Hub/Spaces/docs search + repo writes. hf CLI already covers deploys. Enable with `mcp-toggle huggingface on`, then authenticate once via `/mcp`.",
+      "type": "http",
+      "url": "https://huggingface.co/mcp?login"
+    },
     "trello": {
       "// note": "Opt-in. Official Trello MCP (hosted, HTTP + OAuth — no API key). Boards, lists, cards, checklists, search. Enable with `trello-on`, then authenticate once via `/mcp` in a Claude session.",
       "type": "http",
@@ -53,6 +63,21 @@
       "// note": "Opt-in. Local-first code-intelligence graph (Tree-sitter AST + caller/dependent/test edges) exposing ~30 review tools over MCP so an agent reads only what a diff touches. Installed by fresh.sh (`uv tool install code-review-graph`). Run `code-review-graph build` once per repo before enabling. Enable with `review-on`, disable with `review-off`. Reads the graph relative to the cwd, so toggle it on from inside the target project.",
       "command": "code-review-graph",
       "args": ["serve"]
+    },
+    "cloudflare": {
+      "// note": "Opt-in. Official Cloudflare API MCP (hosted, HTTP + OAuth, no API token). Whole Cloudflare API (Pages, Workers, DNS, R2, D1) via search() and execute(). Enable with `mcp-toggle cloudflare on`, then authenticate once via `/mcp`.",
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "godaddy": {
+      "// note": "Official GoDaddy MCP (hosted, HTTP, no auth). Domain search only: check_domain_availability, suggest_domains. Cannot edit DNS. Enable with `mcp-toggle godaddy on`.",
+      "type": "http",
+      "url": "https://mcp.godaddy.com"
+    },
+    "circleci": {
+      "// note": "Official CircleCI hosted MCP (HTTP, OAuth2 via /mcp > circleci > Authenticate; nothing installed locally). Build failure logs, pipeline status, rerun. Enable with `mcp-toggle circleci on`.",
+      "type": "http",
+      "url": "https://mcp.circleci.com/v1/mcp"
     }
   }
 }
