@@ -27,6 +27,10 @@ case "$p" in
     hint="multi-step build → /contract (freeze acceptance criteria with the auditor first, grade against them after); task state in .work/feature_list.json, not Markdown" ;;
   *"build the app"*|*"from this feature list"*|*"build it unattended"*|*"overnight"*)
     hint="unattended build from a feature list → autobuild features.md" ;;
+  *"deeper version"*|*"more ambitious"*|*"be ambitious"*|*"what would an expert"*)
+    hint="deeper, not bigger → /deepen (what a top pro would do, rawest material, real instruments, an outside judge), then /contract" ;;
+  *crash-free*|*"keep it green"*|*"stay green"*|*"stays fixed"*|*"never happens again"*)
+    hint="standing outcome → /outcome (invariant + check + see/locate/prove access, kept true on /schedule or /loop)" ;;
 esac
 
 [ -n "$hint" ] && printf '↳ tool hint: %s\n' "$hint"

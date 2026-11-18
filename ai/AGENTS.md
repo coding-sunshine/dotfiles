@@ -18,6 +18,10 @@ AI-agent workflow; I value small, verifiable steps.
 - Clean up orphans your change created (imports/vars/functions now unused).
   Pre-existing dead code: mention it, never delete unasked.
 - State how you verified (tests run, output). Don't claim it works unchecked.
+- **Raw over digested.** A source you will quote, encode or judge gets read raw:
+  `curl` plus a tag strip, or the primary DB, log or dataset. WebFetch hands back
+  a small model's summary, which is fine for a lookup and wrong for anything you
+  will build on.
 - Ask before destructive/hard-to-reverse actions (deletes, force-push, schema or
   data changes, anything outward-facing).
 - **Task state goes in JSON, never Markdown.** Anything with a status field —
@@ -83,9 +87,17 @@ progressive (load only when invoked), so routing is free until used.
 | a headless, budget-capped automation run                                                    | `claude-auto`                                                                                 |
 | over-engineering creeping in                                                                | `/ponytail`                                                                                   |
 
+Opt-in, run only when I ask or a route hint suggests it: `/deepen` (four depth
+questions and a rewritten prompt, then `/contract`) and `/outcome` (a standing
+invariant with its check, kept true on `/schedule` or `/loop`).
+
+Crews and review panels: each member does what that professional does (runs the
+query, the profiler, the exploit) and cites the output. Writing in their voice is
+role play; drop any finding that carries no tool output.
+
 Opt-in, toggle on then off: `superpowers-on`, `browser-on`, `github-on`,
-`review-on`. `continuous-learning-v2` auto-learns your patterns — check
-`/instinct-status` occasionally and promote good ones.
+`review-on`, `sentry-on`. `continuous-learning-v2` auto-learns your patterns —
+check `/instinct-status` occasionally and promote good ones.
 
 ## Model routing — subagents & delegation
 

@@ -90,6 +90,8 @@ alias linear-on="mcp-toggle linear on && echo 'Linear MCP on. First use: run /mc
 alias linear-off="mcp-toggle linear off"
 alias trello-on="mcp-toggle trello on && echo 'Trello MCP on. First use: run /mcp in Claude, pick trello, complete browser OAuth.'"
 alias trello-off="mcp-toggle trello off"
+alias sentry-on="mcp-toggle sentry on && echo 'Sentry MCP on. First use: run /mcp in Claude, pick sentry, complete browser OAuth.'"
+alias sentry-off="mcp-toggle sentry off"
 
 # code-review-graph MCP (uv-installed by fresh.sh). Off by default; toggle on
 # from inside the target project, after the one-time per-repo build.

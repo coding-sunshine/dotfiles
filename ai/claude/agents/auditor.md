@@ -27,10 +27,15 @@ Reject a criterion when it:
 - bundles two things with "and" — split it
 - restates the feature name instead of naming an observable outcome
 - can only be judged by reading the implementer's intent
+- names a quantity without a number ("fast", "few queries", "small bundle") —
+  pin it to a specific hard target
 
 Also report criteria that are **missing**: the failure modes this scope obviously
 has that nothing in the list would catch. Error paths, empty input, the boundary
-the change moves, and the existing behaviour the change could break.
+the change moves, and the existing behaviour the change could break. When the
+scope's purpose or stated risk is a quantity (a speed-up, fewer queries, a smaller
+bundle, a lower error rate) and no criterion pins it to a number, that is missing
+too. Do not demand numbers for scopes that are not about a quantity.
 
 Output:
 

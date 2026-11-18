@@ -227,7 +227,9 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   isolated context window (verbose work stays out of the main thread).
 - **Slash commands** ([`ai/claude/commands/`](./ai/claude/commands)) — `/review`,
   `/pr`, `/spec`, `/test`, plus `/plan` (delegates to `planner`) and `/ship`
-  (full gate: verify → review → **security-review** → commit).
+  (full gate: verify → review → **security-review** → commit). `/deepen`
+  rewrites a task the way a top professional would approach it, and `/outcome`
+  turns a one-off fix into a standing invariant with a scheduled check.
 - **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
   lint/test/type-check gates. `ai.sh` also installs (via `npx skills`)
   `agent-browser` (token-lean browser CLI), Anthropic's `frontend-design`,
