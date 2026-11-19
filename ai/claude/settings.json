@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "160000",
-    "BASH_MAX_OUTPUT_LENGTH": "30000",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5"
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-5-5",
+    "BASH_MAX_OUTPUT_LENGTH": "15000",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "200000"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -30,7 +30,7 @@
       "Bash(rm -rf:*)"
     ]
   },
-  "model": "haiku",
+  "model": "opus",
   "skillOverrides": {
     "_gstack-command": "user-invocable-only",
     "aesthetic-direction": "user-invocable-only",
@@ -242,35 +242,73 @@
     "sanskrit-critical-edition": "user-invocable-only",
     "slides": "user-invocable-only",
     "typescript-pro": "user-invocable-only",
-    "video-shotcraft": "user-invocable-only"
+    "video-shotcraft": "user-invocable-only",
+    "cinematic-scroll-video": "user-invocable-only",
+    "agent-reach": "user-invocable-only",
+    "mt": "user-invocable-only",
+    "logo-generator": "user-invocable-only"
   },
   "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/cost-guard.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/route-hint.sh"
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/notify.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh Notification"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/format.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "base hook post-tool-use"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh PostToolUse"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh PostToolUseFailure"
           }
         ]
       }
@@ -304,44 +342,143 @@
         ]
       },
       {
-        "matcher": "Grep|Glob|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node '/Users/hardik/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
-            "timeout": 10,
-            "statusMessage": "Enriching with GitNexus graph context..."
+            "command": "base hook pre-tool-use"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh PreToolUse"
           }
         ]
       }
     ],
-    "PostToolUse": [
+    "SessionEnd": [
       {
-        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/format.sh"
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh SessionEnd"
           }
         ]
       },
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
+            "command": "base hook session-end"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/relink-config.sh"
           }
         ]
       },
       {
-        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node '/Users/hardik/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
-            "timeout": 10,
-            "statusMessage": "Checking GitNexus index freshness..."
+            "command": "$HOME/.claude/hooks/cost-guard.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "base hook session-start"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh SessionStart"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.claude/skills/gstack/hosts/claude/hooks/timeline-stop-hook",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "base hook stop"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh Stop"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh SubagentStart"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh SubagentStop"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/route-hint.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "base hook user-prompt-submit"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/hardik/.holdmylid/hooks/cc-event-hook.sh UserPromptSubmit"
           }
         ]
       }
@@ -353,35 +490,29 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "code-review@claude-code-plugins": true,
-    "feature-dev@claude-code-plugins": true,
-    "superpowers@superpowers-marketplace": false,
-    "ponytail@ponytail": true,
-    "frontend-design@claude-plugins-official": true,
     "caveman@caveman": true,
-    "roundtable@agent-review-panel": true,
-    "laravel@laravel": true,
+    "code-review@claude-code-plugins": false,
+    "feature-dev@claude-code-plugins": false,
+    "frontend-design@claude-plugins-official": false,
+    "i-have-adhd@i-have-adhd": true,
     "improve@improve": true,
-    "stripe@claude-plugins-official": true,
-    "warp@claude-code-warp": true
+    "laravel@laravel": false,
+    "ponytail@ponytail": true,
+    "roundtable@agent-review-panel": true,
+    "stripe@claude-plugins-official": false,
+    "superpowers@superpowers-marketplace": false,
+    "warp@claude-code-warp": true,
+    "hostinger@claude-plugins-official": false,
+    "pstack@pstack-claude": true,
+    "egm@egm": false,
+    "typescript-lsp@claude-plugins-official": true,
+    "php-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "claude-code-plugins": {
+    "agent-review-panel": {
       "source": {
         "source": "github",
-        "repo": "anthropics/claude-code"
-      }
-    },
-    "superpowers-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "obra/superpowers-marketplace"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
+        "repo": "wan-huiyan/agent-review-panel"
       }
     },
     "caveman": {
@@ -390,16 +521,16 @@
         "repo": "JuliusBrussee/caveman"
       }
     },
-    "agent-review-panel": {
+    "claude-code-plugins": {
       "source": {
         "source": "github",
-        "repo": "wan-huiyan/agent-review-panel"
+        "repo": "anthropics/claude-code"
       }
     },
-    "laravel": {
+    "claude-code-warp": {
       "source": {
         "source": "github",
-        "repo": "laravel/claude-code"
+        "repo": "warpdotdev/claude-code-warp"
       }
     },
     "claude-plugins-official": {
@@ -408,23 +539,64 @@
         "repo": "anthropics/claude-plugins-official"
       }
     },
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
+    },
     "improve": {
       "source": {
         "source": "github",
         "repo": "shadcn/improve"
       }
     },
-    "claude-code-warp": {
+    "laravel": {
       "source": {
         "source": "github",
-        "repo": "warpdotdev/claude-code-warp"
+        "repo": "laravel/claude-code"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "pstack-claude": {
+      "source": {
+        "source": "github",
+        "repo": "michael-denyer/pstack-claude"
+      }
+    },
+    "egm": {
+      "source": {
+        "source": "github",
+        "repo": "google/elephant-goldfish-model"
       }
     }
   },
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-fable-5-2": {
+      "effortLevel": "xhigh"
+    }
+  },
+  "advisorModel": "fable",
   "tui": "fullscreen",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
+  "switchModelsOnFlag": true,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true
 }

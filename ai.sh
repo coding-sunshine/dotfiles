@@ -20,8 +20,9 @@ link() {
 }
 
 # Claude Code
-link "$AI/claude/CLAUDE.md"      "$HOME/.claude/CLAUDE.md"
-link "$AI/claude/settings.json"  "$HOME/.claude/settings.json"
+# CLAUDE.md and settings.json: not link(), whose rm -rf would throw away an edit a
+# tool saved into a plain-file copy. relink-config.sh copies that edit home first.
+DOTFILES="$DOTFILES" sh "$AI/claude/hooks/relink-config.sh"
 link "$AI/claude/statusline.sh"  "$HOME/.claude/statusline.sh"
 link "$AI/AGENTS.md"             "$HOME/.claude/AGENTS.md"
 link "$AI/claude/hooks"          "$HOME/.claude/hooks"

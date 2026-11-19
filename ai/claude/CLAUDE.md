@@ -17,6 +17,7 @@ Claude-specific notes in this file.
   param — `haiku` trivial mechanical, `sonnet` bulk, `opus` for work that
   ships. Main session model via `/model` at session start only (mid-task
   switch wipes the prompt cache).
+
 # graphify
 - **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
 When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.
