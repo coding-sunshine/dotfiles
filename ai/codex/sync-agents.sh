@@ -10,7 +10,7 @@
 #   generated part: Codex header + ai/AGENTS.md verbatim, ending at $END
 #   tool-owned tail: everything below $END, kept byte for byte
 # Before $END existed, the tail started at "## BASE CLI"; that fallback migrates
-# the old hand-made file once.
+# the old hand-made file once. A file with neither is kept whole below $END.
 #
 # Runs from ai.sh and at Claude SessionStart (relink-config.sh), so an edit to
 # ai/AGENTS.md reaches Codex without a manual step. Rewrites only on change.
@@ -45,9 +45,13 @@ EOF
   if [ -f "$out" ]; then
     if grep -qxF "$END" "$out"; then
       awk -v end="$END" 'found { print } $0 == end { found = 1 }' "$out"
-    else
+    elif grep -q '^## BASE CLI' "$out"; then
       echo
       awk '/^## BASE CLI/ { found = 1 } found { print }' "$out"
+    else
+      # Unknown layout: keep all of it rather than guess what is safe to drop.
+      echo
+      cat "$out"
     fi
   fi
 } > "$tmp"

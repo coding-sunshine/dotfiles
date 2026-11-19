@@ -167,7 +167,8 @@ idempotent — re-run it any time you change a config.
 | ------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`ai/AGENTS.md`](./ai/AGENTS.md)                       | `~/.claude/AGENTS.md`                                              | Shared, tool-agnostic instructions                                                                                                                                                                                                                                        |
 | [`ai/claude/CLAUDE.md`](./ai/claude/CLAUDE.md)         | `~/.claude/CLAUDE.md`                                              | Global Claude Code instructions (imports `AGENTS.md`)                                                                                                                                                                                                                     |
-| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json`                                          | Model (Opus default) / permissions / hooks / statusline / auto memory                                                                                                                                                                                                     |
+| [`ai/claude/settings.json`](./ai/claude/settings.json) | `~/.claude/settings.json`                                          | Model (last `/model` pick) / permissions / hooks / statusline / auto memory                                                                                                                                                                                               |
+| [`ai/codex/sync-agents.sh`](./ai/codex/sync-agents.sh) | builds `~/.codex/AGENTS.md`                                        | Codex copy of `ai/AGENTS.md` (Codex has no `@import`); keeps what base and installers write below its end marker                                                                                                                                                          |
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh`                                          | Statusline: model · branch · context-usage bar · session cost                                                                                                                                                                                                             |
 | [`ai/claude/agents/`](./ai/claude/agents)              | `~/.claude/agents`                                                 | Subagents: `code-reviewer` & `planner` (Opus), `debugger` (Sonnet), `test-writer` (Haiku — mechanical)                                                                                                                                                                    |
 | [`ai/claude/commands/`](./ai/claude/commands)          | `~/.claude/commands`                                               | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship`                                                                                                                                                                                                      |
@@ -185,10 +186,11 @@ SessionStart and from `./ai.sh`. It copies a plain file back here and relinks it
 or warns if the repo copy has uncommitted edits of its own. After it copies,
 commit the change.
 
-> **Model routing.** The interactive default is **Opus**, with Fable as the
-> advisor model. Pin subagents to `sonnet`/`haiku` for bulk work (see the
-> routing table in `ai/AGENTS.md`), and use `/model` at session start to
-> downshift for routine work.
+> **Model routing.** `model` in `settings.json` is whatever `/model` last saved
+> (Opus at the moment), with Fable as the advisor model. `cost-guard.sh` warns
+> at SessionStart when a session runs on Opus. Pin subagents to `sonnet`/`haiku`
+> for bulk work (see the routing table in `ai/AGENTS.md`), and pick the model at
+> session start.
 
 ### Secrets
 
