@@ -17,3 +17,10 @@ config/zed/prompts/
 # Stray VS Code extension build artifact
 kickbacks.vsix
 *.vsix
+
+# Parked agents (seo-* from the seo skill suite): kept local, not in the repo.
+# Move one back to ai/claude/agents/ to re-enable it.
+ai/claude/agents-disabled/
+
+# Installer backups
+*.bak
