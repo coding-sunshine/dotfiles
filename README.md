@@ -186,9 +186,10 @@ SessionStart and from `./ai.sh`. It copies a plain file back here and relinks it
 or warns if the repo copy has uncommitted edits of its own. After it copies,
 commit the change.
 
-> **Model routing.** `model` in `settings.json` is whatever `/model` last saved
-> (Opus at the moment), with Fable as the advisor model. `cost-guard.sh` warns
-> at SessionStart when a session runs on Opus. Pin subagents to `sonnet`/`haiku`
+> **Model routing.** The session default is pinned to `claude-opus-5-5`, with
+> `claude-fable-5-2` as the advisor model (`/model` overwrites the pin).
+> `cost-guard.sh` warns at SessionStart only when a session runs on Fable,
+> which is metered. Pin subagents to `sonnet`/`haiku`
 > for bulk work (see the routing table in `ai/AGENTS.md`), and pick the model at
 > session start.
 

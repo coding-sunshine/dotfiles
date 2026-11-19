@@ -8,14 +8,15 @@ Claude-specific notes in this file.
 
 ## Claude Code specifics
 
-- No MCP server is always-on (each re-sends its schema every turn and on every
-  subagent spawn). If a task needs one, tell me the toggle to run
+- Only MCP servers I use every week stay on (`claude mcp list` shows them);
+  the rest are opt-in. Each one costs context, a tool name per turn at least.
+  If a task needs an off one, tell me the toggle to run
   (`github-on`, `browser-on`, `review-on`, `mcp-toggle <name> on`).
 - Keep commits scoped and messages descriptive; never commit `.env` or
   `*.local.json`.
 - Model routing (see AGENTS.md table): apply via the Agent/Workflow `model`
-  param — `haiku` trivial mechanical, `sonnet` bulk, `opus` for work that
-  ships. Main session model via `/model` at session start only (mid-task
+  param — `haiku` trivial mechanical, `sonnet` bulk, `opus`/`fable` for work
+  that ships. Main session model via `/model` at session start only (mid-task
   switch wipes the prompt cache).
 
 # graphify

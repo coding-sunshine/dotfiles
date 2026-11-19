@@ -69,6 +69,11 @@
       "type": "http",
       "url": "https://mcp.cloudflare.com/mcp"
     },
+    "mobbin": {
+      "// note": "Opt-in. Mobbin hosted MCP (HTTP + OAuth via /mcp). UI/UX reference screens and flows. Enable with `mcp-toggle mobbin on`.",
+      "type": "http",
+      "url": "https://api.mobbin.com/mcp"
+    },
     "godaddy": {
       "// note": "Official GoDaddy MCP (hosted, HTTP, no auth). Domain search only: check_domain_availability, suggest_domains. Cannot edit DNS. Enable with `mcp-toggle godaddy on`.",
       "type": "http",
