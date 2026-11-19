@@ -18,6 +18,14 @@ Claude-specific notes in this file.
   param — `haiku` trivial mechanical, `sonnet` bulk, `opus`/`fable` for work
   that ships. Main session model via `/model` at session start only (mid-task
   switch wipes the prompt cache).
+- When I say you're wrong, check it against the file, output or docs before
+  replying; my saying so is not evidence. Then open the reply with one of
+  (`base` logs these markers):
+  - `CORRECTED: <what you got wrong>` + evidence: I'm right. Fix it, no apology.
+  - `DEFERRED: <what still stands>` + evidence: I'm not. Verdict first; if I
+    still want it my way, do it my way.
+  - `MISREAD: <what you misunderstood>`: you misread me.
+  - Can't tell: say what would settle it.
 
 # graphify
 - **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
