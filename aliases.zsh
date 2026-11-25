@@ -41,10 +41,11 @@ alias uva="uv add"
 alias venv="uv venv && source .venv/bin/activate"
 
 # AI agents
-# Default `claude` (and the `cc` shortcut, which expands to it) to skip the
-# per-action permission prompts. Only affects interactive shells, not the
-# `claude ...` calls inside scripts like ai.sh / bin/claude-auto.
-alias claude="claude --dangerously-skip-permissions"
+# Default `claude` (and the `cc` shortcut, which expands to it) to auto mode:
+# a classifier approves routine actions and blocks risky ones, so few prompts.
+# Only affects interactive shells, not the `claude ...` calls inside scripts
+# like ai.sh / bin/claude-auto. Bypass for one launch: `command claude --dangerously-skip-permissions`.
+alias claude="claude --permission-mode auto"
 alias cc="claude"
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
 

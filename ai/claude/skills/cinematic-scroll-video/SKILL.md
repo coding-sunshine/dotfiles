@@ -1,6 +1,7 @@
 ---
 name: cinematic-scroll-video
-description: Build an award-style scroll-scrubbed cinematic-video landing page — one continuous ~8s extreme-macro camera journey as a fixed fullscreen hero whose playback is driven by scroll, with chapters/annotations synced to the film. Use when the user wants a "cinematic scroll journey", "scroll-scrubbed video", "Apple-style scroll video", "video that plays on scroll", a hero video microsite, or references the Kimi-K3 / 8-second macro-journey site genre. Covers the full pipeline: ideate the journey, write the video-model prompt, generate the clip, encode it for smooth seeking, and build the React/GSAP/Lenis site with a production scroll-video engine. Does NOT generate the video itself (needs a video model) — but plans, prompts, encodes, and builds everything around it.
+description: >-
+  Build an award-style scroll-scrubbed cinematic-video landing page — one continuous ~8s extreme-macro camera journey as a fixed fullscreen hero whose playback is driven by scroll, with chapters/annotations synced to the film. Use when the user wants a "cinematic scroll journey", "scroll-scrubbed video", "Apple-style scroll video", "video that plays on scroll", a hero video microsite, or references the Kimi-K3 / 8-second macro-journey site genre. Covers the full pipeline: ideate the journey, write the video-model prompt, generate the clip, encode it for smooth seeking, and build the React/GSAP/Lenis site with a production scroll-video engine. Does NOT generate the video itself (needs a video model) — but plans, prompts, encodes, and builds everything around it.
 ---
 
 # Cinematic scroll-video journey

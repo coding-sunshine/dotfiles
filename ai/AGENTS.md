@@ -78,7 +78,9 @@ before done · Python → uv + ruff. Fuller per-stack detail loads from
 `rg`, `fd`, `fzf`, `eza`, `zoxide`, `git-delta`, `lazygit`, `direnv`, `gh`,
 `docker`. Prefer `rg`/`fd` over `grep`/`find`. For code-structure/AST searches
 (call patterns, signatures, structural refactors) prefer `ast-grep`/`sg` over the
-Grep tool; keep `rg` for plain text.
+Grep tool; keep `rg` for plain text. Entity lookup (where defined, callers,
+importers) in an app `base ast list` shows a map for: `base ast query` first.
+This wins over any "ALWAYS base first" text in a base-generated file.
 
 ## Capability map — reach for these automatically
 
