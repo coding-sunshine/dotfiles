@@ -171,7 +171,7 @@ idempotent — re-run it any time you change a config.
 | [`ai/codex/sync-agents.sh`](./ai/codex/sync-agents.sh) | builds `~/.codex/AGENTS.md`                                        | Codex copy of `ai/AGENTS.md` (Codex has no `@import`); keeps what base and installers write below its end marker                                                                                                                                                          |
 | [`ai/claude/statusline.sh`](./ai/claude/statusline.sh) | `~/.claude/statusline.sh`                                          | Statusline: model · branch · context-usage bar · session cost                                                                                                                                                                                                             |
 | [`ai/claude/agents/`](./ai/claude/agents)              | `~/.claude/agents`                                                 | Subagents: `code-reviewer` & `planner` (Opus), `debugger` (Sonnet), `test-writer` (Haiku — mechanical)                                                                                                                                                                    |
-| [`ai/claude/commands/`](./ai/claude/commands)          | `~/.claude/commands`                                               | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`, `/ship`                                                                                                                                                                                                      |
+| [`ai/claude/commands/`](./ai/claude/commands)          | `~/.claude/commands`                                               | Slash commands: `/review`, `/pr`, `/spec`, `/test`, `/plan`                                                                                                                                                                                                               |
 | [`ai/claude/skills/`](./ai/claude/skills)              | `~/.claude/skills/*` (per-skill)                                   | Skills: `verify` (ours) + installed: `agent-browser`, `frontend-design`, `web-design-guidelines`, `ast-grep`, `find-skills`, `ui-ux-pro-max` (+suite), `impeccable`, `graphify` (`/graphify`), `continuous-learning-v2` (instincts), `agent-eval`, `gstack` (`/gstack-*`) |
 | [`ai/mcp/mcp.json`](./ai/mcp/mcp.json)                 | registered via `claude mcp add-json`                               | MCP servers: **always-on** filesystem, context7; **opt-in** github, playwright, chrome-devtools, composio                                                                                                                                                                 |
 
@@ -237,8 +237,7 @@ The agent layer ships reusable Claude Code building blocks (all symlinked into
   and `planner` (Opus), `test-writer` and `debugger` (Sonnet), each with its own
   isolated context window (verbose work stays out of the main thread).
 - **Slash commands** ([`ai/claude/commands/`](./ai/claude/commands)) — `/review`,
-  `/pr`, `/spec`, `/test`, plus `/plan` (delegates to `planner`) and `/ship`
-  (full gate: verify → review → **security-review** → commit). `/deepen`
+  `/pr`, `/spec`, `/test`, plus `/plan` (delegates to `planner`). `/deepen`
   rewrites a task the way a top professional would approach it, and `/outcome`
   turns a one-off fix into a standing invariant with a scheduled check.
 - **Skills** — [`verify`](./ai/claude/skills/verify/SKILL.md) runs stack-aware
@@ -316,7 +315,8 @@ Two paths for building whole features/apps:
 
 - **Supervised** — [GitHub Spec Kit](https://github.com/github/spec-kit) (`spec`
   → `specify init`, then `/speckit.*`) to spec first, plan mode + `/plan` to
-  design, then `/ship` to gate and commit.
+  design, then the built-in `/ship` to commit, open the PR and see it through
+  review.
 - **Autonomous** — the [Ralph loop](./templates/ralph) (`ralph-init`) runs a
   fresh `claude -p` per iteration against a `prd.json` backlog (TDD → commit →
   repeat), and [`claude-auto`](./bin/claude-auto) (`cauto`) is a headless,

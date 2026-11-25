@@ -49,3 +49,5 @@ graphify-out/          # graphify knowledge-graph output
 
 polyscope.local.json
 **/.claude/settings.local.json
+
+**/.claude/.cc-writes/

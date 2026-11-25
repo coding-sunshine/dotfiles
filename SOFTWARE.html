@@ -381,7 +381,7 @@ const DATA = [
 {n:"ponytail",g:"cc",t:"plugin",d:"Lazy senior developer mode: smallest change that fully solves the task, no speculative abstractions.",s:"ai.sh"},
 {n:"caveman",g:"cc",t:"plugin",d:"Terse output mode, on by default. Keeps the technical substance, drops the filler. Toggle with caveman-on and off.",s:"ai.sh"},
 {n:"agent-review-panel",g:"cc",t:"plugin",o:1,d:"Multi-agent adversarial debate over a plan or diff. Token-heavy, so it is invoked on demand at PR and plan boundaries.",s:"ai.sh"},
-{n:"gstack",g:"cc",t:"framework",d:"Garry Tan's command framework, installed under a /gstack-* prefix so it does not collide with the local /review, /ship and /plan.",s:"ai.sh"},
+{n:"gstack",g:"cc",t:"framework",d:"Garry Tan's command framework, installed under a /gstack-* prefix so it does not collide with /review, /ship and /plan.",s:"ai.sh"},
 
 /* ---------------- Claude Code: authored skills ---------------- */
 {n:"verify",g:"cc",t:"skill",d:"Pre-commit check: run the tests, the linter and the type checker before claiming anything works.",s:"ai/claude/skills"},
@@ -398,7 +398,7 @@ const DATA = [
 {n:"debugger",g:"cc",t:"subagent",d:"Reproduces a failure, isolates the root cause and applies a minimal fix with a regression test.",s:"ai/claude/agents"},
 {n:"planner",g:"cc",t:"subagent",d:"Read-only architect that researches the codebase and returns a step-by-step implementation plan.",s:"ai/claude/agents"},
 {n:"test-writer",g:"cc",t:"subagent",d:"Writes focused tests for recently changed code.",s:"ai/claude/agents"},
-{n:"/plan /pr /review /ship /spec /test",g:"cc",t:"commands",d:"The local slash commands: plan a feature, open a PR, review a diff, ship it, write a spec, run tests.",s:"ai/claude/commands"},
+{n:"/plan /pr /review /spec /test",g:"cc",t:"commands",d:"The local slash commands: plan a feature, open a PR, review a diff, write a spec, run tests.",s:"ai/claude/commands"},
 
 /* ---------------- Claude Code: third-party skills ---------------- */
 {n:"impeccable",g:"cc",t:"skill",d:"Frontend polish and critique with sub-commands for craft, critique, audit, polish, animate and more.",s:"ai.sh (npx skills)"},
