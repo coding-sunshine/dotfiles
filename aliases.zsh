@@ -47,6 +47,7 @@ alias venv="uv venv && source .venv/bin/activate"
 # like ai.sh / bin/claude-auto. Bypass for one launch: `command claude --dangerously-skip-permissions`.
 alias claude="claude --permission-mode auto"
 alias cc="claude"
+alias claude-fable='CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1 claude --model fable'
 alias agents="$EDITOR $DOTFILES/ai/AGENTS.md"
 
 # Laravel Boost — give agents real project context via MCP (run inside a project)
