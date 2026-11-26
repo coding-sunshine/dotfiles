@@ -25,7 +25,7 @@ if [[ -n "$cwd" ]]; then
   fi
 fi
 
-ad="$(node "$HOME/.vibe-ads/vibe-ads-statusline.mjs" 2>/dev/null)"
+state="$(printf '%s' "$input" | bash "$HOME/.claude/hooks/statusline-state.sh" 2>/dev/null)"
 # ccusage DISABLED 2026-07-21: hung instances pinned 300-800% CPU (load avg 90+),
 # starving local test runs. Re-enable by restoring the line below.
 # usage="$(printf '%s' "$input" | bun x ccusage statusline --visual-burn-rate emoji-text --cost-source auto --timezone Asia/Kolkata 2>/dev/null)"
@@ -38,7 +38,7 @@ if [[ -z "$usage" ]]; then
 fi
 
 out="" sep=""
-for part in "$badges" "$model" "$loc" "$ad" "$usage"; do
+for part in "$state" "$badges" "$model" "$loc" "$usage"; do
   [[ -z "$part" ]] && continue
   out+="$sep$part"
   sep=" | "

@@ -13,11 +13,11 @@ set -eu
 input="$(cat 2>/dev/null || true)"
 model="$(printf '%s' "$input" | jq -r '(.model | if type=="object" then .id else . end) // empty' 2>/dev/null || true)"
 
-printf '↳ cost discipline: session=opus · subagents haiku=trivial, sonnet=bulk | no mid-session model/effort/fast switch (cache wipe) | /clear between tasks · /compact at breaks only · /mcp prune unused\n'
+printf '↳ cost discipline: session=%s · subagents haiku=trivial, sonnet=bulk | no mid-session model or fast-mode switch (cache rebuild); effort changes are free | /clear between tasks · /compact at breaks only · /mcp prune unused\n' "${model:-unknown}"
 
 case "$model" in
-  # Fable went metered on 2026-07-07 ($10/$50 per Mtok) and was 54% of July spend. Loudest warning.
-  *fable*) printf '⚠ session on FABLE — metered credits on TOP of the subscription. Taste work only (UI, copy, API design). /model opus otherwise.\n' ;;
+  # Fable counts against plan usage (credits are off on this account). List price $8/$40 per Mtok, twice Opus.
+  *fable*) printf '⚠ session on FABLE — plan usage, list price 2x Opus. Taste work only (UI, copy, API design). /model opus otherwise.\n' ;;
 esac
 
 exit 0

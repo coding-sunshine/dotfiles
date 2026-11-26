@@ -3,7 +3,7 @@
 # Types in KEEP run on whatever the main thread asked for. Everything else is forced down.
 set -euo pipefail
 
-KEEP='code-reviewer|feature-dev:code-reviewer|caveman:cavecrew-reviewer|planner|Plan|feature-dev:code-architect|debugger|claude'
+KEEP='code-reviewer|feature-dev:code-reviewer|caveman:cavecrew-reviewer|planner|Plan|feature-dev:code-architect|debugger|claude|auditor|refactorer'
 HAIKU='Explore|caveman:cavecrew-investigator|statusline-setup'
 
 input=$(cat)

@@ -3,6 +3,12 @@
 # (permission request, or idle waiting for input). Click focuses the
 # terminal app the session runs in. Silent no-op on failure.
 input="$(cat)"
+# session-state.sh already sent the banner for this turn's end; skip the idle repeat.
+if [ "$(printf '%s' "$input" | jq -r '.notification_type // empty' 2>/dev/null)" = "idle_prompt" ]; then
+  sid="$(printf '%s' "$input" | jq -r '.session_id // empty' 2>/dev/null)"
+  told="$(jq -r '.told // empty' "${CLAUDE_STATE_DIR:-$HOME/.claude/session-state}/$sid.json" 2>/dev/null)"
+  if [ -n "$told" ]; then exit 0; fi
+fi
 msg="$(printf '%s' "$input" | jq -r '.message // "needs your attention"' 2>/dev/null)"
 cwd="$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)"
 proj="${cwd##*/}"
