@@ -37,8 +37,11 @@ if [[ -z "$usage" ]]; then
   model="$(printf '%s' "$input" | jq -r '.model.display_name // empty' 2>/dev/null)"
 fi
 
+# Habit reminder (audit cards R10, R18): dim, last. HABIT_TIPS=0 hides it.
+habit="$(printf '%s' "$input" | bash "$HOME/.claude/hooks/statusline-habits.sh" 2>/dev/null)"
+
 out="" sep=""
-for part in "$state" "$badges" "$model" "$loc" "$usage"; do
+for part in "$state" "$badges" "$model" "$loc" "$usage" "$habit"; do
   [[ -z "$part" ]] && continue
   out+="$sep$part"
   sep=" | "
