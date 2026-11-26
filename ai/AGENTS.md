@@ -13,11 +13,8 @@ AI-agent workflow; I value small, verifiable steps.
 - Smallest change that fully solves the task; match surrounding style, don't
   reformat unrelated lines.
 - Reuse existing functions/utilities before adding new ones.
-- Ambiguous request: state your chosen interpretation in one line before
-  building; ask only if interpretations diverge materially.
 - Clean up orphans your change created (imports/vars/functions now unused).
   Pre-existing dead code: mention it, never delete unasked.
-- State how you verified (tests run, output). Don't claim it works unchecked.
 - **Raw over digested.** A source you will quote, encode or judge gets read raw:
   `curl` plus a tag strip, or the primary DB, log or dataset. WebFetch hands back
   a small model's summary, which is fine for a lookup and wrong for anything you
@@ -31,6 +28,19 @@ AI-agent workflow; I value small, verifiable steps.
   Status fields are binary: `passing` or `failing`, never `in_progress` or
   `partial`. Unproven is `failing`. Every item carries the exact command that
   decides it.
+
+## Reliability
+
+- A claim about this codebase, a command or an API comes with where you saw it: file and
+  line, command output from this session, or a link. Not checked: say "not checked".
+- Work reported as done lists the command that was run and what it returned. Code that was
+  written and not run is reported as "written, not run".
+- If my premise, plan or claimed cause looks wrong, say so before starting, with the
+  evidence. Then do what I decide.
+- If two readings of my request lead to different work, ask one question first. Otherwise
+  state your reading in one line and carry on.
+- Before editing a file, read the part you will change and find its callers.
+- Before reporting, check each claim against a tool result from this session.
 
 ## No yes-man
 
@@ -102,7 +112,7 @@ progressive (load only when invoked), so routing is free until used.
 | stress-testing a plan/spec or a tenancy / auth / security / money change before building    | `agent-review-panel` (multi-agent adversarial debate)                                         |
 | told to "just build it" from a feature list, unattended                                     | `autobuild features.md`                                                                       |
 | running a big/verbose search or test sweep                                                  | delegate to a subagent (summary only returns)                                                 |
-| running parallel agents on branches                                                         | `claude --worktree` (native) or `gwt new <branch>`                                            |
+| running parallel agents on branches                                                         | `claude --worktree` (native)                                                                  |
 | a headless, budget-capped automation run                                                    | `claude-auto`                                                                                 |
 | over-engineering creeping in                                                                | `/ponytail`                                                                                   |
 
@@ -114,9 +124,8 @@ Crews and review panels: each member does what that professional does (runs the
 query, the profiler, the exploit) and cites the output. Writing in their voice is
 role play; drop any finding that carries no tool output.
 
-Opt-in, toggle on then off: `superpowers-on`, `browser-on`, `github-on`,
-`review-on`, `sentry-on`. `continuous-learning-v2` auto-learns your patterns —
-check `/instinct-status` occasionally and promote good ones.
+Opt-in, toggle on then off: `browser-on`, `github-on`,
+`review-on`, `sentry-on`.
 
 ## Model routing — subagents & delegation
 
@@ -138,32 +147,10 @@ bulk model is **sonnet**, not an external API.
 - Fan-out burns multiply: one agentic task can branch into 4–6 concurrent model
   calls. On opus/fable sessions, pin workers to sonnet/haiku (agent frontmatter
   or `model:` param) — orchestrate smart, execute cheap. Hard rules belong in
-  hooks, not CLAUDE.md (instructions ~70% followed; hooks 100%).
-
-### Model-specific (self-route: apply the block for the model you are)
-
-**Fable 5 sessions** (per Anthropic's Fable prompting guide):
-
-- Long runs: verify with fresh-context subagents at intervals, not self-critique
-  — separate verifiers outperform reviewing your own work.
-- Before reporting progress, audit each claim against an actual tool result from
-  this session; unverified = say so explicitly.
-- Never echo/transcribe internal reasoning as response text (triggers
-  reasoning_extraction refusals → Opus fallback).
-- If my prompt lacks the why, ask for or infer the intent before a long run —
-  Fable performs better knowing what the output is for.
-
-**Opus 5 sessions** (per Anthropic's Opus 5 prompting guide):
-
-- Do NOT add verification/double-check steps — Opus 5 self-verifies; extra
-  instruction causes over-verification. The Fable verifier rule above does not
-  apply to you.
-- Reviews: report everything, filter in a second pass. Never "only
-  high-severity" / "be conservative" — Opus 5 obeys literally and misses bugs.
-- Subagents only for sizeable independent tracks; one if one suffices; never
-  to verify your own work.
-- `low`/`medium` effort holds quality on Opus 5 — primary cost/latency lever
-  for routine work.
+  hooks, not CLAUDE.md.
+- A hook rewrites the `model` param on every subagent type outside its keep list.
+  To run a subagent on Opus or Fable, use `subagent_type: "claude"` or one of:
+  code-reviewer, planner, Plan, debugger, auditor, refactorer.
 
 ## Context & token discipline
 
@@ -171,15 +158,18 @@ bulk model is **sonnet**, not an external API.
 - Read just-in-time: keep paths/queries, read file _ranges_, not whole files.
 - `/compact` at milestones; `/clear` when switching tasks (a long session
   re-reads its history every turn — cost grows with turn count).
-- Protect the prompt cache (reads bill ~10% of input): pick model + effort at
-  session start, save `/compact` for natural task breaks. Mid-task model/effort/
-  fast-mode switches and MCP connect/disconnect each force a pricier uncached turn.
-- Durable decisions persist via `MEMORY.md` + cavemem — don't re-derive them.
+- Protect the prompt cache (reads bill 2.5–5% of input on Opus/Fable/Sonnet):
+  pick the model at session start, save `/compact` for natural task breaks. A
+  mid-task model switch or turning fast mode on forces an uncached turn. Effort
+  changes keep the cache; change effort freely.
+- Durable decisions persist via `MEMORY.md` — don't re-derive them.
 - Default effort `high`; reserve `xhigh`/`max` or workflow orchestration for
   genuinely hard problems.
-- Keep the active MCP set lean and downshift `/model` for routine work; audit
-  with `/context`. MCP is the biggest lever (~500 tok/tool — drop any a CLI
-  replaces); flag skills >400 lines, rules >100, `CLAUDE.md` >300; stay <40% used.
+- Keep the active MCP set lean and lower effort (not `/model`) for routine
+  work; audit with `/context`. With tool search on, a deferred tool costs its
+  name (about 10 tokens); a server's instructions block is the real cost (2–14k
+  chars per session). Flag skills >400 lines, rules >100, `CLAUDE.md` >300; stay
+  <40% used.
 
 ## Browser automation
 
