@@ -347,15 +347,6 @@
         ]
       },
       {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
-          }
-        ]
-      },
-      {
         "hooks": [
           {
             "type": "command",
@@ -418,15 +409,6 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/subagent-model.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh"
           }
         ]
       },
